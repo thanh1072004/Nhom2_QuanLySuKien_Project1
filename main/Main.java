@@ -1,15 +1,24 @@
 package main;
 
 import components.CoverPanel;
+import components.Message;
 import components.PanelLoginAndRegister;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+
+import database.DatabaseConnection;
+import model.User;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
+import service.ServiceUser;
+
 
 public class Main extends javax.swing.JFrame {
-    
+
     private MigLayout layout;
     private CoverPanel cover;
     private PanelLoginAndRegister loginAndRegister;
@@ -17,16 +26,24 @@ public class Main extends javax.swing.JFrame {
     private final double coverSize = 40;
     private final double loginSize = 60;
     private final DecimalFormat df = new DecimalFormat("##0.###");
-    
+    private ServiceUser service;
+
     public Main() {
         initComponents();
         init();
     }
-    
+
     private void init(){
         layout = new MigLayout("fill, insets 0");
         cover = new CoverPanel();
-        loginAndRegister = new PanelLoginAndRegister();
+        service = new ServiceUser();
+        ActionListener eventRegister = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                register();
+            }
+        };
+        loginAndRegister = new PanelLoginAndRegister(eventRegister);
         TimingTarget target = new TimingTargetAdapter(){
             @Override
             public void timingEvent(float fraction){
@@ -50,13 +67,13 @@ public class Main extends javax.swing.JFrame {
 
                 bg.revalidate();
             }
-            
+
             @Override
             public void end(){
                 isLogin = !isLogin;
             }
         };
-        
+
         Animator animator = new Animator(800, target);
         animator.setAcceleration(0.5f);
         animator.setDeceleration(0.5f);
@@ -72,8 +89,75 @@ public class Main extends javax.swing.JFrame {
             }
         });
     }
-    
 
+    private void register(){
+        User user = loginAndRegister.getUser();
+        try{
+            if (service.checkDuplicateUser(user.getUsername())) {
+                showMessage(Message.MessageType.ERROR,"Username already exists");
+            }else {
+                service.authorizeRegister(user);
+                showMessage(Message.MessageType.SUCCESS, "Register successful");
+            }
+        }catch(Exception e){
+            showMessage(Message.MessageType.ERROR, "Register failed");
+        }
+    }
+
+    private void showMessage(Message.MessageType messageType, String message){
+        Message msg = new Message();
+        msg.showMessage(messageType, message);
+        TimingTarget target = new TimingTargetAdapter() {
+            @Override
+            public void begin() {
+                if(!msg.isShow()){
+                    bg.add(msg, "pos 0.5al -30", 0);//insert to bg first index 0
+                    msg.setVisible(true);
+                    bg.repaint();
+                }
+            }
+
+            @Override
+            public void timingEvent(float fraction){
+                float f;
+                if(msg.isShow()){
+                    f = 40 * (1f - fraction);
+                }else{
+                    f = 40 * fraction;
+                }
+                layout.setComponentConstraints(msg, "pos 0.5al " + (int) (f-30));
+                bg.repaint();
+                bg.revalidate();
+            }
+
+            @Override
+            public void end(){
+                if(msg.isShow()){
+                    bg.remove(msg);
+                    bg.repaint();
+                    bg.revalidate();
+                }else{
+                    msg.setShow(true);
+                }
+            }
+        };
+        Animator animator = new Animator(300, target);
+        animator.setAcceleration(0.5f);
+        animator.setDeceleration(0.5f);
+        animator.setResolution(0);
+        animator.start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(2000);
+                    animator.start();
+                }catch(InterruptedException e){
+                    System.err.println(e);
+                }
+            }
+        });
+    }
     private void initComponents() {
 
         bg = new javax.swing.JLayeredPane();
@@ -109,7 +193,11 @@ public class Main extends javax.swing.JFrame {
     }
 
     public static void main(String[] args) {
-
+        try {
+            DatabaseConnection.getInstance().connectToDatabase();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         java.awt.EventQueue.invokeLater(() -> new Main().setVisible(true));
     }
     private javax.swing.JLayeredPane bg;
