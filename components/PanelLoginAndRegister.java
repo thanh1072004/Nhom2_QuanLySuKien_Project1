@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 import javax.swing.*;
+
+import model.Login;
 import model.User;
 import net.miginfocom.swing.MigLayout;
 import swing.MyPasswordField;
@@ -15,20 +17,25 @@ import swing.Button;
 
 public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private User user;
+    private Login dataLogin;
 
     public User getUser() {
         return user;
     }
 
-    public PanelLoginAndRegister(ActionListener eventRegister) {
+    public Login getDataLogin() {
+        return dataLogin;
+    }
+
+    public PanelLoginAndRegister(ActionListener eventRegister, ActionListener eventLogin) {
         initComponents();
-        initLogin();
+        initLogin(eventLogin);
         initRegister(eventRegister);
         login.setVisible(false);
         register.setVisible(true);
     }
    
-    private void initLogin(){
+    private void initLogin(ActionListener eventLogin){
         login.setLayout(new MigLayout("", "push[center]push", "push[]25[]10[]10[]25[]push"));
         JLabel label = new JLabel("Sign In");
         label.setFont(new Font("sanserif", Font.BOLD, 30));
@@ -57,7 +64,16 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.setBackground(new Color(7, 164, 121));
         cmd.setForeground(new Color(250, 250, 250));
         cmd.setText("SIGN IN");
+        cmd.addActionListener(eventLogin);
         login.add(cmd, "w 40%, h 40, wrap");
+        cmd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userName = username.getText().trim();
+                String passWord = password.getText().trim();
+                dataLogin = new Login(userName, passWord);
+            }
+        });
     }
     
     private void initRegister(ActionListener eventRegister){

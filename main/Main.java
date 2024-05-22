@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 
 import database.DatabaseConnection;
 import model.User;
+import model.Login;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -43,7 +44,13 @@ public class Main extends javax.swing.JFrame {
                 register();
             }
         };
-        loginAndRegister = new PanelLoginAndRegister(eventRegister);
+        ActionListener eventLogin = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                login();
+            }
+        };
+        loginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin);
         TimingTarget target = new TimingTargetAdapter(){
             @Override
             public void timingEvent(float fraction){
@@ -101,6 +108,20 @@ public class Main extends javax.swing.JFrame {
             }
         }catch(Exception e){
             showMessage(Message.MessageType.ERROR, "Register failed");
+        }
+    }
+
+    private void login(){
+        Login dataLogin = loginAndRegister.getDataLogin();
+        try{
+            User user = service.authorizeLogin(dataLogin);
+            if(user != null){
+                showMessage(Message.MessageType.SUCCESS, "Login successful");
+            }else{
+                showMessage(Message.MessageType.ERROR,"Username or password is incorrect");
+            }
+        }catch(Exception e){
+            showMessage(Message.MessageType.ERROR,"Login failed");
         }
     }
 

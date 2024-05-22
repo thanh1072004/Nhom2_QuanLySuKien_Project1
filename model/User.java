@@ -54,4 +54,8 @@ public class User {
         this.lastName = lastName;
         this.firstName = firstName;
     }
+
+    public User(int userId, String username, String password) {
+        super();
+    }
 }
