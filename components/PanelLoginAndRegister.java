@@ -3,7 +3,6 @@ package components;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 import javax.swing.*;
@@ -66,13 +65,10 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.setText("SIGN IN");
         cmd.addActionListener(eventLogin);
         login.add(cmd, "w 40%, h 40, wrap");
-        cmd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String userName = username.getText().trim();
-                String passWord = password.getText().trim();
-                dataLogin = new Login(userName, passWord);
-            }
+        cmd.addActionListener(e -> {
+            String userName = username.getText().trim();
+            String passWord = String.valueOf(password.getPassword());
+            dataLogin = new Login(userName, passWord);
         });
     }
     
@@ -111,15 +107,12 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.setText("SIGN UP");
         cmd.addActionListener(eventRegister);
         register.add(cmd, "w 40%, h 40, wrap");
-        cmd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String userName = username.getText().trim();
-                String firstname = firstName.getText().trim();
-                String lastname = lastName.getText().trim();
-                String passWord = password.getText().trim();
-                user = new User(0, firstname, lastname, userName, passWord);
-            }
+        cmd.addActionListener(e -> {
+            String userName = username.getText().trim();
+            String firstname = firstName.getText().trim();
+            String lastname = lastName.getText().trim();
+            String passWord = String.valueOf(password.getPassword());
+            user = new User(0, firstname, lastname, userName, passWord);
         });
     }
 
@@ -134,7 +127,6 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     }
 
 
-    // <editor-fold default state="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         login = new javax.swing.JPanel();
@@ -171,7 +163,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         );
 
         add(register, "card2");
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel login;

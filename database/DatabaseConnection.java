@@ -10,7 +10,7 @@ public class DatabaseConnection {
         try {
             connectToDatabase();
         } catch (SQLException e) {
-            e.printStackTrace();
+
             throw new RuntimeException("Failed to connect to the database");
         }
     }
@@ -43,7 +43,7 @@ public class DatabaseConnection {
                 connection = DriverManager.getConnection(url, username, password);
                 System.out.println("Connection established");
             } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
+
                 throw new SQLException("Failed to connect to the database", e);
             }
         }

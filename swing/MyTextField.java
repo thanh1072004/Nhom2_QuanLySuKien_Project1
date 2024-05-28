@@ -1,12 +1,6 @@
 package swing;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.RenderingHints;
+import java.awt.*;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
@@ -47,7 +41,7 @@ public class MyTextField extends JTextField {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(0, 0, 0, 0));
         setForeground(Color.decode("#7A8C8D"));
-        setFont(new java.awt.Font("sansserif", 0, 13));
+        setFont(new java.awt.Font("sanserif", Font.PLAIN, 13));
         setSelectionColor(new Color(75, 175, 152));
     }
 
@@ -64,7 +58,7 @@ public class MyTextField extends JTextField {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if (getText().length() == 0) {
+        if (getText().isEmpty()) {
             int h = getHeight();
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             Insets ins = getInsets();

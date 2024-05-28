@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import javax.swing.JLabel;
@@ -33,7 +32,7 @@ public class CoverPanel extends javax.swing.JPanel {
     
     private void init(){
         title = new JLabel("Event planner");
-        title.setFont(new Font("sansserif", 1, 30));
+        title.setFont(new Font("sanserif", Font.BOLD, 30));
         title.setForeground(new Color(245, 245, 245));
         add(title);
         
@@ -49,19 +48,16 @@ public class CoverPanel extends javax.swing.JPanel {
         button.setBackground(new Color(255, 255, 255));
         button.setForeground(new Color(255, 255, 255));
         button.setText("SIGN UP");
-        button.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent evt){
-                event.actionPerformed(evt);
-                if(button.getText().equals("SIGN IN")){
-                    button.setText("SIGN UP");
-                    description.setText("Life is an event");
-                    description1.setText("Make it memorable");
-                }else{
-                    button.setText("SIGN IN");
-                    description.setText("Sign Up");
-                    description1.setText("It's quick and easy");
-                }
+        button.addActionListener(evt -> {
+            event.actionPerformed(evt);
+            if(button.getText().equals("SIGN IN")){
+                button.setText("SIGN UP");
+                description.setText("Life is an event");
+                description1.setText("Make it memorable");
+            }else{
+                button.setText("SIGN IN");
+                description.setText("Sign Up");
+                description1.setText("It's quick and easy");
             }
         });
         add(button, "w 60%, h 40");
@@ -91,7 +87,6 @@ public class CoverPanel extends javax.swing.JPanel {
             this.isLogin = login;
         }
     }
-    @SuppressWarnings("unchecked")
 
     private void initComponents() {
 

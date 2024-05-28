@@ -4,7 +4,6 @@ import components.CoverPanel;
 import components.Message;
 import components.PanelLoginAndRegister;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
@@ -38,18 +37,8 @@ public class Main extends javax.swing.JFrame {
         layout = new MigLayout("fill, insets 0");
         cover = new CoverPanel();
         service = new ServiceUser();
-        ActionListener eventRegister = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                register();
-            }
-        };
-        ActionListener eventLogin = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                login();
-            }
-        };
+        ActionListener eventRegister = e -> register();
+        ActionListener eventLogin = e -> login();
         loginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin);
         TimingTarget target = new TimingTargetAdapter(){
             @Override
@@ -102,6 +91,9 @@ public class Main extends javax.swing.JFrame {
         try{
             if (service.checkDuplicateUser(user.getUsername())) {
                 showMessage(Message.MessageType.ERROR,"Username already exists");
+            }else if (user.getUsername().isEmpty() || user.getPassword().isEmpty() || user.getFirstName().isEmpty() || user.getLastName().isEmpty()){
+                showMessage(Message.MessageType.ERROR,"Please fill all the fields");
+
             }else {
                 service.authorizeRegister(user);
                 showMessage(Message.MessageType.SUCCESS, "Register successful");
