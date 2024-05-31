@@ -334,14 +334,11 @@ public class MainMenu extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton createEventButton = new JButton("Create Event");
-        JButton homeButton = new JButton("Home");
         createEventButton.setFont(labelFont);
-        homeButton.setFont(labelFont);
+        createEventButton.setFocusPainted(false);
         buttonPanel.add(createEventButton);
-        buttonPanel.add(Box.createRigidArea(new Dimension(10, 0))); 
-        buttonPanel.add(homeButton);
+        buttonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         createEventForm.add(buttonPanel, gbc);
-
         createEventPanel.add(createEventForm, BorderLayout.CENTER);
 
         // Thêm các panel vào mainPanel
@@ -352,7 +349,6 @@ public class MainMenu extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
         
         // Hành động của các nút bấm
-        homeButton.addActionListener(e -> cardLayout.show(mainPanel, "EventList"));
         create.addActionListener(e -> cardLayout.show(mainPanel, "CreateEvent"));
     }
 
@@ -367,6 +363,7 @@ public class MainMenu extends JFrame {
 
     private JMenuItem createMenuItem(String text) {
         JMenuItem menuItem = new JMenuItem(text);
+        menuItem.setFont(new Font("sansserif", Font.PLAIN, 16));
         menuItem.setForeground(Color.WHITE);
         menuItem.setBackground(new Color(52, 58, 64));
         menuItem.setPreferredSize(new Dimension(200, 50));
