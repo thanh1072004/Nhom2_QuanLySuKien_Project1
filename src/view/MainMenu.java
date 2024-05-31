@@ -7,9 +7,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import model.Login;
-import model.User;
-import service.ServiceUser;
+//import model.Login;
+//import model.User;
+//import service.ServiceUser;
 import swing.MyTextField;
 
 import java.awt.*;
@@ -62,7 +62,7 @@ public class MainMenu extends JFrame {
         eventsMenu.setPreferredSize(new Dimension(200, 50));
         eventsMenu.setFont(new Font("sanserif", Font.PLAIN, 16));
         ImageIcon originalIcon_event = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-                MainMenu.class.getResource("/icon/event1.png")));
+                MainMenu.class.getResource("/icon/event.png")));
         Image scaledImage_event = originalIcon_event.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_event = new ImageIcon(scaledImage_event);
 
@@ -98,7 +98,7 @@ public class MainMenu extends JFrame {
         invitationsMenu.setPreferredSize(new Dimension(200, 50));
         invitationsMenu.setFont(new Font("sanserif", Font.PLAIN, 16));
         ImageIcon originalIcon_invite = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-                MainMenu.class.getResource("/icon/list1.png")));
+                MainMenu.class.getResource("/icon/list.png")));
         Image scaledImage_invite = originalIcon_invite.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_invite = new ImageIcon(scaledImage_invite);
         invitationsMenu.setIcon(scaledIcon_invite);
@@ -236,7 +236,6 @@ public class MainMenu extends JFrame {
         // Đặt chiều cao của mỗi dòng
         eventTable.setRowHeight(25);
 
-        
         JScrollPane scrollPane = new JScrollPane(eventTable);
         scrollPane.setPreferredSize(new Dimension(getWidth(), getHeight() / 4));
         eventListPanel1.add(scrollPane, BorderLayout.SOUTH);
