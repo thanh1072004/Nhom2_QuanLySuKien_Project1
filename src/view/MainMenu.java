@@ -4,12 +4,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-//import model.Login;
-//import model.User;
-//import service.ServiceUser;
 import swing.MyTextField;
 
 import java.awt.*;
@@ -368,6 +364,17 @@ public class MainMenu extends JFrame {
         menuItem.setBackground(new Color(52, 58, 64));
         menuItem.setPreferredSize(new Dimension(200, 50));
         menuItem.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        menuItem.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                menuItem.setBackground(new Color(108, 117, 125));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                menuItem.setBackground(new Color(52, 58, 64));
+            }
+        });
         return menuItem;
     }
 
