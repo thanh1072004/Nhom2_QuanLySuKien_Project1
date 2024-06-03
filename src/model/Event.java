@@ -1,16 +1,53 @@
+package src.model;
+
 public class Event {
+    private int id;
     private String name;
     private String location;
-    private String start_date;
-    private String end_date;
+    private String date;
     private String type;
+    private String description;
+    private String organizer;
 
-    public Event(String name, String location, String start_date, String end_date, String type) {
+    public Event(String name, String location, String date, String type) {
         this.name = name;
         this.location = location;
-        this.start_date = start_date;
-        this.end_date = end_date;
+        this.date = date;
         this.type = type;
+    }
+
+    public Event(int id, String description, String organizer, String type, String date, String location, String name) {
+        this.id = id;
+        this.description = description;
+        this.organizer = organizer;
+        this.type = type;
+        this.date = date;
+        this.location = location;
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(String organizer) {
+        this.organizer = organizer;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getType() {
@@ -21,28 +58,12 @@ public class Event {
         this.type = type;
     }
 
-    public String getEnd_date() {
-        return end_date;
+    public String getDate() {
+        return date;
     }
 
-    public void setEnd_date(String end_date) {
-        this.end_date = end_date;
-    }
-
-    public String getStart_date() {
-        return start_date;
-    }
-
-    public void setStart_date(String start_date) {
-        this.start_date = start_date;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getLocation() {
@@ -51,5 +72,13 @@ public class Event {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

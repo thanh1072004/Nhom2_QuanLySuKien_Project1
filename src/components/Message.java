@@ -1,4 +1,4 @@
-package components;
+package src.components;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,9 +27,9 @@ public class Message extends JPanel {
         this.messageType = messageType;
         lbMessage.setText(message);
         if(messageType == MessageType.SUCCESS) {
-            lbMessage.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/success.png"))));
+            lbMessage.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/success.png"))));
         }else{
-            lbMessage.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/error.png"))));
+            lbMessage.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/error.png"))));
         }
     }
 

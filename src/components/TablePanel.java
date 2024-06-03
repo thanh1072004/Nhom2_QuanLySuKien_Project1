@@ -1,4 +1,4 @@
-package components;
+package src.components;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.net.URL;
 
-import swing.MyTextField;
+import src.swing.MyTextField;
 
 public class TablePanel extends JPanel{
     private JTable table;
@@ -31,7 +31,7 @@ public class TablePanel extends JPanel{
         topPanel.add(searchPanel, BorderLayout.NORTH);
 
         // Tạo tên bảng
-        JLabel tableNameLabel = new JLabel("YOUR CREATED EVENT TABLE", JLabel.CENTER);
+        /*JLabel tableNameLabel = new JLabel("YOUR CREATED EVENT TABLE", JLabel.CENTER);
         tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
@@ -47,7 +47,7 @@ public class TablePanel extends JPanel{
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         eventListPanel1.add(topPanel, BorderLayout.NORTH);
 

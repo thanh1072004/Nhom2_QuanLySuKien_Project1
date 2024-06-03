@@ -1,4 +1,4 @@
-package components;
+package src.components;
 
 import javax.swing.*;
 import java.awt.*;

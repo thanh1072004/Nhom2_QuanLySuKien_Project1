@@ -1,4 +1,4 @@
-package components;
+package src.components;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -11,7 +11,7 @@ import javax.swing.*;
 
 import base.Color1;
 import net.miginfocom.swing.MigLayout;
-import swing.ButtonOutline;
+import src.swing.ButtonOutline;
 public class CoverPanel extends javax.swing.JPanel {
     
     private final DecimalFormat df= new DecimalFormat("##0.###");

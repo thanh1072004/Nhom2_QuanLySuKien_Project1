@@ -1,21 +1,21 @@
-package main;
+package src;
 
 import base.Color1;
-import components.CoverPanel;
-import components.Message;
-import components.PanelLoginAndRegister;
+import src.components.CoverPanel;
+import src.components.Message;
+import src.components.PanelLoginAndRegister;
 
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
-import database.DatabaseConnection;
-import model.User;
-import model.Login;
+import src.database.DatabaseConnection;
+import src.model.User;
+import src.model.Login;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
-import service.ServiceUser;
+import src.service.ServiceUser;
 
 
 public class Main extends javax.swing.JFrame {
@@ -28,6 +28,7 @@ public class Main extends javax.swing.JFrame {
     private final double loginSize = 60;
     private final DecimalFormat df = new DecimalFormat("##0.###");
     private ServiceUser service;
+    private MainMenu mainMenu;
 
     public Main() {
         initComponents();
@@ -94,13 +95,17 @@ public class Main extends javax.swing.JFrame {
                 showMessage(Message.MessageType.ERROR,"Username already exists");
             }else if (user.getUsername().isEmpty() || user.getPassword().isEmpty() || user.getFirstName().isEmpty() || user.getLastName().isEmpty()){
                 showMessage(Message.MessageType.ERROR,"Please fill all the fields");
-
             }else {
                 service.authorizeRegister(user);
                 showMessage(Message.MessageType.SUCCESS, "Register successful");
+                mainMenu = new MainMenu(user);
+                this.dispose();
+                mainMenu.setVisible(true);
+
             }
         }catch(Exception e){
             showMessage(Message.MessageType.ERROR, "Register failed");
+            e.printStackTrace();
         }
     }
 
@@ -110,11 +115,15 @@ public class Main extends javax.swing.JFrame {
             User user = service.authorizeLogin(dataLogin);
             if(user != null){
                 showMessage(Message.MessageType.SUCCESS, "Login successful");
+                mainMenu = new MainMenu(user);
+                this.dispose();
+                mainMenu.setVisible(true);
             }else{
                 showMessage(Message.MessageType.ERROR,"Username or password is incorrect");
             }
         }catch(Exception e){
             showMessage(Message.MessageType.ERROR,"Login failed");
+            e.printStackTrace();
         }
     }
 
@@ -214,6 +223,7 @@ public class Main extends javax.swing.JFrame {
         }
         java.awt.EventQueue.invokeLater(() -> new Main().setVisible(true));
     }
+
     private javax.swing.JLayeredPane bg;
 
 }

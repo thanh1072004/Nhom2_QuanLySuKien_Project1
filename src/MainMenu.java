@@ -1,22 +1,23 @@
+package src;
+
 import javax.swing.*;
 import java.awt.*;
 
-import components.*;
-
-import database.DatabaseConnection;
-import service.ServiceEvent;
-
-import model.Event;
-import components.TablePanel;
+import src.components.*;
+import src.model.User;
+import src.service.ServiceEvent;
+import src.model.Event;
+import src.components.TablePanel;
 
 public class MainMenu extends JFrame {
     private JPanel mainPanel;
     private Event event;
     private ServiceEvent service;
-    private String username = "Hoang Viet Tung";
+    private User user;
     private int id = 1;
 
-    public MainMenu() {
+    public MainMenu(User user) {
+        this.user = user;
         setTitle("Event Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 600);
@@ -29,17 +30,17 @@ public class MainMenu extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         TablePanel tablePanel = new TablePanel();
-        CreatePanel createPanel = new CreatePanel(username);
+        CreatePanel createPanel = new CreatePanel(user.getUsername());
         createPanel.setFormListener(new FormListener() {
             @Override
             public void formSubmitted(String name, String date, String location, String type) {
-                tablePanel.addRow(id++, name, date, location, type, username);
+                tablePanel.addRow(id++, name, date, location, type, user.getUsername());
             }
         });
         mainPanel.add(tablePanel, "tablePanel");
         mainPanel.add(createPanel, "eventCreate");
 
-        SideBar sideBar = new SideBar(mainPanel, cardLayout);
+        SideBar sideBar = new SideBar(mainPanel, cardLayout, user);
         add(sideBar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
     }
@@ -51,7 +52,7 @@ public class MainMenu extends JFrame {
     private void createEvent(){
         Event event = this.getEvent();
         try{
-            if(event.getName() == null || event.getEvent_date() == null || event.getLocation() == null || event.getType() == null){
+            if(event.getName() == null || event.getDate() == null || event.getLocation() == null || event.getType() == null){
                System.out.println("Please fill all the required fields");
             }else{
                 service.authorizeEvent(event);
@@ -64,15 +65,15 @@ public class MainMenu extends JFrame {
     }
 
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         try{
             DatabaseConnection.getInstance().connectToDatabase();
         }catch(Exception e){
             e.printStackTrace();
         }
       SwingUtilities.invokeLater(() -> {
-          MainMenu frame = new MainMenu();
+          MainMenu frame = new MainMenu(user);
           frame.setVisible(true);
       });
-  }
+  }*/
 }

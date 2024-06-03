@@ -1,19 +1,20 @@
-package components;
+package src.components;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import src.model.User;
 
 public class SideBar extends JPanel {
     private JPanel mainPanel;
     private CardLayout cardLayout;
+    private User user;
 
-    public SideBar(JPanel mainPanel, CardLayout cardLayout){
+    public SideBar(JPanel mainPanel, CardLayout cardLayout, User user){
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;
+        this.user = user;
 
         setPreferredSize(new Dimension(200, getHeight()));
         setLayout(new GridBagLayout());
@@ -27,12 +28,12 @@ public class SideBar extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 0, 5, 0);
 
-        JLabel usernameLabel = new JLabel("Username");
+        JLabel usernameLabel = new JLabel(user.getUsername());
         usernameLabel.setForeground(Color.WHITE);
         usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         usernameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         ImageIcon originalIcon_user = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-                SideBar.class.getResource("/icon/user.png")));
+                SideBar.class.getResource("/src/icon/user1.png")));
         Image scaledImage_user = originalIcon_user.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_user = new ImageIcon(scaledImage_user);
         usernameLabel.setIcon(scaledIcon_user);
@@ -46,7 +47,7 @@ public class SideBar extends JPanel {
         JMenu eventsMenu = createMenu("Events", Color.WHITE);
         eventsMenu.setPreferredSize(new Dimension(200, 50));
         eventsMenu.setFont(new Font("sanserif", Font.PLAIN, 16));
-        ImageIcon originalIcon_event = new ImageIcon(Toolkit.getDefaultToolkit().createImage(SideBar.class.getResource("/icon/event.png")));
+        ImageIcon originalIcon_event = new ImageIcon(Toolkit.getDefaultToolkit().createImage(SideBar.class.getResource("/src/icon/event.png")));
         Image scaledImage_event = originalIcon_event.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_event = new ImageIcon(scaledImage_event);
 
@@ -84,7 +85,7 @@ public class SideBar extends JPanel {
         invitationsMenu.setPreferredSize(new Dimension(200, 50));
         invitationsMenu.setFont(new Font("sanserif", Font.PLAIN, 16));
         ImageIcon originalIcon_invite = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-                SideBar.class.getResource("/icon/list.png")));
+                SideBar.class.getResource("/src/icon/list.png")));
         Image scaledImage_invite = originalIcon_invite.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_invite = new ImageIcon(scaledImage_invite);
         invitationsMenu.setIcon(scaledIcon_invite);

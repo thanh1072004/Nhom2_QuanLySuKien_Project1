@@ -1,7 +1,7 @@
-package service;
+package src.service;
 
-import database.DatabaseConnection;
-import model.Event;
+import src.database.DatabaseConnection;
+import src.model.Event;
 import java.sql.*;
 
 public class ServiceEvent {
@@ -18,13 +18,13 @@ public class ServiceEvent {
         PreparedStatement ps = connection.prepareStatement("insert into event(name, location, event_date, description, type, organizer_id) values(?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
         ps.setString(1, event.getName());
         ps.setString(2, event.getLocation());
-        ps.setString(3, event.getEvent_date());
+        ps.setString(3, event.getDate());
         ps.setString(4, event.getDescription());
         ps.setString(5, event.getType());
         ResultSet rs = ps.getGeneratedKeys();
         if(rs.next()){
             int event_id = rs.getInt(1);
-            event.setEvent_id(event_id);
+            event.setId(event_id);
         }
         rs.close();
         ps.close();

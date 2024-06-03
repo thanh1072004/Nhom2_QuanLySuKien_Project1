@@ -1,4 +1,4 @@
-package model;
+package src.model;
 
 public class User {
     private int userId;
@@ -56,6 +56,8 @@ public class User {
     }
 
     public User(int userId, String username, String password) {
-        super();
+        this.userId = userId;
+        this.password = password;
+        this.username = username;
     }
 }

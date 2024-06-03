@@ -1,4 +1,4 @@
-package swing;
+package src.swing;
 
 import java.awt.Color;
 import java.awt.FontMetrics;

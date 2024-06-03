@@ -1,4 +1,4 @@
-package swing;
+package src.swing;
 
 import java.awt.*;
 import javax.swing.Icon;

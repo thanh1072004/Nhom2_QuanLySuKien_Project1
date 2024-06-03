@@ -1,8 +1,8 @@
-package service;
+package src.service;
 
-import database.DatabaseConnection;
-import model.Login;
-import model.User;
+import src.database.DatabaseConnection;
+import src.model.Login;
+import src.model.User;
 import java.sql.*;
 
 public class ServiceUser {
@@ -28,6 +28,7 @@ public class ServiceUser {
         }
         rs.close();
         ps.close();
+
         return data;
     }
 

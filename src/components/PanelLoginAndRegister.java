@@ -1,4 +1,4 @@
-package components;
+package src.components;
 
 import base.Color1;
 import java.awt.*;
@@ -6,14 +6,14 @@ import java.awt.event.ActionListener;
 import java.util.Objects;
 import javax.swing.*;
 
-import model.Login;
-import model.User;
+import src.model.Login;
+import src.model.User;
 import net.miginfocom.swing.MigLayout;
-import swing.MyPasswordField;
-import swing.MyTextField;
-import swing.Button;
+import src.swing.MyPasswordField;
+import src.swing.MyTextField;
+import src.swing.Button;
 
-public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
+public class PanelLoginAndRegister extends JLayeredPane {
     private User user;
     private Login dataLogin;
 
@@ -41,12 +41,12 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         login.add(label, "wrap");
         
         MyTextField username = new MyTextField();
-        username.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/mail.png"))));
+        username.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/mail.png"))));
         username.setHint("Username");
         login.add(username, "w 60%, wrap");
         
         MyPasswordField password = new MyPasswordField();
-        password.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/pass.png"))));
+        password.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/pass.png"))));
         password.setHint("Password");
         login.add(password, " w 60%, wrap");
         
@@ -81,22 +81,22 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         JPanel fullName = new JPanel(new MigLayout("fill", "push[right]push"));
         fullName.setBackground(new Color(255, 255, 255));
         MyTextField firstName = new MyTextField();
-        firstName.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/user.png"))));
+        firstName.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/user.png"))));
         firstName.setHint("First name");
         fullName.add(firstName, "w 45%, left");
         MyTextField lastName = new MyTextField();
-        lastName.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/user.png"))));
+        lastName.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/user.png"))));
         lastName.setHint("Surname");
         fullName.add(lastName, "w 45%, right");
         register.add(fullName, "w 60%, wrap");
        
         MyTextField username = new MyTextField();
-        username.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/mail.png"))));
+        username.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/mail.png"))));
         username.setHint("Username");
         register.add(username, "w 60%, wrap");
         
         MyPasswordField password = new MyPasswordField();
-        password.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icon/pass.png"))));
+        password.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/pass.png"))));
         password.setHint("Password");
         register.add(password, "w 60%, wrap");
         
