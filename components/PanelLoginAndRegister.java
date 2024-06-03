@@ -1,8 +1,7 @@
 package components;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
+import base.Color1;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 import javax.swing.*;
@@ -60,7 +59,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         login.add(cmdForget, "wrap");
         
         Button cmd = new Button();  
-        cmd.setBackground(new Color(7, 164, 121));
+        cmd.setBackground(Color1.BACKGROUND_LABEL);
         cmd.setForeground(new Color(250, 250, 250));
         cmd.setText("SIGN IN");
         cmd.addActionListener(eventLogin);
@@ -76,7 +75,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         register.setLayout(new MigLayout("", "push[center]push", "push[]10[]10[]10[]push"));
         JLabel label = new JLabel("Create Account");
         label.setFont(new Font("sanserif", Font.BOLD, 30));
-        label.setForeground(new Color(7, 164, 121));
+        label.setForeground(Color1.BACKGROUND_LABEL);
         register.add(label, "wrap");
         
         JPanel fullName = new JPanel(new MigLayout("fill", "push[right]push"));
@@ -102,8 +101,8 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         register.add(password, "w 60%, wrap");
         
         Button cmd = new Button();  
-        cmd.setBackground(new Color(7, 164, 121));
-        cmd.setForeground(new Color(250, 250, 250));
+        cmd.setBackground(Color1.BACKGROUND_LABEL);
+        cmd.setForeground(Color1.COLOR_TEXT);
         cmd.setText("SIGN UP");
         cmd.addActionListener(eventRegister);
         register.add(cmd, "w 40%, h 40, wrap");
@@ -129,36 +128,36 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
     private void initComponents() {
 
-        login = new javax.swing.JPanel();
-        register = new javax.swing.JPanel();
+        login = new JPanel();
+        register = new JPanel();
 
-        setLayout(new java.awt.CardLayout());
+        setLayout(new CardLayout());
 
-        login.setBackground(new java.awt.Color(255, 255, 255));
+        login.setBackground(Color1.WHITE);
 
-        javax.swing.GroupLayout loginLayout = new javax.swing.GroupLayout(login);
+        GroupLayout loginLayout = new GroupLayout(login);
         login.setLayout(loginLayout);
         loginLayout.setHorizontalGroup(
-            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            loginLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
         );
         loginLayout.setVerticalGroup(
-            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            loginLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
         add(login, "card3");
 
-        register.setBackground(new java.awt.Color(255, 255, 255));
+        register.setBackground(Color1.WHITE);
 
-        javax.swing.GroupLayout registerLayout = new javax.swing.GroupLayout(register);
+        GroupLayout registerLayout = new GroupLayout(register);
         register.setLayout(registerLayout);
         registerLayout.setHorizontalGroup(
-            registerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            registerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
         );
         registerLayout.setVerticalGroup(
-            registerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            registerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
@@ -166,7 +165,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel login;
-    private javax.swing.JPanel register;
+    private JPanel login;
+    private JPanel register;
     // End of variables declaration//GEN-END:variables
 }

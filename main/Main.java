@@ -1,5 +1,6 @@
 package main;
 
+import base.Color1;
 import components.CoverPanel;
 import components.Message;
 import components.PanelLoginAndRegister;
@@ -177,7 +178,7 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        bg.setBackground(new java.awt.Color(255, 255, 255));
+        bg.setBackground(Color1.WHITE);
         bg.setOpaque(true);
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
