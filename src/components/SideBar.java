@@ -2,17 +2,19 @@ package components;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class SideBar extends JPanel {
-
     private JPanel mainPanel;
     private CardLayout cardLayout;
 
     public SideBar(JPanel mainPanel, CardLayout cardLayout){
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;
+
         setPreferredSize(new Dimension(200, getHeight()));
         setLayout(new GridBagLayout());
         setBackground(new Color(52, 58, 64));
@@ -75,7 +77,8 @@ public class SideBar extends JPanel {
                 repaint();
             }
         });
-        create.addActionListener(e -> cardLayout.show(mainPanel, "CreateEvent"));
+        create.addActionListener(e -> cardLayout.show(mainPanel, "eventCreate"));
+        view.addActionListener(e -> cardLayout.show(mainPanel, "tablePanel"));
 
         JMenu invitationsMenu = createMenu("Invitations", Color.WHITE);
         invitationsMenu.setPreferredSize(new Dimension(200, 50));
