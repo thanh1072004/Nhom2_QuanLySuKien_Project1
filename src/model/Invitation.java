@@ -1,3 +1,5 @@
+package model;
+
 public class Invitation {
 	private User sender;
 	private Event event;

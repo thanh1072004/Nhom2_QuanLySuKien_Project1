@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,10 +89,10 @@ public class User {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public void createEvent(String name, int event_id, String location, String start_date, String end_date, String type) {
+	/*public void createEvent(String name, int event_id, String location, String start_date, String end_date, String type) {
 		Event newEvent = new Event(this, event_id, name, location, start_date, end_date, type);
         this.events.add(newEvent);
-    }
+    }*/
 
     public static void signUp(int user_id, String userName, String password, String firstName, String lastName, String phoneNumber) {
     	 User newUser = new User(user_id, userName, password, firstName, lastName, phoneNumber);
@@ -111,14 +113,14 @@ public class User {
         this.invitations.remove(invitation);
     }
 
-    public void registerForPublicEvent(Event event) {
+    /*public void registerForPublicEvent(Event event) {
     	if (event.getType().equals("Public")) {
             Invitation invitation = new Invitation(this, event);
             event.getOrganizer_id().invitations.add(invitation);
         } else {
             System.out.println("Cannot register for a private event");
         }
-    }
+    }*/
 
     public void sendInvitation(User recipient, Event event) {
     	if (this.events.contains(event)) {

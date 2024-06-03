@@ -1,21 +1,30 @@
-package view;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
+import database.DatabaseConnection;
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTarget;
+import org.jdesktop.animation.timing.TimingTargetAdapter;
+import service.ServiceEvent;
 import swing.MyTextField;
+import model.Event;
+import components.Message;
+import components.SideBar;
+import view.ButtonEditor;
+import view.ButtonRenderer;
 
 import java.awt.*;
 import javax.imageio.ImageIO;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 
 public class MainMenu extends JFrame {
+
+    private Event event;
+    private ServiceEvent service;
 
     public MainMenu() {
         setTitle("Event Management System");
@@ -23,132 +32,6 @@ public class MainMenu extends JFrame {
         setSize(1000, 600);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-
-     
-        // Hiển thị tên người dùng trong leftPanel
-        JLabel usernameLabel = new JLabel("Username");
-        usernameLabel.setForeground(Color.WHITE);
-        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        usernameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-        ImageIcon originalIcon_user = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-                MainMenu.class.getResource("/icon/user.png")));
-        Image scaledImage_user = originalIcon_user.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon_user = new ImageIcon(scaledImage_user);
-        usernameLabel.setIcon(scaledIcon_user);
-        usernameLabel.setForeground(Color.WHITE);
-        usernameLabel.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
-        usernameLabel.setPreferredSize(new Dimension(200, 50));
-
-        JSeparator separator = new JSeparator();
-        separator.setPreferredSize(new Dimension(160, 10));
-
-        JPanel leftPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.0;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 0, 5, 0);
-        leftPanel.setBackground(new Color(52, 58, 64));
-        leftPanel.setPreferredSize(new Dimension(200, getHeight()));
-
-        JMenu eventsMenu = createMenu("Events", Color.WHITE);
-        eventsMenu.setPreferredSize(new Dimension(200, 50));
-        eventsMenu.setFont(new Font("sanserif", Font.PLAIN, 16));
-        ImageIcon originalIcon_event = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-                MainMenu.class.getResource("/icon/event.png")));
-        Image scaledImage_event = originalIcon_event.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon_event = new ImageIcon(scaledImage_event);
-
-        JPanel eventListPanel = new JPanel();
-        eventListPanel.setLayout(new BoxLayout(eventListPanel, BoxLayout.Y_AXIS));
-
-        JMenuItem view = createMenuItem("View events");
-        JMenuItem create = createMenuItem("Create event");
-        eventsMenu.setIcon(scaledIcon_event);
-        eventsMenu.addMouseListener(new MouseAdapter() {
-            private boolean eventsVisible = false;
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (!eventsVisible) {
-                    // Add event items to the event list panel
-                    eventListPanel.add(view);
-                    eventListPanel.add(create);
-                    eventsMenu.setBackground(new Color(108, 117, 125));
-                } else {
-                    // Remove all event items
-                    eventListPanel.removeAll();
-                    eventsMenu.setBackground(new Color(52, 58, 64));
-                }
-                eventsVisible = !eventsVisible;
-
-                leftPanel.revalidate();
-                leftPanel.repaint();
-            }
-        });
-
-        JMenu invitationsMenu = createMenu("Invitations", Color.WHITE);
-        invitationsMenu.setPreferredSize(new Dimension(200, 50));
-        invitationsMenu.setFont(new Font("sanserif", Font.PLAIN, 16));
-        ImageIcon originalIcon_invite = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-                MainMenu.class.getResource("/icon/list.png")));
-        Image scaledImage_invite = originalIcon_invite.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon_invite = new ImageIcon(scaledImage_invite);
-        invitationsMenu.setIcon(scaledIcon_invite);
-
-        JPanel invitationListPanel = new JPanel();
-        invitationListPanel.setLayout(new BoxLayout(invitationListPanel, BoxLayout.Y_AXIS));
-
-        JMenuItem request = createMenuItem("Join events");
-        JMenuItem invite = createMenuItem("Invite User");
-        invitationsMenu.addMouseListener(new MouseAdapter() {
-            private boolean eventsVisible = false;
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (!eventsVisible) {
-                    // Add event items to the event list panel
-                    invitationListPanel.add(request);
-                    invitationListPanel.add(invite);
-                    invitationsMenu.setBackground(new Color(108, 117, 125));
-                } else {
-                    // Remove all event items
-                    invitationListPanel.removeAll();
-                    invitationsMenu.setBackground(new Color(52, 58, 64));
-
-                }
-                // Toggle visibility
-                eventsVisible = !eventsVisible;
-                // Revalidate and repaint to update the layout
-                leftPanel.revalidate();
-                leftPanel.repaint();
-            }
-        });
-
-
-        leftPanel.add(usernameLabel, gbc);
-
-        gbc.gridy++;
-        leftPanel.add(separator, gbc);
-
-        gbc.gridy++;
-        leftPanel.add(eventsMenu,gbc);
-
-        gbc.gridy++;
-        leftPanel.add(eventListPanel,gbc);
-
-        gbc.gridy++;
-        leftPanel.add(invitationsMenu, gbc);
-
-        gbc.gridy++;
-        leftPanel.add(invitationListPanel,gbc);
-
-        gbc.gridy++;
-        gbc.weighty = 1.0; // Give the last row a positive weight
-        leftPanel.add(Box.createVerticalGlue(), gbc);
 
         CardLayout cardLayout = new CardLayout();
         JPanel mainPanel = new JPanel(cardLayout);
@@ -245,9 +128,9 @@ public class MainMenu extends JFrame {
         createEventForm.setBackground(Color.WHITE);
         createEventForm.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
-        GridBagConstraints gbc1 = new GridBagConstraints();
-        gbc1.insets = new Insets(10, 10, 10, 10);
-        gbc1.anchor = GridBagConstraints.WEST;
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
 
         Font labelFont = new Font("Arial", Font.PLAIN, 16);
         Font fieldFont = new Font("Arial", Font.PLAIN, 16);
@@ -276,7 +159,6 @@ public class MainMenu extends JFrame {
         JScrollPane descriptionScrollPane = new JScrollPane(descriptionField);
         gbc.gridx = 1;
         createEventForm.add(descriptionScrollPane, gbc);
-
 
         JLabel dateLabel = new JLabel("Event Date:");
         dateLabel.setFont(labelFont);
@@ -340,45 +222,125 @@ public class MainMenu extends JFrame {
         // Thêm các panel vào mainPanel
         mainPanel.add(eventListPanel1, "EventList");
         mainPanel.add(createEventPanel, "CreateEvent");
-        
-        add(leftPanel, BorderLayout.WEST);
+
+        SideBar sideBar = new SideBar(mainPanel, cardLayout);
+        add(sideBar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
-        
-        // Hành động của các nút bấm
-        create.addActionListener(e -> cardLayout.show(mainPanel, "CreateEvent"));
+
     }
 
-    private JMenu createMenu(String text, Color foreground) {
-        JMenu menu = new JMenu(text);
-        menu.setForeground(foreground);
-        menu.setBackground(new Color(52, 58, 64));
-        menu.setOpaque(true);
-        menu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        return menu;
+    public Event getEvent(){
+        return event;
     }
+    private void createEvent(){
+        Event event = this.getEvent();
+        try{
+            if(event.getName() == null || event.getEvent_date() == null || event.getLocation() == null || event.getType() == null){
+                showMessage(Message.MessageType.ERROR, "Please fill all the required fields");
+            }else{
+                service.authorizeEvent(event);
+                showMessage(Message.MessageType.SUCCESS, "Successfully create event");
+            }
+        }catch(Exception e){
+            showMessage(Message.MessageType.ERROR, "Create event failed ");
+        }
 
-    private JMenuItem createMenuItem(String text) {
-        JMenuItem menuItem = new JMenuItem(text);
-        menuItem.setFont(new Font("sansserif", Font.PLAIN, 16));
-        menuItem.setForeground(Color.WHITE);
-        menuItem.setBackground(new Color(52, 58, 64));
-        menuItem.setPreferredSize(new Dimension(200, 50));
-        menuItem.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        menuItem.addMouseListener(new MouseAdapter() {
+    }
+    private void showMessage(Message.MessageType messageType, String message){
+        Message msg = new Message();
+        msg.showMessage(messageType, message);
+        TimingTarget target = new TimingTargetAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                menuItem.setBackground(new Color(108, 117, 125));
+            public void begin() {
+                if(!msg.isShow()){
+                    bg.add(msg, "pos 0.5al -30", 0);//insert to bg first index 0
+                    msg.setVisible(true);
+                    bg.repaint();
+                }
             }
 
             @Override
-            public void mouseExited(MouseEvent e) {
-                menuItem.setBackground(new Color(52, 58, 64));
+            public void timingEvent(float fraction){
+                float f;
+                if(msg.isShow()){
+                    f = 40 * (1f - fraction);
+                }else{
+                    f = 40 * fraction;
+                }
+                //layout.setComponentConstraints(msg, "pos 0.5al " + (int) (f-30));
+                bg.repaint();
+                bg.revalidate();
+            }
+
+            @Override
+            public void end(){
+                if(msg.isShow()){
+                    bg.remove(msg);
+                    bg.repaint();
+                    bg.revalidate();
+                }else{
+                    msg.setShow(true);
+                }
+            }
+        };
+        Animator animator = new Animator(300, target);
+        animator.setAcceleration(0.5f);
+        animator.setDeceleration(0.5f);
+        animator.setResolution(0);
+        animator.start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(2000);
+                    animator.start();
+                }catch(InterruptedException e){
+                    System.err.println(e);
+                }
             }
         });
-        return menuItem;
+    }
+    private void initComponents() {
+
+        bg = new javax.swing.JLayeredPane();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        bg.setBackground(Color.WHITE);
+        bg.setOpaque(true);
+
+        javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
+        bg.setLayout(bgLayout);
+        bgLayout.setHorizontalGroup(
+                bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 588, Short.MAX_VALUE)
+        );
+        bgLayout.setVerticalGroup(
+                bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 496, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(bg)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(bg)
+        );
+
+        pack();
     }
 
+    private JLayeredPane bg;
     public static void main(String[] args) {
+        /*try{
+            DatabaseConnection.getInstance().connectToDatabase();
+        }catch(Exception e){
+            e.printStackTrace();
+        }*/
       SwingUtilities.invokeLater(() -> {
           MainMenu frame = new MainMenu();
           frame.setVisible(true);
