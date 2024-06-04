@@ -2,8 +2,12 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 
 import src.components.*;
+import src.database.DatabaseConnection;
 import src.model.User;
 import src.service.ServiceEvent;
 import src.model.Event;
@@ -14,11 +18,14 @@ public class MainMenu extends JFrame {
     private Event event;
     private ServiceEvent service;
     private User user;
+    private CreatePanel createPanel;
     private int id = 1;
 
     public MainMenu(User user) {
         this.user = user;
-        setTitle("Event Management System");
+        service = new ServiceEvent();
+        ActionListener eventCreate = e -> createEvent();
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 600);
         setLocationRelativeTo(null);
@@ -30,7 +37,7 @@ public class MainMenu extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         TablePanel tablePanel = new TablePanel();
-        CreatePanel createPanel = new CreatePanel(user.getUsername());
+        createPanel = new CreatePanel(user, eventCreate);
         createPanel.setFormListener(new FormListener() {
             @Override
             public void formSubmitted(String name, String date, String location, String type) {
@@ -49,31 +56,34 @@ public class MainMenu extends JFrame {
     public Event getEvent(){
         return event;
     }
+
     private void createEvent(){
-        Event event = this.getEvent();
+        Event event = createPanel.getEvent();
         try{
-            if(event.getName() == null || event.getDate() == null || event.getLocation() == null || event.getType() == null){
+            if(event.getName().isEmpty()  || event.getLocation().isEmpty()){
                System.out.println("Please fill all the required fields");
+            }else if (event.getDate().compareTo(String.valueOf(Calendar.getInstance())) < 0){
+                System.out.println("Invalid date");
             }else{
-                service.authorizeEvent(event);
+                service.authorizeEvent(event, user);
                 System.out.println("Successfully create event");
             }
         }catch(Exception e){
-            System.out.println("Create event failed ");
+            e.printStackTrace();
         }
-
     }
 
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         try{
             DatabaseConnection.getInstance().connectToDatabase();
         }catch(Exception e){
             e.printStackTrace();
         }
       SwingUtilities.invokeLater(() -> {
+          User user = new User(1, "tung", "tung");
           MainMenu frame = new MainMenu(user);
           frame.setVisible(true);
       });
-  }*/
+  }
 }

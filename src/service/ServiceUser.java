@@ -6,15 +6,15 @@ import src.model.User;
 import java.sql.*;
 
 public class ServiceUser {
-    private final Connection con;
+    private final Connection connection;
 
     public ServiceUser() {
-        con = DatabaseConnection.getInstance().getConnection();
+        connection = DatabaseConnection.getInstance().getConnection();
     }
 
     public User authorizeLogin(Login dataLogin) throws SQLException {
         User data = null;
-        PreparedStatement ps = con.prepareStatement("select user_id, username, password from Users where username = ? and password = ?",
+        PreparedStatement ps = connection.prepareStatement("select user_id, username, password from Users where username = ? and password = ?",
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
         ps.setString(1, dataLogin.getUsername());
@@ -34,10 +34,10 @@ public class ServiceUser {
 
 
     public void authorizeRegister(User user) throws SQLException {
-        if (con == null) {
+        if (connection == null) {
             throw new SQLException("Failed to establish a database connection.");
         }
-        PreparedStatement ps = con.prepareStatement("insert into Users(first_name, last_name, username, password) values(?,?,?,?)",PreparedStatement.RETURN_GENERATED_KEYS);
+        PreparedStatement ps = connection.prepareStatement("insert into Users(first_name, last_name, username, password) values(?,?,?,?)",PreparedStatement.RETURN_GENERATED_KEYS);
         ps.setString(1, user.getFirstName());
         ps.setString(2, user.getLastName());
         ps.setString(3, user.getUsername());
@@ -56,7 +56,7 @@ public class ServiceUser {
     public boolean checkDuplicateUser(String username) throws SQLException {
         boolean duplicate = false;
         String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
-        PreparedStatement p = con.prepareStatement(sql);
+        PreparedStatement p = connection.prepareStatement(sql);
         p.setString(1, username);
         ResultSet rs = p.executeQuery();
         if (rs.next() && rs.getInt(1) > 0) {

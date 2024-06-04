@@ -74,9 +74,4 @@ public class Message extends JPanel {
                         .addComponent(lbMessage, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
 }

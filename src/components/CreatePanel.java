@@ -1,16 +1,26 @@
 package src.components;
 
+import src.model.User;
+import src.model.Event;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
+
 
 public class CreatePanel extends JPanel{
     private FormListener formListener;
-    private String username;
+    private User user;
+    private Event event;
 
-    public CreatePanel(String username) {
-        this.username = username;
+    public Event getEvent(){
+        return event;
+    }
+
+    public CreatePanel(User user, ActionListener eventCreate) {
+        this.user = user;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL; // Allow components to fill horizontally
@@ -38,10 +48,10 @@ public class CreatePanel extends JPanel{
         gbc.gridy = 1;
         add(dateLabel, gbc);
 
-        JTextField date = new JTextField(20);
-        date.setFont(fieldFont);
+        DateSelectorPanel dateSelectorPanel = new DateSelectorPanel();
         gbc.gridx = 1;
-        add(date, gbc);
+        // Adjust as necessary
+        add(dateSelectorPanel, gbc);
 
         JLabel locationLabel = new JLabel("Location:");
         locationLabel.setFont(labelFont);
@@ -89,19 +99,31 @@ public class CreatePanel extends JPanel{
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton createEventButton = new JButton("Create Event");
+        createEventButton.addActionListener(eventCreate);
         createEventButton.setFont(labelFont);
         createEventButton.setFocusPainted(false);
         createEventButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(formListener != null){
-                    formListener.formSubmitted(name.getText(), date.getText(), location.getText(), (String) typeList.getSelectedItem());
+                String eventName = name.getText().trim();
+                String eventDate = dateSelectorPanel.getSelectedDate().trim();
+                String eventLocation = location.getText().trim();
+                String eventType = typeList.getSelectedItem().toString().trim();
+                String eventDescription = description.getText().trim();
+                if(eventName.isEmpty() && eventType.isEmpty() && eventDescription.isEmpty()){
+                    System.out.println("Event name or event date or event location or event type or event description is empty");
+                }else if(formListener == null){
+                    System.out.println("FormListener is null");
+                }else if(eventDate.compareTo(String.valueOf(Calendar.getInstance())) < 0){
+                    System.out.println("Event date not valid");
+                }else{
+                    formListener.formSubmitted(eventName, eventDate, eventLocation, eventType);
                 }
                 name.setText("");
-                date.setText("");
                 location.setText("");
                 typeList.setSelectedIndex(0);
                 description.setText("");
+                event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
             }
         });
         buttonPanel.add(createEventButton);

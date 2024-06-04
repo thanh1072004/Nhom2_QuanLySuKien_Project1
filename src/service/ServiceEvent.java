@@ -2,16 +2,20 @@ package src.service;
 
 import src.database.DatabaseConnection;
 import src.model.Event;
+import src.model.User;
+
 import java.sql.*;
 
 public class ServiceEvent {
     private final Connection connection;
+    private User user;
 
     public ServiceEvent(){
         connection = DatabaseConnection.getInstance().getConnection();
     }
 
-    public void authorizeEvent(Event event) throws SQLException{
+    public void authorizeEvent(Event event, User user) throws SQLException{
+        this.user = user;
         if(connection == null){
             throw new SQLException("Failed to establish a connection");
         }
@@ -21,6 +25,8 @@ public class ServiceEvent {
         ps.setString(3, event.getDate());
         ps.setString(4, event.getDescription());
         ps.setString(5, event.getType());
+        ps.setInt(6, user.getUserId());
+        ps.execute();
         ResultSet rs = ps.getGeneratedKeys();
         if(rs.next()){
             int event_id = rs.getInt(1);

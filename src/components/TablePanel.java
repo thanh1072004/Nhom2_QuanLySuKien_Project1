@@ -6,12 +6,15 @@ import javax.swing.table.*;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 
+import src.model.User;
 import src.swing.MyTextField;
 
 public class TablePanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
+
 
     public TablePanel() {
         setLayout(new BorderLayout());
@@ -51,7 +54,7 @@ public class TablePanel extends JPanel{
 
         eventListPanel1.add(topPanel, BorderLayout.NORTH);
 
-        String[] columnNames = {"Event ID", "Name", "Event Date", "Location", "Type", "Organizer"};
+        String[] columnNames = {"#", "Name", "Event Date", "Location", "Type", "Organizer"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(table);
