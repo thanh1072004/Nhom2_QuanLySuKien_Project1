@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.URL;
 
 import swing.MyTextField;
+import view.ButtonEditor;
+import view.ButtonRenderer;
 
 public class TablePanel extends JPanel{
     private JTable table;
@@ -29,69 +31,62 @@ public class TablePanel extends JPanel{
         searchField.setPreferredSize(new Dimension(2000, 30));
         searchPanel.add(searchField);
         topPanel.add(searchPanel, BorderLayout.NORTH);
+        
 
         // Tạo tên bảng
-        JLabel tableNameLabel = new JLabel("YOUR CREATED EVENT TABLE", JLabel.CENTER);
+        JLabel tableNameLabel = new JLabel("YOUR EVENT TABLE", JLabel.CENTER);
         tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
-
-        try {
-            URL imageURL = getClass().getResource("/icon/welcome.jpg");
-            if (imageURL != null) {
-                ImageIcon icon = new ImageIcon(ImageIO.read(imageURL));
-                Image image = icon.getImage().getScaledInstance(800, 300, Image.SCALE_SMOOTH);
-                JLabel imageLabel = new JLabel(new ImageIcon(image));
-                topPanel.add(imageLabel, BorderLayout.CENTER);
-                topPanel.add(tableNameLabel, BorderLayout.SOUTH);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        
+        eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
         eventListPanel1.add(topPanel, BorderLayout.NORTH);
 
-        String[] columnNames = {"Event ID", "Name", "Event Date", "Location", "Type", "Organizer"};
-        tableModel = new DefaultTableModel(columnNames, 0);
+        String[] columnNames = {"Event ID", "Name", "Event Date", "Location", "Type", "Organizer", "Actions"};
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Make all cells not editable
+                return column == getColumnCount() - 1;
+            }
+        };
         table = new JTable(tableModel);
+        
+     // Set table not editable
+        table.setDefaultEditor(Object.class, null);
+        
+     // Bold header
+        JTableHeader header = table.getTableHeader();
+        header.setDefaultRenderer(new DefaultTableCellRenderer() {
+          @Override
+          public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+          	JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+              label.setFont(label.getFont().deriveFont(Font.BOLD));
+              label.setHorizontalAlignment(SwingConstants.CENTER);
+              label.setBorder(UIManager.getBorder("TableHeader.cellBorder")); 
+              return label;
+          }
+      });
+        
+        // Add ButtonRenderer and ButtonEditor for the "Actions" column
+        table.getColumn("Actions").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Actions").setCellEditor(new ButtonEditor(new JCheckBox()));
+
+        // Center align all data
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < table.getColumnCount() - 1; i++) { 
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
+        
+        table.setRowHeight(48);
+
         JScrollPane tableScrollPane = new JScrollPane(table);
 
-        add(tableScrollPane, BorderLayout.CENTER);
-
-        /*header.setDefaultRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                label.setFont(label.getFont().deriveFont(Font.BOLD));
-                label.setHorizontalAlignment(SwingConstants.CENTER);
-                label.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-                return label;
-            }
-        });
-
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        centerRenderer.setVerticalAlignment(SwingConstants.CENTER);
-        for (int i = 0; i < eventTable.getColumnCount(); i++) {
-            eventTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-        }
-
-        TableColumn actionsColumn = eventTable.getColumnModel().getColumn(6);
-        actionsColumn.setCellRenderer(new ButtonRenderer());
-        actionsColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
-
-        eventTable.getTableHeader().setReorderingAllowed(false);
-        eventTable.getTableHeader().setResizingAllowed(false);
-
-        // Đặt chiều cao của mỗi dòng
-        eventTable.setRowHeight(48);
-
-        JScrollPane scrollPane = new JScrollPane(eventTable);
-        scrollPane.setPreferredSize(new Dimension(getWidth(), getHeight() / 4));
-        eventListPanel1.add(scrollPane, BorderLayout.SOUTH);
-
-        add(eventListPanel1, BorderLayout.NORTH);
-        add(eventTable, BorderLayout.SOUTH);*/
+        eventListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
+        add(eventListPanel1, BorderLayout.CENTER);
+        
     }
     public void addRow(int id, String name, String date, String location, String type, String organizer) {
         tableModel.addRow(new Object[]{id, name, date, location, type, organizer});
