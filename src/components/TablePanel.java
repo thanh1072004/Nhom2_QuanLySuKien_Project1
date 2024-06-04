@@ -29,7 +29,6 @@ public class TablePanel extends JPanel{
         searchField.setPreferredSize(new Dimension(2000, 30));
         searchPanel.add(searchField);
         topPanel.add(searchPanel, BorderLayout.NORTH);
-        
 
         // Tạo tên bảng
         JLabel tableNameLabel = new JLabel("YOUR EVENT TABLE", JLabel.CENTER);
@@ -51,6 +50,8 @@ public class TablePanel extends JPanel{
         
      // Set table not editable
         table.setDefaultEditor(Object.class, null);
+        table.setRowSelectionAllowed(false);
+        table.setFocusable(false);
         
      // Bold header
         JTableHeader header = table.getTableHeader();
@@ -67,7 +68,7 @@ public class TablePanel extends JPanel{
         
         // Add ButtonRenderer and ButtonEditor for the "Actions" column
         table.getColumn("Actions").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Actions").setCellEditor(new ButtonEditor(new JCheckBox()));
+        table.getColumn("Actions").setCellEditor(new ButtonEditor(new JCheckBox(),this));
 
         // Center align all data
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -88,6 +89,10 @@ public class TablePanel extends JPanel{
     }
     public void addRow(int id, String name, String date, String location, String type, String organizer) {
         tableModel.addRow(new Object[]{id, name, date, location, type, organizer});
+    }
+
+    public void removeRow(int row){
+        tableModel.removeRow(row);
     }
 
 

@@ -5,20 +5,12 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class ButtonRenderer extends JPanel implements TableCellRenderer {
-    private final JButton watchButton = new JButton();
     private final JButton editButton = new JButton();
     private final JButton deleteButton = new JButton();
 
     public ButtonRenderer() {
-        setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
-        
-        ImageIcon originalIcon_watch = new ImageIcon(ButtonEditor.class.getResource("/src/icon/eye.png"));
-        Image scaledImage_watch = originalIcon_watch.getImage().getScaledInstance(20, 26, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon_watch = new ImageIcon(scaledImage_watch);
-        watchButton.setIcon(scaledIcon_watch);
-        watchButton.setBackground(Color.CYAN);
-
-        watchButton.setPreferredSize(new Dimension(24, 24));
+        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        setBackground(Color.WHITE);
 
         ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/src/icon/edit.png"));
         Image scaledImage_edit = originalIcon_edit.getImage().getScaledInstance(20, 18, Image.SCALE_SMOOTH);
@@ -33,7 +25,6 @@ public class ButtonRenderer extends JPanel implements TableCellRenderer {
         deleteButton.setIcon(scaledIcon_bin);     
         deleteButton.setBackground(Color.RED);
         deleteButton.setPreferredSize(new Dimension(24, 24));
-        add(watchButton);
         add(editButton);
         add(deleteButton);
     }

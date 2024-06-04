@@ -1,24 +1,26 @@
 package src.view;
 
+import src.components.TablePanel;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ButtonEditor extends DefaultCellEditor {
     private final JPanel panel = new JPanel();
-    private final JButton watchButton = new JButton();
     private final JButton editButton = new JButton();
     private final JButton deleteButton = new JButton();
+    private JTable table;
+    private TablePanel tablePanel;
 
-    public ButtonEditor(JCheckBox checkBox) {
+    public ButtonEditor(JCheckBox checkBox, TablePanel tablePanel) {
         super(checkBox);
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5,10));
-        ImageIcon originalIcon_watch = new ImageIcon(ButtonEditor.class.getResource("/src/icon/eye.png"));
-        Image scaledImage_watch = originalIcon_watch.getImage().getScaledInstance(20, 26, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon_watch = new ImageIcon(scaledImage_watch);
-        watchButton.setIcon(scaledIcon_watch);
-        watchButton.setBackground(Color.CYAN);
-        watchButton.setPreferredSize(new Dimension(24, 24));
+        this.tablePanel = tablePanel;
+        panel.setBackground(Color.WHITE);
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10,10));
+
 
         ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/src/icon/edit.png"));
         Image scaledImage_edit = originalIcon_edit.getImage().getScaledInstance(20, 18, Image.SCALE_SMOOTH);
@@ -33,13 +35,16 @@ public class ButtonEditor extends DefaultCellEditor {
         deleteButton.setIcon(scaledIcon_bin);        
         deleteButton.setBackground(Color.RED);
         deleteButton.setPreferredSize(new Dimension(24, 24));
-        panel.add(watchButton);
         panel.add(editButton);
         panel.add(deleteButton);
 
-        watchButton.addActionListener(e -> fireEditingStopped());
+
         editButton.addActionListener(e -> fireEditingStopped());
-        deleteButton.addActionListener(e -> fireEditingStopped());
+        deleteButton.addActionListener(e -> {
+            fireEditingStopped();
+            int row = table.getSelectedRow();
+            tablePanel.removeRow(row);
+        });
     }
 
     private void setButtonIcon(JButton button, String imagePath, int width, int height) {
@@ -51,6 +56,7 @@ public class ButtonEditor extends DefaultCellEditor {
     }
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        this.table = table;
         return panel;
     }
 

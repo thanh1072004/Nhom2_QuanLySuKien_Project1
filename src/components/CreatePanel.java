@@ -5,9 +5,7 @@ import src.model.Event;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 import java.time.LocalDate;
 
 
@@ -24,9 +22,8 @@ public class CreatePanel extends JPanel{
         this.user = user;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Allow components to fill horizontally
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
-
 
         Font font = new Font("Arial", Font.PLAIN, 16);
 
@@ -91,7 +88,7 @@ public class CreatePanel extends JPanel{
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER; // Center the button panel
+        gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.NONE;
 
         JPanel buttonPanel = new JPanel();
@@ -100,32 +97,29 @@ public class CreatePanel extends JPanel{
         createEventButton.addActionListener(eventCreate);
         createEventButton.setFont(font);
         createEventButton.setFocusPainted(false);
-        createEventButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try{
-                    String eventName = name.getText().trim();
-                    String eventDate = dateSelectorPanel.getSelectedDate().trim();
-                    String eventLocation = location.getText().trim();
-                    String eventType = typeList.getSelectedItem().toString().trim();
-                    String eventDescription = description.getText().trim();
-                    if(eventName.isEmpty() && eventType.isEmpty() && eventDescription.isEmpty()){
-                        System.out.println("Event name or event date or event location or event type or event description is empty");
-                    }else if(formListener == null){
-                        System.out.println("FormListener is null");
-                    }else if(getDate(eventDate).isBefore(LocalDate.now())){
-                        System.out.println("Event date not valid");
-                    }else{
-                        formListener.formSubmitted(eventName, eventDate, eventLocation, eventType);
-                    }
-                    name.setText("");
-                    location.setText("");
-                    typeList.setSelectedIndex(0);
-                    description.setText("");
-                    event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
-                }catch(Exception ex){
-                    ex.printStackTrace();
+        createEventButton.addActionListener(e -> {
+            try{
+                String eventName = name.getText().trim();
+                String eventDate = dateSelectorPanel.getSelectedDate().trim();
+                String eventLocation = location.getText().trim();
+                String eventType = typeList.getSelectedItem().toString().trim();
+                String eventDescription = description.getText().trim();
+                if(eventName.isEmpty() && eventType.isEmpty() && eventDescription.isEmpty()){
+                    System.out.println("Event name or event date or event location or event type or event description is empty");
+                }else if(formListener == null){
+                    System.out.println("FormListener is null");
+                }else if(getDate(eventDate).isBefore(LocalDate.now())){
+                    System.out.println("Event date not valid");
+                }else{
+                    formListener.formSubmitted(eventName, eventDate, eventLocation, eventType);
                 }
+                name.setText("");
+                location.setText("");
+                typeList.setSelectedIndex(0);
+                description.setText("");
+                event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
+            }catch(Exception ex){
+                ex.printStackTrace();
             }
         });
         buttonPanel.add(createEventButton);
