@@ -8,12 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-
 
 
 public class CreatePanel extends JPanel{
@@ -33,64 +28,61 @@ public class CreatePanel extends JPanel{
         gbc.insets = new Insets(10, 10, 10, 10);
 
 
-        Font labelFont = new Font("Arial", Font.PLAIN, 16);
-        Font fieldFont = new Font("Arial", Font.PLAIN, 16);
+        Font font = new Font("Arial", Font.PLAIN, 16);
 
         JLabel nameLabel = new JLabel("Name:");
-        nameLabel.setFont(labelFont);
+        nameLabel.setFont(font);
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(nameLabel, gbc);
 
         JTextField name = new JTextField(20);
-        name.setFont(fieldFont);
+        name.setFont(font);
         gbc.gridx = 1;
         add(name, gbc);
 
-
         JLabel dateLabel = new JLabel("Date:");
-        dateLabel.setFont(labelFont);
+        dateLabel.setFont(font);
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(dateLabel, gbc);
 
         DateSelectorPanel dateSelectorPanel = new DateSelectorPanel();
         gbc.gridx = 1;
-        // Adjust as necessary
         add(dateSelectorPanel, gbc);
 
         JLabel locationLabel = new JLabel("Location:");
-        locationLabel.setFont(labelFont);
+        locationLabel.setFont(font);
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(locationLabel, gbc);
 
         JTextField location = new JTextField(20);
-        location.setFont(fieldFont);
+        location.setFont(font);
         gbc.gridx = 1;
         add(location, gbc);
 
         String[] type = { "Public", "Private" };
         JLabel typeLabel = new JLabel("Type:");
-        typeLabel.setFont(labelFont);
+        typeLabel.setFont(font);
         gbc.gridx = 0;
         gbc.gridy = 3;
         add(typeLabel, gbc);
 
         JComboBox<String> typeList = new JComboBox<>(type);
         typeList.setBackground(Color.WHITE);
-        typeList.setFont(fieldFont);
+        typeList.setFont(font);
         gbc.gridx = 1;
         add(typeList, gbc);
 
         JLabel descriptionLabel = new JLabel("Description:");
-        descriptionLabel.setFont(labelFont);
+        descriptionLabel.setFont(font);
         gbc.gridx = 0;
         gbc.gridy = 4;
         add(descriptionLabel, gbc);
 
         JTextArea description = new JTextArea(5, 20);
-        description.setFont(fieldFont);
+        description.setFont(font);
         description.setLineWrap(true);
         description.setWrapStyleWord(true);
         JScrollPane descriptionScrollPane = new JScrollPane(description);
@@ -106,7 +98,7 @@ public class CreatePanel extends JPanel{
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton createEventButton = new JButton("Create Event");
         createEventButton.addActionListener(eventCreate);
-        createEventButton.setFont(labelFont);
+        createEventButton.setFont(font);
         createEventButton.setFocusPainted(false);
         createEventButton.addActionListener(new ActionListener() {
             @Override
@@ -144,7 +136,7 @@ public class CreatePanel extends JPanel{
         this.formListener = formListener;
     }
 
-    public LocalDate getDate(String date) throws ParseException {
+    public LocalDate getDate(String date){
         return LocalDate.parse(date);
     }
 }

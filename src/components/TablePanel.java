@@ -3,9 +3,7 @@ package src.components;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.*;
-import javax.imageio.ImageIO;
-import java.io.IOException;
-import java.net.URL;
+
 
 import src.swing.MyTextField;
 import src.view.ButtonEditor;

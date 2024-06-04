@@ -5,8 +5,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 
 import src.components.*;
 import src.database.DatabaseConnection;
@@ -78,7 +76,7 @@ public class MainMenu extends JFrame {
         }
     }
 
-    public LocalDate getDate(String date) throws ParseException {
+    public LocalDate getDate(String date){
         return LocalDate.parse(date);
     }
 

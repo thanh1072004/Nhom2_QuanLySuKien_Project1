@@ -12,7 +12,7 @@ public class ButtonEditor extends DefaultCellEditor {
 
     public ButtonEditor(JCheckBox checkBox) {
         super(checkBox);
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5,0));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5,10));
         ImageIcon originalIcon_watch = new ImageIcon(ButtonEditor.class.getResource("/src/icon/eye.png"));
         Image scaledImage_watch = originalIcon_watch.getImage().getScaledInstance(20, 26, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_watch = new ImageIcon(scaledImage_watch);
