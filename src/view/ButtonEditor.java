@@ -13,21 +13,21 @@ public class ButtonEditor extends DefaultCellEditor {
     public ButtonEditor(JCheckBox checkBox) {
         super(checkBox);
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5,0));
-        ImageIcon originalIcon_watch = new ImageIcon(ButtonEditor.class.getResource("/icon/eye.png"));
+        ImageIcon originalIcon_watch = new ImageIcon(ButtonEditor.class.getResource("/src/icon/eye.png"));
         Image scaledImage_watch = originalIcon_watch.getImage().getScaledInstance(20, 26, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_watch = new ImageIcon(scaledImage_watch);
         watchButton.setIcon(scaledIcon_watch);
         watchButton.setBackground(Color.CYAN);
         watchButton.setPreferredSize(new Dimension(24, 24));
 
-        ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/icon/edit.png"));
+        ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/src/icon/edit.png"));
         Image scaledImage_edit = originalIcon_edit.getImage().getScaledInstance(20, 18, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_edit = new ImageIcon(scaledImage_edit);
         editButton.setIcon(scaledIcon_edit);
         editButton.setBackground(Color.CYAN);
         editButton.setPreferredSize(new Dimension(24, 24));
         
-        ImageIcon originalIcon_bin = new ImageIcon(ButtonEditor.class.getResource("/icon/bin.png"));
+        ImageIcon originalIcon_bin = new ImageIcon(ButtonEditor.class.getResource("/src/icon/bin.png"));
         Image scaledImage_bin = originalIcon_bin.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_bin = new ImageIcon(scaledImage_bin);
         deleteButton.setIcon(scaledIcon_bin);        

@@ -1,4 +1,4 @@
-package components;
+package src.components;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,9 +7,9 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.net.URL;
 
-import swing.MyTextField;
-import view.ButtonEditor;
-import view.ButtonRenderer;
+import src.swing.MyTextField;
+import src.view.ButtonEditor;
+import src.view.ButtonRenderer;
 
 public class TablePanel extends JPanel{
     private JTable table;
