@@ -3,8 +3,10 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.Calendar;
-import java.util.Date;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 import src.components.*;
 import src.database.DatabaseConnection;
@@ -20,6 +22,7 @@ public class MainMenu extends JFrame {
     private User user;
     private CreatePanel createPanel;
     private int id = 1;
+
 
     public MainMenu(User user) {
         this.user = user;
@@ -59,10 +62,12 @@ public class MainMenu extends JFrame {
 
     private void createEvent(){
         Event event = createPanel.getEvent();
+        String eventDate = event.getDate();
         try{
+            LocalDate day = getDate(eventDate);
             if(event.getName().isEmpty()  || event.getLocation().isEmpty()){
                System.out.println("Please fill all the required fields");
-            }else if (event.getDate().compareTo(String.valueOf(Calendar.getInstance())) < 0){
+            }else if (day.isBefore(LocalDate.now())){
                 System.out.println("Invalid date");
             }else{
                 service.authorizeEvent(event, user);
@@ -73,6 +78,9 @@ public class MainMenu extends JFrame {
         }
     }
 
+    public LocalDate getDate(String date) throws ParseException {
+        return LocalDate.parse(date);
+    }
 
     public static void main(String[] args) {
         try{

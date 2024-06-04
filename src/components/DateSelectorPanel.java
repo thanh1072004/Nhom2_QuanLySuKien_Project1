@@ -5,7 +5,7 @@ import java.awt.*;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.text.SimpleDateFormat;
+
 
 
 public class DateSelectorPanel extends JPanel {
@@ -13,7 +13,7 @@ public class DateSelectorPanel extends JPanel {
     private JComboBox<String> monthComboBox;
     private JComboBox<Integer> yearComboBox;
     private JLabel dateLabel;
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 
     public DateSelectorPanel() {
         setLayout(new GridBagLayout());
@@ -48,7 +48,7 @@ public class DateSelectorPanel extends JPanel {
         Integer[] years = new Integer[100];
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         for (int i = 0; i < 100; i++) {
-            years[i] = currentYear - i;
+            years[i] = currentYear + 50 - i;
         }
         yearComboBox = new JComboBox<>(years);
         gbc.gridx = 2;
@@ -60,6 +60,8 @@ public class DateSelectorPanel extends JPanel {
         int day = (int) dayComboBox.getSelectedItem();
         int month = monthComboBox.getSelectedIndex() + 1;
         int year = (int) yearComboBox.getSelectedItem();
-        return String.format("%02d/%02d/%04d", day, month, year);
+        return String.format("%04d-%02d-%02d", year, month, day);
     }
+
+
 }

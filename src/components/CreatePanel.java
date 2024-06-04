@@ -7,7 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
+
 
 
 public class CreatePanel extends JPanel{
@@ -105,25 +111,29 @@ public class CreatePanel extends JPanel{
         createEventButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String eventName = name.getText().trim();
-                String eventDate = dateSelectorPanel.getSelectedDate().trim();
-                String eventLocation = location.getText().trim();
-                String eventType = typeList.getSelectedItem().toString().trim();
-                String eventDescription = description.getText().trim();
-                if(eventName.isEmpty() && eventType.isEmpty() && eventDescription.isEmpty()){
-                    System.out.println("Event name or event date or event location or event type or event description is empty");
-                }else if(formListener == null){
-                    System.out.println("FormListener is null");
-                }else if(eventDate.compareTo(String.valueOf(Calendar.getInstance())) < 0){
-                    System.out.println("Event date not valid");
-                }else{
-                    formListener.formSubmitted(eventName, eventDate, eventLocation, eventType);
+                try{
+                    String eventName = name.getText().trim();
+                    String eventDate = dateSelectorPanel.getSelectedDate().trim();
+                    String eventLocation = location.getText().trim();
+                    String eventType = typeList.getSelectedItem().toString().trim();
+                    String eventDescription = description.getText().trim();
+                    if(eventName.isEmpty() && eventType.isEmpty() && eventDescription.isEmpty()){
+                        System.out.println("Event name or event date or event location or event type or event description is empty");
+                    }else if(formListener == null){
+                        System.out.println("FormListener is null");
+                    }else if(getDate(eventDate).isBefore(LocalDate.now())){
+                        System.out.println("Event date not valid");
+                    }else{
+                        formListener.formSubmitted(eventName, eventDate, eventLocation, eventType);
+                    }
+                    name.setText("");
+                    location.setText("");
+                    typeList.setSelectedIndex(0);
+                    description.setText("");
+                    event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
+                }catch(Exception ex){
+                    ex.printStackTrace();
                 }
-                name.setText("");
-                location.setText("");
-                typeList.setSelectedIndex(0);
-                description.setText("");
-                event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
             }
         });
         buttonPanel.add(createEventButton);
@@ -132,6 +142,10 @@ public class CreatePanel extends JPanel{
     }
     public void setFormListener(FormListener formListener){
         this.formListener = formListener;
+    }
+
+    public LocalDate getDate(String date) throws ParseException {
+        return LocalDate.parse(date);
     }
 }
 
