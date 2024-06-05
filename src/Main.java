@@ -1,11 +1,10 @@
 package src;
 
 import base.Color1;
-import src.components.CoverPanel;
-import src.components.Message;
-import src.components.PanelLoginAndRegister;
+import src.components.*;
 
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.text.DecimalFormat;
 
 import src.database.DatabaseConnection;
@@ -105,12 +104,12 @@ public class Main extends javax.swing.JFrame {
             }
         }catch(Exception e){
             showMessage(Message.MessageType.ERROR, "Register failed");
-            e.printStackTrace();
         }
     }
 
     private void login(){
         Login dataLogin = loginAndRegister.getDataLogin();
+
         try{
             User user = service.authorizeLogin(dataLogin);
             if(user != null){
@@ -123,7 +122,6 @@ public class Main extends javax.swing.JFrame {
             }
         }catch(Exception e){
             showMessage(Message.MessageType.ERROR,"Login failed");
-            e.printStackTrace();
         }
     }
 

@@ -3,7 +3,7 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
+import java.util.List;
 import java.time.LocalDate;
 
 import src.components.*;
@@ -37,12 +37,12 @@ public class MainMenu extends JFrame {
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        TablePanel tablePanel = new TablePanel();
+        TablePanel tablePanel = new TablePanel(service, user);
         createPanel = new CreatePanel(user, eventCreate);
         createPanel.setFormListener(new FormListener() {
             @Override
             public void formSubmitted(String name, String date, String location, String type) {
-                tablePanel.addRow(id++, name, date, location, type, user.getUsername());
+                tablePanel.addRow(id++, name, date, location, type, user);
             }
         });
         mainPanel.add(tablePanel, "tablePanel");
@@ -52,7 +52,6 @@ public class MainMenu extends JFrame {
         add(sideBar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
     }
-
 
     public Event getEvent(){
         return event;
@@ -88,6 +87,7 @@ public class MainMenu extends JFrame {
         }
       SwingUtilities.invokeLater(() -> {
           User user = new User(10, "tyl1312", "123456");
+
           MainMenu frame = new MainMenu(user);
           frame.setVisible(true);
       });

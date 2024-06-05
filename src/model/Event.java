@@ -7,20 +7,20 @@ public class Event {
     private String date;
     private String type;
     private String description;
-    private User user;
+    private User organizer;
 
-    public Event(String name, String date, String location, String type, User user) {
+    public Event(String name, String date, String location, String type, User organizer) {
         this.name = name;
         this.location = location;
         this.date = date;
         this.type = type;
-        this.user = user;
+        this.organizer = organizer;
     }
 
-    public Event(int id, String name, String date, String location, String type, String description, User user) {
+    public Event(int id, String name, String date, String location, String type, String description, User organizer) {
         this.id = id;
         this.description = description;
-        this.user = user;
+        this.organizer = organizer;
         this.type = type;
         this.date = date;
         this.location = location;
@@ -35,12 +35,12 @@ public class Event {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public User getOrganizer() {
+        return organizer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setOrganizer(User organizer) {
+        this.organizer = organizer;
     }
 
     public String getDescription() {
@@ -82,4 +82,5 @@ public class Event {
     public void setName(String name) {
         this.name = name;
     }
+
 }
