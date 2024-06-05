@@ -79,7 +79,7 @@ public class TablePanel extends JPanel{
 
             // Add ButtonRenderer and ButtonEditor for the "Actions" column
             table.getColumn("Actions").setCellRenderer(new ButtonRenderer());
-            table.getColumn("Actions").setCellEditor(new ButtonEditor(new JCheckBox(), this));
+            table.getColumn("Actions").setCellEditor(new ButtonEditor(new JCheckBox(), this, serviceEvent));
 
             // Center align all data
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -111,9 +111,10 @@ public class TablePanel extends JPanel{
     }
 
     public void loadUserEvents(List<Event> events) {
-        tableModel.setRowCount(0); // Clear existing data
+        int id = 1;
+        tableModel.setRowCount(0);
         for (Event event : events) {
-            addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+            addRow(id++, event.getName(), event.getDate(), event.getLocation(), event.getType(), user);
         }
     }
 

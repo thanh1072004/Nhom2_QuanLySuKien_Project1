@@ -1,6 +1,5 @@
 package src.service;
 
-import src.components.TablePanel;
 import src.database.DatabaseConnection;
 import src.model.Event;
 import src.model.User;
@@ -12,7 +11,6 @@ import java.util.List;
 public class ServiceEvent {
     private final Connection connection;
     private User user;
-    //private TablePanel tablePanel;
 
     public ServiceEvent(){
         connection = DatabaseConnection.getInstance().getConnection();
@@ -40,10 +38,6 @@ public class ServiceEvent {
         ps.close();
     }
 
-    /*public void onUserLogin(User user) throws SQLException{
-        List<Event> events = getUserEvent(user);
-        tablePanel.loadUserEvents(events);
-    }*/
     public List<Event> getUserEvent(User user) throws SQLException{
         this.user = user;
         List<Event> events = new ArrayList<>();
@@ -67,4 +61,12 @@ public class ServiceEvent {
         }
         return events;
     }
+
+    public void deleteEvent(String event_name) throws SQLException{
+        PreparedStatement ps = connection.prepareStatement("delete from event where name = ?");
+        ps.setString(1, event_name);
+        ps.execute();
+        ps.close();
+    }
+
 }

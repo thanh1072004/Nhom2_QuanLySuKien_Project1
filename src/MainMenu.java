@@ -68,7 +68,6 @@ public class MainMenu extends JFrame {
                 System.out.println("Invalid date");
             }else{
                 service.authorizeEvent(event, user);
-                System.out.println("Successfully create event");
             }
         }catch(Exception e){
             e.printStackTrace();

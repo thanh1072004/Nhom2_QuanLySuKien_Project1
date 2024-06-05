@@ -1,12 +1,17 @@
 package src.view;
 
+import src.components.CreatePanel;
 import src.components.TablePanel;
+import src.model.Event;
+import src.model.User;
+import src.service.ServiceEvent;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class ButtonEditor extends DefaultCellEditor {
     private final JPanel panel = new JPanel();
@@ -14,9 +19,11 @@ public class ButtonEditor extends DefaultCellEditor {
     private final JButton deleteButton = new JButton();
     private JTable table;
     private TablePanel tablePanel;
+    private ServiceEvent serviceEvent;
 
-    public ButtonEditor(JCheckBox checkBox, TablePanel tablePanel) {
+    public ButtonEditor(JCheckBox checkBox, TablePanel tablePanel, ServiceEvent serviceEvent) {
         super(checkBox);
+        this.serviceEvent = serviceEvent;
         this.tablePanel = tablePanel;
         panel.setBackground(Color.WHITE);
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10,10));
@@ -39,10 +46,19 @@ public class ButtonEditor extends DefaultCellEditor {
         panel.add(deleteButton);
 
 
-        editButton.addActionListener(e -> fireEditingStopped());
+        editButton.addActionListener(e -> {
+            fireEditingStopped();
+
+        });
         deleteButton.addActionListener(e -> {
             fireEditingStopped();
             int row = table.getSelectedRow();
+            String event_name = table.getModel().getValueAt(row, 1).toString();
+            try {
+                serviceEvent.deleteEvent(event_name);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             tablePanel.removeRow(row);
         });
     }
@@ -64,6 +80,8 @@ public class ButtonEditor extends DefaultCellEditor {
     public Object getCellEditorValue() {
         return null;
     }
+
+
 }
 
 
