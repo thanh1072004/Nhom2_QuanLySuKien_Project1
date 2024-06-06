@@ -1,4 +1,4 @@
-package src;
+package view;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,12 +6,12 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.time.LocalDate;
 
-import src.components.*;
-import src.database.DatabaseConnection;
-import src.model.User;
-import src.service.ServiceEvent;
-import src.model.Event;
-import src.components.TablePanel;
+import components.*;
+import database.DatabaseConnection;
+import model.User;
+import service.ServiceEvent;
+import model.Event;
+import components.TablePanel;
 
 public class MainMenu extends JFrame {
     private JPanel mainPanel;
@@ -19,6 +19,8 @@ public class MainMenu extends JFrame {
     private ServiceEvent service;
     private User user;
     private CreatePanel createPanel;
+    private JoinPanel joinPanel; 
+    private InvitePanel invitePanel;
     private int id = 1;
 
 
@@ -39,6 +41,8 @@ public class MainMenu extends JFrame {
 
         TablePanel tablePanel = new TablePanel(service, user);
         createPanel = new CreatePanel(user, eventCreate);
+        joinPanel = new JoinPanel();
+        invitePanel = new InvitePanel();
         createPanel.setFormListener(new FormListener() {
             @Override
             public void formSubmitted(String name, String date, String location, String type) {
@@ -47,11 +51,14 @@ public class MainMenu extends JFrame {
         });
         mainPanel.add(tablePanel, "tablePanel");
         mainPanel.add(createPanel, "eventCreate");
+        mainPanel.add(joinPanel, "joinPanel");
+        mainPanel.add(invitePanel, "invitePanel");
 
         SideBar sideBar = new SideBar(mainPanel, cardLayout, user);
         add(sideBar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
     }
+
 
     public Event getEvent(){
         return event;
@@ -85,8 +92,7 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
       SwingUtilities.invokeLater(() -> {
-          User user = new User(10, "tyl1312", "123456");
-
+          User user = new User(5, "thanh123", "123456");
           MainMenu frame = new MainMenu(user);
           frame.setVisible(true);
       });
