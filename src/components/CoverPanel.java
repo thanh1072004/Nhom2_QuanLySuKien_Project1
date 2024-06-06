@@ -13,7 +13,7 @@ import base.Color1;
 import net.miginfocom.swing.MigLayout;
 import src.swing.ButtonOutline;
 public class CoverPanel extends javax.swing.JPanel {
-    
+
     private final DecimalFormat df= new DecimalFormat("##0.###");
     private ActionListener event;
     private MigLayout layout;
@@ -22,8 +22,8 @@ public class CoverPanel extends javax.swing.JPanel {
     private JLabel description1;
     private ButtonOutline button;
     private boolean isLogin;
-    
-    
+
+
     public CoverPanel() {
         initComponents();
         setOpaque(false);
@@ -31,21 +31,21 @@ public class CoverPanel extends javax.swing.JPanel {
         setLayout(layout);
         init();
     }
-    
+
     private void init(){
         title = new JLabel("Event planner");
         title.setFont(new Font("sanserif", Font.BOLD, 30));
         title.setForeground(Color1.TEXT_LOGIN);
         add(title);
-        
+
         description = new JLabel("Life is an event");
         description.setForeground(Color1.TEXT_LOGIN);
         add(description);
-        
+
         description1 = new JLabel("Make it memorable");
         description1.setForeground(Color1.TEXT_LOGIN);
         add(description1);
-        
+
         button = new ButtonOutline();
         button.setBackground(Color1.WHITE);
         button.setForeground(Color1.WHITE);
@@ -64,7 +64,7 @@ public class CoverPanel extends javax.swing.JPanel {
         });
         add(button, "w 60%, h 40");
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
@@ -73,7 +73,7 @@ public class CoverPanel extends javax.swing.JPanel {
         g2d.fillRect(0, 0, getWidth(), getHeight());
         super.paintComponent(g);
     }
-    
+
     public void addEvent(ActionListener event) {
         this.event= event;
     }
@@ -93,12 +93,12 @@ public class CoverPanel extends javax.swing.JPanel {
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE)
         );
     }
 

@@ -1,4 +1,4 @@
-package view;
+package src.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,8 +12,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import components.JoinPanel;
-import components.TablePanel;
+import src.components.JoinPanel;
+import src.components.TablePanel;
 
 public class ButtonPanelEditor extends DefaultCellEditor {
 
@@ -30,14 +30,14 @@ public class ButtonPanelEditor extends DefaultCellEditor {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10,10));
 
 
-        ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/icon/accept.png"));
+        ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/src/icon/accept.png"));
         Image scaledImage_edit = originalIcon_edit.getImage().getScaledInstance(20, 18, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_edit = new ImageIcon(scaledImage_edit);
         acceptButton.setIcon(scaledIcon_edit);
         acceptButton.setBackground(Color.CYAN);
         acceptButton.setPreferredSize(new Dimension(24, 24));
         
-        ImageIcon originalIcon_bin = new ImageIcon(ButtonEditor.class.getResource("/icon/bin.png"));
+        ImageIcon originalIcon_bin = new ImageIcon(ButtonEditor.class.getResource("/src/icon/bin.png"));
         Image scaledImage_bin = originalIcon_bin.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_bin = new ImageIcon(scaledImage_bin);
         refuseButton.setIcon(scaledIcon_bin);        

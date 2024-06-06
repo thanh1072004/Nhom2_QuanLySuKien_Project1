@@ -54,5 +54,24 @@ public class DateSelectorPanel extends JPanel {
         return String.format("%04d-%02d-%02d", year, month, day);
     }
 
+    public void setDate(String date) {
+        try {
+            String[] parts = date.split("-");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Invalid date format. Expected format: yyyy-MM-dd");
+            }
 
+            int year = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]) - 1;
+            int day = Integer.parseInt(parts[2]);
+
+            dayComboBox.setSelectedItem(day);
+            monthComboBox.setSelectedIndex(month);
+            yearComboBox.setSelectedItem(year);
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing date: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error setting date: " + e.getMessage());
+        }
+    }
 }

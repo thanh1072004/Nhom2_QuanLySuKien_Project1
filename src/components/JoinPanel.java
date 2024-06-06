@@ -1,4 +1,4 @@
-package components;
+package src.components;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -27,11 +27,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-import swing.MyTextField;
-import view.ButtonEditor;
-import view.ButtonPanelEditor;
-import view.ButtonPanelRenderer;
-import view.ButtonRenderer;
+import src.swing.MyTextField;
+import src.view.ButtonEditor;
+import src.view.ButtonPanelEditor;
+import src.view.ButtonPanelRenderer;
+import src.view.ButtonRenderer;
 
 public class JoinPanel extends JPanel {
 	private JTable table;

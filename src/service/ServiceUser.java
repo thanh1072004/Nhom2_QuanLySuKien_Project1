@@ -3,6 +3,8 @@ package src.service;
 import src.database.DatabaseConnection;
 import src.model.Login;
 import src.model.User;
+
+import java.security.MessageDigest;
 import java.sql.*;
 
 public class ServiceUser {
@@ -18,7 +20,7 @@ public class ServiceUser {
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
         ps.setString(1, dataLogin.getUsername());
-        ps.setString(2, dataLogin.getPassword());
+        ps.setString(2, md5(dataLogin.getPassword()));
         ResultSet rs = ps.executeQuery();
         if(rs.first()){
             int userId = rs.getInt("user_id");
@@ -41,7 +43,7 @@ public class ServiceUser {
         ps.setString(1, user.getFirstName());
         ps.setString(2, user.getLastName());
         ps.setString(3, user.getUsername());
-        ps.setString(4, user.getPassword());
+        ps.setString(4, md5(user.getPassword()));
         ps.execute();
         ResultSet rs = ps.getGeneratedKeys();
         if (rs.next()) {
@@ -65,5 +67,21 @@ public class ServiceUser {
         rs.close();
         p.close();
         return duplicate;
+    }
+
+    public static String md5(String msg) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(msg.getBytes());
+            byte byteData[] = md.digest();
+            //convert the byte to hex format method 1
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            return  sb.toString();
+        } catch (Exception ex) {
+            return "";
+        }
     }
 }

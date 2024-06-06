@@ -32,24 +32,24 @@ public class PanelLoginAndRegister extends JLayeredPane {
         login.setVisible(false);
         register.setVisible(true);
     }
-   
+
     private void initLogin(ActionListener eventLogin){
         login.setLayout(new MigLayout("", "push[center]push", "push[]25[]10[]10[]25[]push"));
         JLabel label = new JLabel("Sign In");
         label.setFont(new Font("sanserif", Font.BOLD, 30));
         label.setForeground(new Color(7, 164, 121));
         login.add(label, "wrap");
-        
+
         MyTextField username = new MyTextField();
         username.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/mail.png"))));
         username.setHint("Username");
         login.add(username, "w 60%, wrap");
-        
+
         MyPasswordField password = new MyPasswordField();
         password.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/pass.png"))));
         password.setHint("Password");
         login.add(password, " w 60%, wrap");
-        
+
         JButton cmdForget = new JButton("Forget your password ?");
         cmdForget.setForeground(new Color(100, 100, 100));
         cmdForget.setFont(new Font("sanserif", Font.BOLD, 12));
@@ -57,8 +57,8 @@ public class PanelLoginAndRegister extends JLayeredPane {
         cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cmdForget.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         login.add(cmdForget, "wrap");
-        
-        Button cmd = new Button();  
+
+        Button cmd = new Button();
         cmd.setBackground(Color1.BACKGROUND_LABEL);
         cmd.setForeground(new Color(250, 250, 250));
         cmd.setText("SIGN IN");
@@ -70,14 +70,14 @@ public class PanelLoginAndRegister extends JLayeredPane {
             dataLogin = new Login(userName, passWord);
         });
     }
-    
+
     private void initRegister(ActionListener eventRegister){
         register.setLayout(new MigLayout("", "push[center]push", "push[]10[]10[]10[]push"));
         JLabel label = new JLabel("Create Account");
         label.setFont(new Font("sanserif", Font.BOLD, 30));
         label.setForeground(Color1.BACKGROUND_LABEL);
         register.add(label, "wrap");
-        
+
         JPanel fullName = new JPanel(new MigLayout("fill", "push[right]push"));
         fullName.setBackground(new Color(255, 255, 255));
         MyTextField firstName = new MyTextField();
@@ -89,18 +89,18 @@ public class PanelLoginAndRegister extends JLayeredPane {
         lastName.setHint("Surname");
         fullName.add(lastName, "w 45%, right");
         register.add(fullName, "w 60%, wrap");
-       
+
         MyTextField username = new MyTextField();
         username.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/mail.png"))));
         username.setHint("Username");
         register.add(username, "w 60%, wrap");
-        
+
         MyPasswordField password = new MyPasswordField();
         password.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/pass.png"))));
         password.setHint("Password");
         register.add(password, "w 60%, wrap");
-        
-        Button cmd = new Button();  
+
+        Button cmd = new Button();
         cmd.setBackground(Color1.BACKGROUND_LABEL);
         cmd.setForeground(Color1.COLOR_TEXT);
         cmd.setText("SIGN UP");
@@ -138,12 +138,12 @@ public class PanelLoginAndRegister extends JLayeredPane {
         GroupLayout loginLayout = new GroupLayout(login);
         login.setLayout(loginLayout);
         loginLayout.setHorizontalGroup(
-            loginLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+                loginLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE)
         );
         loginLayout.setVerticalGroup(
-            loginLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+                loginLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE)
         );
 
         add(login, "card3");
@@ -153,12 +153,12 @@ public class PanelLoginAndRegister extends JLayeredPane {
         GroupLayout registerLayout = new GroupLayout(register);
         register.setLayout(registerLayout);
         registerLayout.setHorizontalGroup(
-            registerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+                registerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE)
         );
         registerLayout.setVerticalGroup(
-            registerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+                registerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE)
         );
 
         add(register, "card2");

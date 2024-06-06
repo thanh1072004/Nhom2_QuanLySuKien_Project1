@@ -3,7 +3,6 @@ package src.components;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.*;
-import java.sql.SQLException;
 import java.util.List;
 
 import src.model.Event;
@@ -18,8 +17,7 @@ public class TablePanel extends JPanel{
     private DefaultTableModel tableModel;
     private ServiceEvent serviceEvent;
     private User user;
-
-    public TablePanel(ServiceEvent serviceEvent, User user) {
+    public TablePanel(ServiceEvent serviceEvent, User user, JPanel mainPanel, CardLayout cardLayout) {
         try {
             this.user = user;
             this.serviceEvent = serviceEvent;
@@ -49,7 +47,7 @@ public class TablePanel extends JPanel{
             eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
             eventListPanel1.add(topPanel, BorderLayout.NORTH);
 
-            String[] columnNames = {"Event ID", "Name", "Event Date", "Location", "Type", "Organizer", "Actions"};
+            String[] columnNames = {"Event ID", "Name", "Location", "Date", "Type", "Organizer", "Actions"};
             tableModel = new DefaultTableModel(columnNames, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -79,7 +77,7 @@ public class TablePanel extends JPanel{
 
             // Add ButtonRenderer and ButtonEditor for the "Actions" column
             table.getColumn("Actions").setCellRenderer(new ButtonRenderer());
-            table.getColumn("Actions").setCellEditor(new ButtonEditor(new JCheckBox(), this, serviceEvent));
+            table.getColumn("Actions").setCellEditor(new ButtonEditor(new JCheckBox(), this, serviceEvent, mainPanel, cardLayout));
 
             // Center align all data
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -102,10 +100,15 @@ public class TablePanel extends JPanel{
             e.printStackTrace();
         }
     }
-    public void addRow(int id, String name, String date, String location, String type, User organizer) {
-        tableModel.addRow(new Object[]{id, name, date, location, type, organizer.getUsername()});
+    public void addRow(int id, String name, String location, String date, String type, User organizer) {
+        tableModel.addRow(new Object[]{id, name, location, date, type, organizer.getUsername()});
     }
-
+    public void updateRow(int row, String name, String location, String date, String type) {
+        tableModel.setValueAt(name, row, 1);
+        tableModel.setValueAt(location, row, 2);
+        tableModel.setValueAt(date, row, 3);
+        tableModel.setValueAt(type, row, 4);
+    }
     public void removeRow(int row){
         tableModel.removeRow(row);
     }
@@ -114,7 +117,7 @@ public class TablePanel extends JPanel{
         int id = 1;
         tableModel.setRowCount(0);
         for (Event event : events) {
-            addRow(id++, event.getName(), event.getDate(), event.getLocation(), event.getType(), user);
+            addRow(id++, event.getName(), event.getLocation(), event.getDate(), event.getType(), user);
         }
     }
 
