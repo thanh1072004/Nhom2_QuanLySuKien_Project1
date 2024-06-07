@@ -120,10 +120,6 @@ public class UpdatePanel extends JPanel{
                 }else{
                     formListener.formUpdated(eventName, eventDate, eventLocation, eventType);
                 }
-                name.setText("");
-                location.setText("");
-                typeList.setSelectedIndex(0);
-                description.setText("");
                 event = new Event(event.getId() ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
             }catch(Exception ex){
                 ex.printStackTrace();

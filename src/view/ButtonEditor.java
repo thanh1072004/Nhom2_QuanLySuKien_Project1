@@ -74,6 +74,7 @@ public class ButtonEditor extends DefaultCellEditor {
                     @Override
                     public void formUpdated(String name, String date, String location, String type) {
                         tablePanel.updateRow(row, name, date, location, type);
+                        cardLayout.show(mainPanel, "tablePanel");
                     }
                 });
             }catch(SQLException ex){

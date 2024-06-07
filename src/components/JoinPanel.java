@@ -82,7 +82,7 @@ private JPanel createInvitationListPanel() {
     tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
     topPanel.add(tableNameLabel, BorderLayout.SOUTH);
 
-    String[] columnNames = {"Event ID", "Name", "Event Date", "Location", "Type", "Organizer", "Sender", "Actions"};
+    String[] columnNames = {"#", "Name", "Event Date", "Location",  "Organizer", "Actions"};
     
     tableModel = new DefaultTableModel(columnNames, 0) {
         @Override
@@ -164,7 +164,7 @@ private JPanel createJoinPublicEventPanel() {
     gbc.gridx = 1;
     joinPublicEvent.add(name, gbc);
 
-    JLabel eventidLabel = new JLabel("Event ID:");
+    JLabel eventidLabel = new JLabel("Event name:");
     eventidLabel.setFont(font);
     gbc.gridx = 0;
     gbc.gridy = 1;
@@ -223,8 +223,8 @@ private JPanel createJoinPublicEventPanel() {
 
     // Method to add some sample data
     private void addSampleData() {
-        addRowToTable(new Object[]{"1", "Event A", "2024-06-10", "New York", "Conference", "Org A", "User A", "Action"});
-        addRowToTable(new Object[]{"2", "Event B", "2024-07-15", "Los Angeles", "Meetup", "Org B", "User B", "Action"});
-        addRowToTable(new Object[]{"3", "Event C", "2024-08-20", "Chicago", "Workshop", "Org C", "User C", "Action"});
+        addRowToTable(new Object[]{"1", "Event A", "2024-06-10", "New York", "Org A", "Action"});
+        addRowToTable(new Object[]{"2", "Event B", "2024-07-15", "Los Angeles", "Org B", "Action"});
+        addRowToTable(new Object[]{"3", "Event C", "2024-08-20", "Chicago", "Org C", "Action"});
     }
 }

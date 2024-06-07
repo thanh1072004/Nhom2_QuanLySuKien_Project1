@@ -47,6 +47,7 @@ public class MainMenu extends JFrame {
             @Override
             public void formSubmitted(String name, String date, String location, String type) {
                 tablePanel.addRow(id++, name, date, location, type, user);
+                cardLayout.show(mainPanel, "tablePanel");
             }
             public void formUpdated(String name, String date, String location, String type) {}
         });
@@ -56,7 +57,6 @@ public class MainMenu extends JFrame {
         mainPanel.add(joinPanel, "joinPanel");
         mainPanel.add(invitePanel, "invitePanel");
         mainPanel.add(createPanel, "eventCreate");
-
 
         SideBar sideBar = new SideBar(mainPanel, cardLayout, user);
         add(sideBar, BorderLayout.WEST);
