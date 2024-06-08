@@ -3,8 +3,13 @@ package src.mainMenuPanel;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.*;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import src.base.MyColor;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
@@ -15,15 +20,21 @@ import src.view.ButtonRenderer;
 public class TablePanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
-    private ServiceEvent serviceEvent;
     private User user;
     private int id = 1;
-    
-    public TablePanel(ServiceEvent serviceEvent, User user, JPanel mainPanel, CardLayout cardLayout) {
+    private EventUpdatePanel eventUpdatePanel;
+    private JPanel mainPanel;
+    private CardLayout cardLayout;
+    private ServiceEvent service;
+
+    public TablePanel(ServiceEvent service, User user, JPanel mainPanel, CardLayout cardLayout) {
         try {
             this.user = user;
-            this.serviceEvent = serviceEvent;
-            List<Event> events = serviceEvent.getUserEvent(user);
+            this.service = service;
+            this.mainPanel = mainPanel;
+            this.cardLayout = cardLayout;
+            ActionListener eventUpdate = e -> updateEvent();
+            List<Event> events = service.getUserEvent(user);
 
             setLayout(new BorderLayout());
             JPanel eventListPanel1 = new JPanel(new BorderLayout());
@@ -41,7 +52,6 @@ public class TablePanel extends JPanel{
             searchPanel.add(searchField);
             topPanel.add(searchPanel, BorderLayout.NORTH);
 
-            // Tạo tên bảng
             JLabel tableNameLabel = new JLabel("YOUR EVENT TABLE", JLabel.CENTER);
             tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
             tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
@@ -53,45 +63,80 @@ public class TablePanel extends JPanel{
             tableModel = new DefaultTableModel(columnNames, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    // Make all cells not editable
                     return column == getColumnCount() - 1;
                 }
             };
             table = new JTable(tableModel);
 
-            // Set table not editable
             table.setDefaultEditor(Object.class, null);
             table.setRowSelectionAllowed(false);
             table.setFocusable(false);
 
-            // Bold header
-            JTableHeader header = table.getTableHeader();
-            header.setDefaultRenderer(new DefaultTableCellRenderer() {
-                @Override
-                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                    JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                    label.setFont(label.getFont().deriveFont(Font.BOLD));
-                    label.setHorizontalAlignment(SwingConstants.CENTER);
-                    label.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-                    return label;
+            ImageIcon originalEditIcon = new ImageIcon("src\\icon\\edit.png");
+            Image scaledImage_edit = originalEditIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            ImageIcon editIcon = new ImageIcon(scaledImage_edit);
+
+            ImageIcon originalDeleteIcon = new ImageIcon("src\\icon\\delete.png");
+            Image scaledImage_bin = originalDeleteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
+
+            List<Color> backgroundColor = new ArrayList<>();
+            backgroundColor.add(MyColor.CYAN);
+            backgroundColor.add(MyColor.RED);
+            List<ImageIcon> icons = new ArrayList<>();
+            icons.add(editIcon);
+            icons.add(deleteIcon);
+
+            ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
+            table.getColumnModel().getColumn(6).setCellRenderer(buttonRender);
+
+            List<ActionListener> actionListeners = new ArrayList<>();
+            actionListeners.add(e -> {
+                int row = table.getSelectedRow();
+                String event_name = table.getValueAt(row, 1).toString();
+
+                try{
+                    Event event = service.getSelectedEvent(event_name);
+                    eventUpdatePanel = new EventUpdatePanel(user, eventUpdate);
+                    eventUpdatePanel.setEventDetails(event);
+                    mainPanel.add(eventUpdatePanel, "eventUpdate");
+                    cardLayout.show(mainPanel, "eventUpdate");
+                    eventUpdatePanel.setFormListener(new FormListener() {
+                        @Override
+                        public void formSubmitted(String name, String date, String location, String type) {
+
+                        }
+
+                        @Override
+                        public void formUpdated(String name, String date, String location, String type) {
+                            updateRow(row, name, date, location, type);
+                            cardLayout.show(mainPanel, "tablePanel");
+                        }
+                    });
+                }catch(SQLException ex){
+                    ex.printStackTrace();
                 }
             });
+            actionListeners.add(e -> {
+                int row = table.getSelectedRow();
+                String event_name = table.getModel().getValueAt(row, 1).toString();
+                try {
+                    service.deleteEvent(event_name);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                removeRow(row);
+            });
 
-            // Add ButtonRenderer and ButtonEditor for the "Actions" column
-            table.getColumn("Actions").setCellRenderer(new ButtonRenderer());
-            table.getColumn("Actions").setCellEditor(new ButtonEditor(new JCheckBox(), this, serviceEvent, mainPanel, cardLayout));
+            ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
+            table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
 
-            // Center align all data
+            table.setRowHeight(48);
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
             centerRenderer.setHorizontalAlignment(JLabel.CENTER);
             for (int i = 0; i < table.getColumnCount() - 1; i++) {
                 table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
             }
-            table.getTableHeader().setReorderingAllowed(false);
-            table.getTableHeader().setResizingAllowed(false);
-
-            table.setRowHeight(48);
-
             JScrollPane tableScrollPane = new JScrollPane(table);
 
             eventListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
@@ -116,10 +161,31 @@ public class TablePanel extends JPanel{
     }
 
     public void loadUserEvents(List<Event> events) {
-        int id = 1;
         tableModel.setRowCount(0);
         for (Event event : events) {
             addRow(event.getName(), event.getLocation(), event.getDate(), event.getType(), user);
         }
+    }
+
+    public void updateEvent(){
+        Event event = eventUpdatePanel.getEvent();
+        int event_id = event.getId();
+        String eventDate = event.getDate();
+        try{
+            LocalDate day = getDate(eventDate);
+            if(event.getName().isEmpty()  || event.getLocation().isEmpty()){
+                System.out.println("Please fill all the required fields");
+            }else if (day.isBefore(LocalDate.now())){
+                System.out.println("Invalid date");
+            }else{
+                service.updateEvent(event, event_id);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public LocalDate getDate(String date){
+        return LocalDate.parse(date);
     }
 }

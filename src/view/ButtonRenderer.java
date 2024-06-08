@@ -1,44 +1,41 @@
 package src.view;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.util.List;
 
 public class ButtonRenderer extends JPanel implements TableCellRenderer {
-    private final JButton editButton = new JButton();
-    private final JButton deleteButton = new JButton();
 
-    public ButtonRenderer() {
-        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        setBackground(Color.WHITE);
+    private List<ImageIcon> icons;
+    private List<Color> backgroundColors;
 
-        ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/src/icon/edit.png"));
-        Image scaledImage_edit = originalIcon_edit.getImage().getScaledInstance(20, 18, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon_edit = new ImageIcon(scaledImage_edit);
-        editButton.setIcon(scaledIcon_edit);
-        editButton.setBackground(Color.CYAN);
-        editButton.setPreferredSize(new Dimension(24, 24));
-        
-        ImageIcon originalIcon_bin = new ImageIcon(ButtonEditor.class.getResource("/src/icon/bin.png"));
-        Image scaledImage_bin = originalIcon_bin.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon_bin = new ImageIcon(scaledImage_bin);
-        deleteButton.setIcon(scaledIcon_bin);     
-        deleteButton.setBackground(Color.RED);
-        deleteButton.setPreferredSize(new Dimension(24, 24));
-        add(editButton);
-        add(deleteButton);
-    }
+    public ButtonRenderer(List<ImageIcon> icons, List<Color> backgroundColors) {
+        this.icons = icons;
+        this.backgroundColors = backgroundColors;
+        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 8));
 
-    private void setButtonIcon(JButton button, String imagePath, int width, int height) {
-    	ImageIcon icon = new ImageIcon(imagePath);
-        Image image = icon.getImage();
-        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        button.setIcon(scaledIcon);
+        for (int i = 0; i < icons.size(); i++) {
+            JLabel label = new JLabel(icons.get(i));
+            label.setBorder(new EmptyBorder(8,8,8,8));
+            label.setBackground(backgroundColors.get(i));
+            label.setOpaque(true);
+            add(label);
+        }
+        setOpaque(true);
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                   boolean hasFocus, int row, int column) {
+        if (isSelected) {
+            setBackground(table.getSelectionBackground());
+        } else {
+            setBackground(table.getBackground());
+        }
         return this;
     }
 }
+
+

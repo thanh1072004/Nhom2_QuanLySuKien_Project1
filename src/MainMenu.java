@@ -44,7 +44,7 @@ public class MainMenu extends JFrame {
         inviteViewPanel = new InviteViewPanel();
         inviteSendPanel = new InviteSendPanel();
         requestViewPanel = new RequestViewPanel();
-        requestSendPanel = new RequestSendPanel(service, user, mainPanel, cardLayout);
+        requestSendPanel = new RequestSendPanel(service, user);
         eventCreatePanel = new EventCreatePanel(user, eventCreate);
         eventCreatePanel.setFormListener(new FormListener() {
             @Override

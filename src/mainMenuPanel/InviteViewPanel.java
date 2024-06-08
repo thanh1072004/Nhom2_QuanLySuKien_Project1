@@ -2,11 +2,15 @@ package src.mainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.*;
 
+import src.base.MyColor;
 import src.base.MyTextField;
-import src.view.ButtonPanelEditor;
-import src.view.ButtonPanelRenderer;
+import src.view.ButtonEditor;
+import src.view.ButtonRenderer;
 
 public class InviteViewPanel extends JPanel{
     private JTable table;
@@ -29,7 +33,7 @@ public class InviteViewPanel extends JPanel{
         topPanel.add(searchPanel, BorderLayout.NORTH);
 
         // Tạo tên bảng
-        JLabel tableNameLabel = new JLabel("YOUR INVITATION TABLE", JLabel.CENTER);
+        JLabel tableNameLabel = new JLabel("INVITATION", JLabel.CENTER);
         tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
@@ -51,20 +55,39 @@ public class InviteViewPanel extends JPanel{
         table.setRowSelectionAllowed(false);
         table.setFocusable(false);
 
-        JTableHeader header = table.getTableHeader();
-        header.setDefaultRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                label.setFont(label.getFont().deriveFont(Font.BOLD));
-                label.setHorizontalAlignment(SwingConstants.CENTER);
-                label.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-                return label;
-            }
+        ImageIcon originalEditIcon = new ImageIcon("src\\icon\\accept.png");
+        Image scaledImage_edit = originalEditIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon editIcon = new ImageIcon(scaledImage_edit);
+
+        ImageIcon originalDeleteIcon = new ImageIcon("src\\icon\\delete.png");
+        Image scaledImage_bin = originalDeleteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
+
+        java.util.List<Color> backgroundColor = new ArrayList<>();
+        backgroundColor.add(Color.CYAN);
+        backgroundColor.add(MyColor.RED);
+        java.util.List<ImageIcon> icons = new ArrayList<>();
+        icons.add(editIcon);
+        icons.add(deleteIcon);
+
+        ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
+        table.getColumnModel().getColumn(5).setCellRenderer(buttonRender);
+
+        List<ActionListener> actionListeners = new ArrayList<>();
+        actionListeners.add(e -> {
+            int row = table.getSelectedRow();
+            System.out.println(row);
         });
 
-        table.getColumn("Actions").setCellRenderer(new ButtonPanelRenderer());
-        table.getColumn("Actions").setCellEditor(new ButtonPanelEditor(new JCheckBox(), this));
+        actionListeners.add(e -> {
+            int row = table.getSelectedRow();
+            removeRow(row);
+        });
+
+        ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
+        table.getColumnModel().getColumn(5).setCellEditor(buttonEdit);
+
+        table.setRowHeight(48);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -74,15 +97,12 @@ public class InviteViewPanel extends JPanel{
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);
 
-        table.setRowHeight(48);
-
         JScrollPane tableScrollPane = new JScrollPane(table);
         
         invitationListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
         add(invitationListPanel1, BorderLayout.CENTER);
         
         addSampleData();
-
     }
     
     public void removeRow(int row){

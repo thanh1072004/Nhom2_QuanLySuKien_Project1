@@ -8,4 +8,6 @@ public class MyColor {
     public static Color BACKGROUND_MENU_ITEM = new Color(52,58,64);
     public static Color BACKGROUND_MENU_ITEM2 = new Color(108,117,125);
     public static Color WHITE = new Color(255,255,255);
+    public static Color CYAN = new Color(23,162,184);
+    public static Color RED = new Color(220,53,69);
 }

@@ -1,5 +1,6 @@
 package src.mainMenuPanel;
 
+import src.base.MyColor;
 import src.base.MyTextField;
 import src.model.Event;
 import src.model.User;
@@ -10,18 +11,20 @@ import src.view.ButtonRenderer;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
+
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
-public class RequestSendPanel extends TablePanel {
+public class RequestSendPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private ServiceEvent serviceEvent;
     private User user;
 
-    public RequestSendPanel(ServiceEvent serviceEvent, User user, JPanel mainPanel, CardLayout cardLayout) {
-        super(serviceEvent, user, mainPanel,cardLayout);
+    public RequestSendPanel(ServiceEvent serviceEvent, User user) {
+
         try {
             this.user = user;
             this.serviceEvent = serviceEvent;
@@ -43,8 +46,7 @@ public class RequestSendPanel extends TablePanel {
             searchPanel.add(searchField);
             topPanel.add(searchPanel, BorderLayout.NORTH);
 
-            // Tạo tên bảng
-            JLabel tableNameLabel = new JLabel("YOUR EVENT TABLE", JLabel.CENTER);
+            JLabel tableNameLabel = new JLabel("Available Event", JLabel.CENTER);
             tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
             tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
@@ -55,33 +57,47 @@ public class RequestSendPanel extends TablePanel {
             tableModel = new DefaultTableModel(columnNames, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    // Make all cells not editable
                     return column == getColumnCount() - 1;
                 }
             };
             table = new JTable(tableModel);
 
-            // Set table not editable
             table.setDefaultEditor(Object.class, null);
             table.setRowSelectionAllowed(false);
             table.setFocusable(false);
 
-            // Bold header
-            JTableHeader header = table.getTableHeader();
-            header.setDefaultRenderer(new DefaultTableCellRenderer() {
-                @Override
-                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                    JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                    label.setFont(label.getFont().deriveFont(Font.BOLD));
-                    label.setHorizontalAlignment(SwingConstants.CENTER);
-                    label.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-                    return label;
-                }
+            ImageIcon originalEditIcon = new ImageIcon("src\\icon\\edit.png");
+            Image scaledImage_edit = originalEditIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            ImageIcon editIcon = new ImageIcon(scaledImage_edit);
+
+            ImageIcon originalDeleteIcon = new ImageIcon("src\\icon\\delete.png");
+            Image scaledImage_bin = originalDeleteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
+
+            List<Color> backgroundColor = new ArrayList<>();
+            backgroundColor.add(MyColor.CYAN);
+            backgroundColor.add(MyColor.RED);
+            List<ImageIcon> icons = new ArrayList<>();
+            icons.add(editIcon);
+            icons.add(deleteIcon);
+
+            ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
+            table.getColumnModel().getColumn(6).setCellRenderer(buttonRender);
+
+            List<ActionListener> actionListeners = new ArrayList<>();
+            actionListeners.add(e -> {
+                int row = table.getSelectedRow();
+                System.out.println(row);
+            });
+            actionListeners.add(e -> {
+                int row = table.getSelectedRow();
+                removeRow(row);
             });
 
-            // Add ButtonRenderer and ButtonEditor for the "Actions" column
-            table.getColumn("Actions").setCellRenderer(new ButtonRenderer());
-            table.getColumn("Actions").setCellEditor(new ButtonEditor(new JCheckBox(), this, serviceEvent, mainPanel, cardLayout));
+            ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
+            table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
+
+            table.setRowHeight(48);
 
             // Center align all data
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -91,8 +107,6 @@ public class RequestSendPanel extends TablePanel {
             }
             table.getTableHeader().setReorderingAllowed(false);
             table.getTableHeader().setResizingAllowed(false);
-
-            table.setRowHeight(48);
 
             JScrollPane tableScrollPane = new JScrollPane(table);
 

@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import src.base.MyColor;
 import src.model.User;
 
 public class SideBar extends JPanel {
@@ -18,7 +20,7 @@ public class SideBar extends JPanel {
 
         setPreferredSize(new Dimension(200, getHeight()));
         setLayout(new GridBagLayout());
-        setBackground(new Color(52, 58, 64));
+        setBackground(MyColor.BACKGROUND_MENU_ITEM);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1.0;
         gbc.weighty = 0.0;
@@ -66,11 +68,11 @@ public class SideBar extends JPanel {
                     // Add event items to the event list panel
                     eventListPanel.add(view);
                     eventListPanel.add(create);
-                    eventsMenu.setBackground(new Color(108, 117, 125));
+                    eventsMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM2);
                 } else {
                     // Remove all event items
                     eventListPanel.removeAll();
-                    eventsMenu.setBackground(new Color(52, 58, 64));
+                    eventsMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM);
                 }
                 eventsVisible = !eventsVisible;
 
@@ -104,11 +106,11 @@ public class SideBar extends JPanel {
                     // Add event items to the event list panel
                     invitationListPanel.add(viewInvitations);
                     invitationListPanel.add(sendInvitations);
-                    invitationsMenu.setBackground(new Color(108, 117, 125));
+                    invitationsMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM2);
                 } else {
                     // Remove all event items
                     invitationListPanel.removeAll();
-                    invitationsMenu.setBackground(new Color(52, 58, 64));
+                    invitationsMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM);
 
                 }
                 // Toggle visibility
@@ -143,10 +145,10 @@ public class SideBar extends JPanel {
                 if (!eventsVisible) {
                     requestPanel.add(viewRequest);
                     requestPanel.add(sendRequest);
-                    requestMenu.setBackground(new Color(108, 117, 125));
+                    requestMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM2);
                 } else {
                     requestPanel.removeAll();
-                    requestMenu.setBackground(new Color(52, 58, 64));
+                    requestMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM);
 
                 }
                 eventsVisible = !eventsVisible;
@@ -207,12 +209,12 @@ public class SideBar extends JPanel {
         menuItem.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                menuItem.setBackground(new Color(108, 117, 125));
+                menuItem.setBackground(MyColor.BACKGROUND_MENU_ITEM2);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                menuItem.setBackground(new Color(52, 58, 64));
+                menuItem.setBackground(MyColor.BACKGROUND_MENU_ITEM);
             }
         });
         return menuItem;

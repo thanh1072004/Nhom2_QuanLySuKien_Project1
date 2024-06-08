@@ -2,11 +2,14 @@ package src.mainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.*;
 
 import src.base.MyTextField;
-import src.view.ButtonPanelRenderer;
-import src.view.RequestPanelEditor;
+import src.view.ButtonEditor;
+import src.view.ButtonRenderer;
 
 public class RequestViewPanel extends JPanel{
     private JTable table;
@@ -51,20 +54,37 @@ public class RequestViewPanel extends JPanel{
         table.setRowSelectionAllowed(false);
         table.setFocusable(false);
 
-        JTableHeader header = table.getTableHeader();
-        header.setDefaultRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                label.setFont(label.getFont().deriveFont(Font.BOLD));
-                label.setHorizontalAlignment(SwingConstants.CENTER);
-                label.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-                return label;
-            }
+        ImageIcon originalEditIcon = new ImageIcon("src\\icon\\accept.png");
+        Image scaledImage_edit = originalEditIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon editIcon = new ImageIcon(scaledImage_edit);
+
+        ImageIcon originalDeleteIcon = new ImageIcon("src\\icon\\reject.png");
+        Image scaledImage_bin = originalDeleteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
+
+        java.util.List<Color> backgroundColor = new ArrayList<>();
+        backgroundColor.add(Color.CYAN);
+        backgroundColor.add(Color.RED);
+        java.util.List<ImageIcon> icons = new ArrayList<>();
+        icons.add(editIcon);
+        icons.add(deleteIcon);
+
+        ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
+        table.getColumnModel().getColumn(5).setCellRenderer(buttonRender);
+
+        List<ActionListener> actionListeners = new ArrayList<>();
+        actionListeners.add(e -> {
+            int row = table.getSelectedRow();
+            System.out.println(row);
         });
 
-        table.getColumn("Actions").setCellRenderer(new ButtonPanelRenderer());
-        table.getColumn("Actions").setCellEditor(new RequestPanelEditor(new JCheckBox(), this));
+        actionListeners.add(e -> {
+            int row = table.getSelectedRow();
+            removeRow(row);
+        });
+
+        ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
+        table.getColumnModel().getColumn(5).setCellEditor(buttonEdit);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);

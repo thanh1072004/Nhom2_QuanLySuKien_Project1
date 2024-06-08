@@ -1,133 +1,38 @@
 package src.view;
 
-import src.mainMenuPanel.EventUpdatePanel;
-import src.mainMenuPanel.FormListener;
-import src.mainMenuPanel.TablePanel;
-import src.mainMenuPanel.EventUpdatePanel;
-import src.model.User;
-import src.service.ServiceEvent;
-import src.model.Event;
-
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
-
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.List;
 
+public class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 
-public class ButtonEditor extends DefaultCellEditor {
-    private final JPanel panel = new JPanel();
-    private final JButton editButton = new JButton();
-    private final JButton deleteButton = new JButton();
-    private JTable table;
-    private TablePanel tablePanel;
-    private EventUpdatePanel eventUpdatePanel;
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
-    private User user;
-    private ServiceEvent service;
-    private int row;
-    public ButtonEditor(JCheckBox checkBox, TablePanel tablePanel, ServiceEvent service, JPanel mainPanel, CardLayout cardLayout) {
-        super(checkBox);
-        this.service = service;
-        this.tablePanel = tablePanel;
-        this.mainPanel = mainPanel;
-        this.cardLayout = cardLayout;
-        ActionListener eventUpdate = e -> updateEvent();
+    private JPanel panel;
+    private List<JButton> buttons;
+    private List<ActionListener> actionListeners;
+    private List<Color> backgroundColors;
 
-        panel.setBackground(Color.WHITE);
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10,10));
+    public ButtonEditor(List<ImageIcon> icons, List<ActionListener> actionListeners, List<Color> backgroundColors) {
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
+        this.actionListeners = actionListeners;
+        this.backgroundColors = backgroundColors;
+        buttons = new ArrayList<>();
 
-        ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/src/icon/edit.png"));
-        Image scaledImage_edit = originalIcon_edit.getImage().getScaledInstance(20, 18, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon_edit = new ImageIcon(scaledImage_edit);
-        editButton.setIcon(scaledIcon_edit);
-        editButton.setBackground(Color.CYAN);
-        editButton.setPreferredSize(new Dimension(24, 24));
+        for (int i = 0; i < icons.size(); i++) {
+            JButton button = new JButton(icons.get(i));
+            button.setBorder(new EmptyBorder(8,8,8,8));
+            button.setBackground(backgroundColors.get(i));
 
-        ImageIcon originalIcon_bin = new ImageIcon(ButtonEditor.class.getResource("/src/icon/bin.png"));
-        Image scaledImage_bin = originalIcon_bin.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon_bin = new ImageIcon(scaledImage_bin);
-        deleteButton.setIcon(scaledIcon_bin);
-        deleteButton.setBackground(Color.RED);
-        deleteButton.setPreferredSize(new Dimension(24, 24));
-        panel.add(editButton);
-        panel.add(deleteButton);
-
-        editButton.addActionListener(e -> {
-            fireEditingStopped();
-            row = table.getSelectedRow();
-            String event_name = table.getValueAt(row, 1).toString();
-
-            try{
-                Event event = service.getSelectedEvent(event_name);
-                eventUpdatePanel = new EventUpdatePanel(user, eventUpdate);
-                eventUpdatePanel.setEventDetails(event);
-                mainPanel.add(eventUpdatePanel, "eventUpdate");
-                cardLayout.show(mainPanel, "eventUpdate");
-                eventUpdatePanel.setFormListener(new FormListener() {
-                    @Override
-                    public void formSubmitted(String name, String date, String location, String type) {
-
-                    }
-
-                    @Override
-                    public void formUpdated(String name, String date, String location, String type) {
-                        tablePanel.updateRow(row, name, date, location, type);
-                        cardLayout.show(mainPanel, "tablePanel");
-                    }
-                });
-            }catch(SQLException ex){
-                ex.printStackTrace();
-            }
-        });
-
-        deleteButton.addActionListener(e -> {
-            fireEditingStopped();
-            row = table.getSelectedRow();
-            String event_name = table.getModel().getValueAt(row, 1).toString();
-            try {
-                service.deleteEvent(event_name);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            tablePanel.removeRow(row);
-        });
-    }
-
-    public void updateEvent(){
-        Event event = eventUpdatePanel.getEvent();
-        int event_id = event.getId();
-        String eventDate = event.getDate();
-        try{
-            LocalDate day = getDate(eventDate);
-            if(event.getName().isEmpty()  || event.getLocation().isEmpty()){
-                System.out.println("Please fill all the required fields");
-            }else if (day.isBefore(LocalDate.now())){
-                System.out.println("Invalid date");
-            }else{
-                service.updateEvent(event, event_id);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
+            button.setFocusPainted(false);
+            button.addActionListener(this);
+            buttons.add(button);
+            panel.add(button);
         }
-    }
-
-    public LocalDate getDate(String date){
-        return LocalDate.parse(date);
-    }
-    private void setButtonIcon(JButton button, String imagePath, int width, int height) {
-        ImageIcon icon = new ImageIcon(imagePath);
-        Image image = icon.getImage();
-        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        button.setIcon(scaledIcon);
-    }
-    @Override
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        this.table = table;
-        return panel;
     }
 
     @Override
@@ -135,7 +40,28 @@ public class ButtonEditor extends DefaultCellEditor {
         return null;
     }
 
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value,
+                                                 boolean isSelected, int row, int column) {
+        return panel;
+    }
+
+    @Override
+    public boolean isCellEditable(EventObject e) {
+        return true;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        fireEditingStopped();
+        for (int i = 0; i < buttons.size(); i++) {
+            if (e.getSource() == buttons.get(i)) {
+                actionListeners.get(i).actionPerformed(e);
+                break;
+            }
+        }
+    }
+
 
 }
-
 
