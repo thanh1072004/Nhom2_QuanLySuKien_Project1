@@ -69,6 +69,8 @@ public class ServiceUser {
         return duplicate;
     }
 
+
+
     public static String md5(String msg) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

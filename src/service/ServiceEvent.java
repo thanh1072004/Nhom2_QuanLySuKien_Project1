@@ -120,10 +120,28 @@ public class ServiceEvent {
             String date = rs.getString("date");
             String type = rs.getString("type");
             int organizer_id = rs.getInt("organizer_id");
+            String organizerUsername = getUsernameFromUserID(organizer_id);
+
+            // Create the User object for the organizer
             User organizer = new User(organizer_id);
+            organizer.setUsername(organizerUsername);
 
             events.add(new Event(name, date, location, type, organizer));
+            System.out.println(organizerUsername);
         }
         return events;
+    }
+
+    public String getUsernameFromUserID(int userId) throws SQLException {
+        String username = null;
+        PreparedStatement ps = connection.prepareStatement("SELECT username FROM Users WHERE user_id = ?");
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            username = rs.getString("username");
+        }
+        rs.close();
+        ps.close();
+        return username;
     }
 }

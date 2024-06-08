@@ -16,8 +16,9 @@ public class MainMenu extends JFrame {
     private JPanel mainPanel;
     private EventCreatePanel eventCreatePanel;
     private TablePanel tablePanel;
-    private InviteViewPanel joinPanel;
-    private InviteSendPanel invitePanel;
+    private InviteViewPanel inviteViewPanel;
+    private InviteSendPanel inviteSendPanel;
+    private RequestSendPanel requestSendPanel;
     private Event event;
     private ServiceEvent service;
     private User user;
@@ -39,9 +40,10 @@ public class MainMenu extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         tablePanel = new TablePanel(service, user, mainPanel, cardLayout);
-        joinPanel = new InviteViewPanel();
-        invitePanel = new InviteSendPanel();
+        inviteViewPanel = new InviteViewPanel();
+        inviteSendPanel = new InviteSendPanel();
         eventCreatePanel = new EventCreatePanel(user, eventCreate);
+        requestSendPanel = new RequestSendPanel(service, user, mainPanel, cardLayout);
         eventCreatePanel.setFormListener(new FormListener() {
             @Override
             public void formSubmitted(String name, String date, String location, String type) {
@@ -54,9 +56,10 @@ public class MainMenu extends JFrame {
 
 
         mainPanel.add(tablePanel, "tablePanel");
-        mainPanel.add(joinPanel, "joinPanel");
-        mainPanel.add(invitePanel, "invitePanel");
+        mainPanel.add(inviteViewPanel, "joinPanel");
+        mainPanel.add(inviteSendPanel, "invitePanel");
         mainPanel.add(eventCreatePanel, "eventCreate");
+        mainPanel.add(requestSendPanel, "requestPanel");
 
         SideBar sideBar = new SideBar(mainPanel, cardLayout, user);
         add(sideBar, BorderLayout.WEST);

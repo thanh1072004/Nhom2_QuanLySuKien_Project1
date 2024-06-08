@@ -155,6 +155,7 @@ public class SideBar extends JPanel {
                 repaint();
             }
         });
+        sendRequest.addActionListener(e -> cardLayout.show(mainPanel, "requestPanel"));
         add(usernameLabel, gbc);
 
         gbc.gridy++;

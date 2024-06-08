@@ -63,7 +63,6 @@ public class User {
 
     public User(int userId){
         this.userId = userId;
+
     }
-
-
 }

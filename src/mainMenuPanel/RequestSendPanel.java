@@ -1,28 +1,31 @@
 package src.mainMenuPanel;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.table.*;
-import java.util.List;
-
+import src.base.MyTextField;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
-import src.base.MyTextField;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
-public class TablePanel extends JPanel{
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import java.awt.*;
+import java.util.List;
+
+public class RequestSendPanel extends TablePanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private ServiceEvent serviceEvent;
     private User user;
 
-    public TablePanel(ServiceEvent serviceEvent, User user, JPanel mainPanel, CardLayout cardLayout) {
+    public RequestSendPanel(ServiceEvent serviceEvent, User user, JPanel mainPanel, CardLayout cardLayout) {
+        super(serviceEvent, user, mainPanel,cardLayout);
         try {
             this.user = user;
             this.serviceEvent = serviceEvent;
-            List<Event> events = serviceEvent.getUserEvent(user);
+            java.util.List<src.model.Event> events = serviceEvent.getPublicEvents(user);
 
             setLayout(new BorderLayout());
             JPanel eventListPanel1 = new JPanel(new BorderLayout());
@@ -96,7 +99,7 @@ public class TablePanel extends JPanel{
             eventListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
             add(eventListPanel1, BorderLayout.CENTER);
 
-            loadUserEvents(events);
+            loadPublicEvents(events);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -114,11 +117,12 @@ public class TablePanel extends JPanel{
         tableModel.removeRow(row);
     }
 
-    public void loadUserEvents(List<Event> events) {
+    public void loadPublicEvents(List<src.model.Event> events) {
         int id = 1;
         tableModel.setRowCount(0);
         for (Event event : events) {
-            addRow(id++, event.getName(), event.getLocation(), event.getDate(), event.getType(), user);
+            addRow(id++, event.getName(), event.getLocation(), event.getDate(), event.getType(), event.getOrganizer());
         }
     }
 }
+
