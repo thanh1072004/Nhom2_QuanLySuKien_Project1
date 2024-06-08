@@ -16,8 +16,9 @@ public class MainMenu extends JFrame {
     private JPanel mainPanel;
     private EventCreatePanel eventCreatePanel;
     private TablePanel tablePanel;
-    private InviteViewPanel inviteViewPanel;
-    private InviteSendPanel inviteSendPanel;
+    private InviteViewPanel invitationTablePanel;
+    private InviteSendPanel invitePanel;
+    private RequestViewPanel requestViewPanel;
     private RequestSendPanel requestSendPanel;
     private Event event;
     private ServiceEvent service;
@@ -30,7 +31,7 @@ public class MainMenu extends JFrame {
         ActionListener eventCreate = e -> createEvent();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 600);
+        setSize(1000, 650);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -40,14 +41,15 @@ public class MainMenu extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         tablePanel = new TablePanel(service, user, mainPanel, cardLayout);
-        inviteViewPanel = new InviteViewPanel();
-        inviteSendPanel = new InviteSendPanel();
+        invitationTablePanel = new InviteViewPanel();
+        invitePanel = new InviteSendPanel();
+        requestViewPanel = new RequestViewPanel();
+        requestSendPanel = new RequestSendPanel();
         eventCreatePanel = new EventCreatePanel(user, eventCreate);
-        requestSendPanel = new RequestSendPanel(service, user, mainPanel, cardLayout);
         eventCreatePanel.setFormListener(new FormListener() {
             @Override
             public void formSubmitted(String name, String date, String location, String type) {
-                tablePanel.addRow(id++, name, location, date, type, user);
+                tablePanel.addRow(name, location, date, type, user);
                 cardLayout.show(mainPanel, "tablePanel");
 
             }
@@ -56,10 +58,11 @@ public class MainMenu extends JFrame {
 
 
         mainPanel.add(tablePanel, "tablePanel");
-        mainPanel.add(inviteViewPanel, "joinPanel");
-        mainPanel.add(inviteSendPanel, "invitePanel");
+        mainPanel.add(invitationTablePanel, "invitationTablePanel");
+        mainPanel.add(invitePanel, "invitePanel");
         mainPanel.add(eventCreatePanel, "eventCreate");
-        mainPanel.add(requestSendPanel, "requestPanel");
+        mainPanel.add(requestViewPanel, "requestViewPanel");
+        mainPanel.add(requestSendPanel, "requestSendPanel");
 
         SideBar sideBar = new SideBar(mainPanel, cardLayout, user);
         add(sideBar, BorderLayout.WEST);
@@ -100,7 +103,7 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-            User user = new User(1015, "tunghv", "bb7d4b236b564cf1ec27aa891331e0af");
+            User user = new User(2007, "thanh", "202cb962ac59075b964b07152d234b70");
 
             MainMenu frame = new MainMenu(user);
             frame.setVisible(true);

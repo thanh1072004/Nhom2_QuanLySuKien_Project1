@@ -5,13 +5,13 @@ import java.awt.*;
 import javax.swing.table.*;
 
 import src.base.MyTextField;
-import src.view.ButtonPanelEditor;
 import src.view.ButtonPanelRenderer;
+import src.view.RequestPanelEditor;
 
-public class InviteViewPanel extends JPanel{
+public class RequestViewPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
-    public InviteViewPanel() {
+    public RequestViewPanel() {
     	setLayout(new BorderLayout());
         JPanel invitationListPanel1 = new JPanel(new BorderLayout());
         invitationListPanel1.setBackground(Color.WHITE);
@@ -29,14 +29,14 @@ public class InviteViewPanel extends JPanel{
         topPanel.add(searchPanel, BorderLayout.NORTH);
 
         // Tạo tên bảng
-        JLabel tableNameLabel = new JLabel("YOUR INVITATION TABLE", JLabel.CENTER);
+        JLabel tableNameLabel = new JLabel("YOUR REQUEST TABLE", JLabel.CENTER);
         tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
         invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
         invitationListPanel1.add(topPanel, BorderLayout.NORTH);
         
-        String[] columnNames = {"#", "Name", "Event Date", "Location",  "Organizer", "Actions"};
+        String[] columnNames = {"#", "Name", "Event Date", "Location",  "Sender", "Actions"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -64,7 +64,7 @@ public class InviteViewPanel extends JPanel{
         });
 
         table.getColumn("Actions").setCellRenderer(new ButtonPanelRenderer());
-        table.getColumn("Actions").setCellEditor(new ButtonPanelEditor(new JCheckBox(), this));
+        table.getColumn("Actions").setCellEditor(new RequestPanelEditor(new JCheckBox(), this));
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -96,8 +96,9 @@ public class InviteViewPanel extends JPanel{
 
     // Method to add some sample data
     private void addSampleData() {
-        addRowToTable(new Object[]{"1", "Event A", "2024-06-10", "New York", "Org A", "Action"});
-        addRowToTable(new Object[]{"2", "Event B", "2024-07-15", "Los Angeles", "Org B", "Action"});
-        addRowToTable(new Object[]{"3", "Event C", "2024-08-20", "Chicago", "Org C", "Action"});
+        addRowToTable(new Object[]{"1", "Event A", "2024-06-10", "New York", "Sender A", "Action"});
+        addRowToTable(new Object[]{"2", "Event B", "2024-07-15", "Los Angeles", "Sender B", "Action"});
+        addRowToTable(new Object[]{"3", "Event C", "2024-08-20", "Chicago", "Sender C", "Action"});
     }
 }
+

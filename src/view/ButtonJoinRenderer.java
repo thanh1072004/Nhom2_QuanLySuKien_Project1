@@ -12,22 +12,22 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-public class ButtonPanelRenderer extends JPanel implements TableCellRenderer {
+public class ButtonJoinRenderer extends JPanel implements TableCellRenderer {
     private final JButton acceptButton = new JButton();
     private final JButton refuseButton = new JButton();
 
-    public ButtonPanelRenderer() {
+    public ButtonJoinRenderer() {
         setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setBackground(Color.WHITE);
 
-        ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/src/icon/accept.png"));
+        ImageIcon originalIcon_edit = new ImageIcon(ButtonEditor.class.getResource("/src/icon/join.png"));
         Image scaledImage_edit = originalIcon_edit.getImage().getScaledInstance(20, 18, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_edit = new ImageIcon(scaledImage_edit);
         acceptButton.setIcon(scaledIcon_edit);
         acceptButton.setBackground(Color.CYAN);
         acceptButton.setPreferredSize(new Dimension(24, 24));
         
-        ImageIcon originalIcon_bin = new ImageIcon(ButtonEditor.class.getResource("/src/icon/reject.png"));
+        ImageIcon originalIcon_bin = new ImageIcon(ButtonEditor.class.getResource("/src/icon/bin.png"));
         Image scaledImage_bin = originalIcon_bin.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon_bin = new ImageIcon(scaledImage_bin);
         refuseButton.setIcon(scaledIcon_bin);     
@@ -50,3 +50,4 @@ public class ButtonPanelRenderer extends JPanel implements TableCellRenderer {
         return this;
     }
 }
+

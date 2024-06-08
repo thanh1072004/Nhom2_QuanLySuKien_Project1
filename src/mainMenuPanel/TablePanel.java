@@ -17,7 +17,8 @@ public class TablePanel extends JPanel{
     private DefaultTableModel tableModel;
     private ServiceEvent serviceEvent;
     private User user;
-
+    private int id = 1;
+    
     public TablePanel(ServiceEvent serviceEvent, User user, JPanel mainPanel, CardLayout cardLayout) {
         try {
             this.user = user;
@@ -101,8 +102,8 @@ public class TablePanel extends JPanel{
             e.printStackTrace();
         }
     }
-    public void addRow(int id, String name, String location, String date, String type, User organizer) {
-        tableModel.addRow(new Object[]{id, name, location, date, type, organizer.getUsername()});
+    public void addRow(String name, String location, String date, String type, User organizer) {
+        tableModel.addRow(new Object[]{id++, name, location, date, type, organizer.getUsername()});
     }
     public void updateRow(int row, String name, String location, String date, String type) {
         tableModel.setValueAt(name, row, 1);
@@ -118,7 +119,7 @@ public class TablePanel extends JPanel{
         int id = 1;
         tableModel.setRowCount(0);
         for (Event event : events) {
-            addRow(id++, event.getName(), event.getLocation(), event.getDate(), event.getType(), user);
+            addRow(event.getName(), event.getLocation(), event.getDate(), event.getType(), user);
         }
     }
 }
