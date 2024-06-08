@@ -82,7 +82,6 @@ public class RequestViewPanel extends JPanel{
         add(invitationListPanel1, BorderLayout.CENTER);
         
         addSampleData();
-
     }
     
     public void removeRow(int row){

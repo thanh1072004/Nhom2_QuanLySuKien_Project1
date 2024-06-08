@@ -16,8 +16,8 @@ public class MainMenu extends JFrame {
     private JPanel mainPanel;
     private EventCreatePanel eventCreatePanel;
     private TablePanel tablePanel;
-    private InviteViewPanel invitationTablePanel;
-    private InviteSendPanel invitePanel;
+    private InviteViewPanel inviteViewPanel;
+    private InviteSendPanel inviteSendPanel;
     private RequestViewPanel requestViewPanel;
     private RequestSendPanel requestSendPanel;
     private Event event;
@@ -41,26 +41,25 @@ public class MainMenu extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         tablePanel = new TablePanel(service, user, mainPanel, cardLayout);
-        invitationTablePanel = new InviteViewPanel();
-        invitePanel = new InviteSendPanel();
+        inviteViewPanel = new InviteViewPanel();
+        inviteSendPanel = new InviteSendPanel();
         requestViewPanel = new RequestViewPanel();
-        requestSendPanel = new RequestSendPanel();
+        requestSendPanel = new RequestSendPanel(service, user, mainPanel, cardLayout);
         eventCreatePanel = new EventCreatePanel(user, eventCreate);
         eventCreatePanel.setFormListener(new FormListener() {
             @Override
             public void formSubmitted(String name, String date, String location, String type) {
                 tablePanel.addRow(name, location, date, type, user);
                 cardLayout.show(mainPanel, "tablePanel");
-
             }
             public void formUpdated(String name, String date, String location, String type) {}
         });
 
 
         mainPanel.add(tablePanel, "tablePanel");
-        mainPanel.add(invitationTablePanel, "invitationTablePanel");
-        mainPanel.add(invitePanel, "invitePanel");
-        mainPanel.add(eventCreatePanel, "eventCreate");
+        mainPanel.add(inviteViewPanel, "inviteViewPanel");
+        mainPanel.add(inviteSendPanel, "inviteSendPanel");
+        mainPanel.add(eventCreatePanel, "eventCreatePanel");
         mainPanel.add(requestViewPanel, "requestViewPanel");
         mainPanel.add(requestSendPanel, "requestSendPanel");
 
@@ -103,7 +102,7 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-            User user = new User(2007, "thanh", "202cb962ac59075b964b07152d234b70");
+            User user = new User(1015, "tunghv", "bb7d4b236b564cf1ec27aa891331e0af");
 
             MainMenu frame = new MainMenu(user);
             frame.setVisible(true);

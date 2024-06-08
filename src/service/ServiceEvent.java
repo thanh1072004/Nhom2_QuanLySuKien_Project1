@@ -106,10 +106,10 @@ public class ServiceEvent {
     public List<Event> getPublicEvents(User user) throws SQLException {
         this.user = user;
         List<Event> events = new ArrayList<>();
-        PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, u.user_id AS organizer_id " +
+        PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
                                                             "from event e " +
-                                                            "join Users u on e.organizer_id = u.user_id " +
-                                                            "where e.type = 'Public' and e.organizer_id != ?");
+                                                            "join Users u on organizer_id != u.user_id " +
+                                                            "where e.type = 'Public' and organizer_id != ?");
 
         ps.setInt(1, user.getUserId());
         ResultSet rs = ps.executeQuery();
@@ -122,12 +122,10 @@ public class ServiceEvent {
             int organizer_id = rs.getInt("organizer_id");
             String organizerUsername = getUsernameFromUserID(organizer_id);
 
-            // Create the User object for the organizer
             User organizer = new User(organizer_id);
             organizer.setUsername(organizerUsername);
 
             events.add(new Event(name, date, location, type, organizer));
-            System.out.println(organizerUsername);
         }
         return events;
     }
