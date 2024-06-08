@@ -16,7 +16,7 @@ public class ServiceEvent {
         connection = DatabaseConnection.getInstance().getConnection();
     }
 
-    public void authorizeEvent(Event event, User user) throws SQLException {
+    public void addEvent(Event event, User user) throws SQLException {
         this.user = user;
         if (connection == null) {
             throw new SQLException("Failed to establish a connection");
@@ -35,6 +35,26 @@ public class ServiceEvent {
             event.setId(event_id);
         }
         rs.close();
+        ps.close();
+    }
+
+
+    public void updateEvent(Event event, int event_id) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("Update event SET name = ?, location = ?, date = ?, description = ?, type = ? WHERE event_id = " + event_id);
+
+        ps.setString(1, event.getName());
+        ps.setString(2, event.getLocation());
+        ps.setString(3, event.getDate());
+        ps.setString(4, event.getDescription());
+        ps.setString(5, event.getType());
+
+        ps.executeUpdate();
+    }
+
+    public void deleteEvent(String event_name) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("delete from event where name = ?");
+        ps.setString(1, event_name);
+        ps.execute();
         ps.close();
     }
 
@@ -62,13 +82,6 @@ public class ServiceEvent {
         return events;
     }
 
-    public void deleteEvent(String event_name) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("delete from event where name = ?");
-        ps.setString(1, event_name);
-        ps.execute();
-        ps.close();
-    }
-
     public Event getSelectedEvent(String event_name) throws SQLException {
         Event event = null;
         PreparedStatement ps = connection.prepareStatement("select * from event where name = ?");
@@ -90,17 +103,27 @@ public class ServiceEvent {
         return event;
     }
 
-    public void updateEvent(Event event, int event_id) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("Update event SET name = ?, location = ?, date = ?, description = ?, type = ? WHERE event_id = " + event_id);
+    public List<Event> getPublicEvents(User user) throws SQLException {
+        this.user = user;
+        List<Event> events = new ArrayList<>();
+        PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, u.user_id AS organizer_id " +
+                                                            "from event e " +
+                                                            "join Users u on e.organizer_id = u.user_id " +
+                                                            "where e.type = 'Public' and e.organizer_id != ?");
 
-        ps.setString(1, event.getName());
-        ps.setString(2, event.getLocation());
-        ps.setString(3, event.getDate());
-        ps.setString(4, event.getDescription());
-        ps.setString(5, event.getType());
+        ps.setInt(1, user.getUserId());
+        ResultSet rs = ps.executeQuery();
 
+        while (rs.next()) {
+            String name = rs.getString("name");
+            String location = rs.getString("location");
+            String date = rs.getString("date");
+            String type = rs.getString("type");
+            int organizer_id = rs.getInt("organizer_id");
+            User organizer = new User(organizer_id);
 
-        ps.executeUpdate();
-
+            events.add(new Event(name, date, location, type, organizer));
+        }
+        return events;
     }
 }

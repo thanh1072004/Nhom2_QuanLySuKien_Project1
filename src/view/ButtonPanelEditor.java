@@ -1,9 +1,6 @@
 package src.view;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Image;
+import java.awt.*;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
@@ -12,8 +9,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import src.components.JoinPanel;
-import src.components.TablePanel;
+import src.mainMenuPanel.InviteViewPanel;
 
 public class ButtonPanelEditor extends DefaultCellEditor {
 
@@ -21,9 +17,9 @@ public class ButtonPanelEditor extends DefaultCellEditor {
     private final JButton acceptButton = new JButton();
     private final JButton refuseButton = new JButton();
     private JTable table;
-    private JoinPanel joinPanel;
+    private InviteViewPanel joinPanel;
     
-    public ButtonPanelEditor(JCheckBox checkBox, JoinPanel joinPanel) {
+    public ButtonPanelEditor(JCheckBox checkBox, InviteViewPanel joinPanel) {
         super(checkBox);
         this.joinPanel = joinPanel;
         panel.setBackground(Color.WHITE);
@@ -53,6 +49,11 @@ public class ButtonPanelEditor extends DefaultCellEditor {
             int row = table.getSelectedRow();
             joinPanel.removeRow(row);
         });
+    }
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        this.table = table;
+        return panel;
     }
 
     private void setButtonIcon(JButton button, String imagePath, int width, int height) {

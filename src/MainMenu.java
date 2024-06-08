@@ -5,24 +5,23 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
-import src.components.*;
+import src.mainMenuPanel.*;
 import src.database.DatabaseConnection;
 import src.model.User;
 import src.service.ServiceEvent;
 import src.model.Event;
-import src.components.TablePanel;
+import src.mainMenuPanel.TablePanel;
 
 public class MainMenu extends JFrame {
     private JPanel mainPanel;
-    private CreatePanel createPanel;
+    private EventCreatePanel eventCreatePanel;
     private TablePanel tablePanel;
-    private JoinPanel joinPanel;
-    private InvitePanel invitePanel;
+    private InviteViewPanel joinPanel;
+    private InviteSendPanel invitePanel;
     private Event event;
     private ServiceEvent service;
     private User user;
     private int id = 1;
-
 
     public MainMenu(User user) {
         this.user = user;
@@ -40,14 +39,15 @@ public class MainMenu extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         tablePanel = new TablePanel(service, user, mainPanel, cardLayout);
-        joinPanel = new JoinPanel();
-        invitePanel = new InvitePanel();
-        createPanel = new CreatePanel(user, eventCreate);
-        createPanel.setFormListener(new FormListener() {
+        joinPanel = new InviteViewPanel();
+        invitePanel = new InviteSendPanel();
+        eventCreatePanel = new EventCreatePanel(user, eventCreate);
+        eventCreatePanel.setFormListener(new FormListener() {
             @Override
             public void formSubmitted(String name, String date, String location, String type) {
-                tablePanel.addRow(id++, name, date, location, type, user);
+                tablePanel.addRow(id++, name, location, date, type, user);
                 cardLayout.show(mainPanel, "tablePanel");
+
             }
             public void formUpdated(String name, String date, String location, String type) {}
         });
@@ -56,11 +56,12 @@ public class MainMenu extends JFrame {
         mainPanel.add(tablePanel, "tablePanel");
         mainPanel.add(joinPanel, "joinPanel");
         mainPanel.add(invitePanel, "invitePanel");
-        mainPanel.add(createPanel, "eventCreate");
+        mainPanel.add(eventCreatePanel, "eventCreate");
 
         SideBar sideBar = new SideBar(mainPanel, cardLayout, user);
         add(sideBar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
+
     }
 
     public Event getEvent(){
@@ -68,7 +69,7 @@ public class MainMenu extends JFrame {
     }
 
     private void createEvent(){
-        Event event = createPanel.getEvent();
+        Event event = eventCreatePanel.getEvent();
         String eventDate = event.getDate();
         try{
             LocalDate day = getDate(eventDate);
@@ -77,7 +78,7 @@ public class MainMenu extends JFrame {
             }else if (day.isBefore(LocalDate.now())){
                 System.out.println("Invalid date");
             }else{
-                service.authorizeEvent(event, user);
+                service.addEvent(event, user);
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -96,10 +97,11 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-            User user = new User(15, "tung", "97c873b3ef5ed9c7bcb8bd2b77e79b0d");
+            User user = new User(1015, "tunghv", "bb7d4b236b564cf1ec27aa891331e0af");
 
             MainMenu frame = new MainMenu(user);
             frame.setVisible(true);
         });
     }
+
 }

@@ -1,8 +1,9 @@
 package src.view;
 
-import src.components.FormListener;
-import src.components.TablePanel;
-import src.components.UpdatePanel;
+import src.mainMenuPanel.EventUpdatePanel;
+import src.mainMenuPanel.FormListener;
+import src.mainMenuPanel.TablePanel;
+import src.mainMenuPanel.EventUpdatePanel;
 import src.model.User;
 import src.service.ServiceEvent;
 import src.model.Event;
@@ -21,7 +22,7 @@ public class ButtonEditor extends DefaultCellEditor {
     private final JButton deleteButton = new JButton();
     private JTable table;
     private TablePanel tablePanel;
-    private UpdatePanel updatePanel;
+    private EventUpdatePanel eventUpdatePanel;
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private User user;
@@ -61,11 +62,11 @@ public class ButtonEditor extends DefaultCellEditor {
 
             try{
                 Event event = service.getSelectedEvent(event_name);
-                updatePanel = new UpdatePanel(user, eventUpdate);
-                updatePanel.setEventDetails(event);
-                mainPanel.add(updatePanel, "eventUpdate");
+                eventUpdatePanel = new EventUpdatePanel(user, eventUpdate);
+                eventUpdatePanel.setEventDetails(event);
+                mainPanel.add(eventUpdatePanel, "eventUpdate");
                 cardLayout.show(mainPanel, "eventUpdate");
-                updatePanel.setFormListener(new FormListener() {
+                eventUpdatePanel.setFormListener(new FormListener() {
                     @Override
                     public void formSubmitted(String name, String date, String location, String type) {
 
@@ -96,7 +97,7 @@ public class ButtonEditor extends DefaultCellEditor {
     }
 
     public void updateEvent(){
-        Event event = updatePanel.getEvent();
+        Event event = eventUpdatePanel.getEvent();
         int event_id = event.getId();
         String eventDate = event.getDate();
         try{

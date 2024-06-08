@@ -1,13 +1,14 @@
 package src;
 
-import base.Color1;
-import src.components.*;
+import src.base.MyColor;
+import src.loginPanel.Message;
 
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.text.DecimalFormat;
 
 import src.database.DatabaseConnection;
+import src.loginPanel.CoverPanel;
+import src.loginPanel.PanelLoginAndRegister;
 import src.model.User;
 import src.model.Login;
 import net.miginfocom.swing.MigLayout;
@@ -96,7 +97,6 @@ public class Main extends javax.swing.JFrame {
                 showMessage(Message.MessageType.ERROR,"Please fill all the fields");
             }else {
                 service.authorizeRegister(user);
-                showMessage(Message.MessageType.SUCCESS, "Register successful");
                 mainMenu = new MainMenu(user);
                 this.dispose();
                 mainMenu.setVisible(true);
@@ -114,7 +114,6 @@ public class Main extends javax.swing.JFrame {
         try{
             User user = service.authorizeLogin(dataLogin);
             if(user != null){
-                showMessage(Message.MessageType.SUCCESS, "Login successful");
                 mainMenu = new MainMenu(user);
                 this.dispose();
                 mainMenu.setVisible(true);
@@ -186,7 +185,7 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        bg.setBackground(Color1.WHITE);
+        bg.setBackground(MyColor.WHITE);
         bg.setOpaque(true);
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
