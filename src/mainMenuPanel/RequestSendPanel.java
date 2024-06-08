@@ -5,13 +5,13 @@ import java.awt.*;
 import javax.swing.table.*;
 
 import src.base.MyTextField;
-import src.view.ButtonPanelEditor;
-import src.view.ButtonPanelRenderer;
+import src.view.ButtonJoinEditor;
+import src.view.ButtonJoinRenderer;
 
-public class InviteViewPanel extends JPanel{
+public class RequestSendPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
-    public InviteViewPanel() {
+    public RequestSendPanel() {
     	setLayout(new BorderLayout());
         JPanel invitationListPanel1 = new JPanel(new BorderLayout());
         invitationListPanel1.setBackground(Color.WHITE);
@@ -29,7 +29,7 @@ public class InviteViewPanel extends JPanel{
         topPanel.add(searchPanel, BorderLayout.NORTH);
 
         // Tạo tên bảng
-        JLabel tableNameLabel = new JLabel("YOUR INVITATION TABLE", JLabel.CENTER);
+        JLabel tableNameLabel = new JLabel("PUBLIC EVENT LIST", JLabel.CENTER);
         tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
@@ -63,8 +63,8 @@ public class InviteViewPanel extends JPanel{
             }
         });
 
-        table.getColumn("Actions").setCellRenderer(new ButtonPanelRenderer());
-        table.getColumn("Actions").setCellEditor(new ButtonPanelEditor(new JCheckBox(), this));
+        table.getColumn("Actions").setCellRenderer(new ButtonJoinRenderer());
+        table.getColumn("Actions").setCellEditor(new ButtonJoinEditor(new JCheckBox(), this));
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -101,3 +101,4 @@ public class InviteViewPanel extends JPanel{
         addRowToTable(new Object[]{"3", "Event C", "2024-08-20", "Chicago", "Org C", "Action"});
     }
 }
+

@@ -32,12 +32,11 @@ public class DatabaseConnection {
 
     public void connectToDatabase() throws SQLException {
         if (connection == null) {
-            String serverName = "DESKTOP-APP81J1\\SQLEXPRESS";
+        	String serverName = "LAPTOP-MAULSVT1\\SQLEXPRESS";
             String dbName = "Event Management";
             String username = "sa";
-            String password = "tyl1312";
+            String password = "123456";
             String url = "jdbc:sqlserver://" + serverName + ":1433;DatabaseName=" + dbName + ";encrypt=true;trustServerCertificate=true";
-
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 connection = DriverManager.getConnection(url, username, password);

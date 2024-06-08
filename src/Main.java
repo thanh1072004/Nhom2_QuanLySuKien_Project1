@@ -81,7 +81,7 @@ public class Main extends javax.swing.JFrame {
         bg.add(loginAndRegister, "width " + loginSize + "%, pos" + (isLogin ? "0al" : "1al") + " 0 n 100%");
         loginAndRegister.showRegister(!isLogin);
         cover.login(isLogin);
-        cover.addEvent(_ -> {
+        cover.addEvent(e -> {
             if(!animator.isRunning()){
                 animator.start();
             }

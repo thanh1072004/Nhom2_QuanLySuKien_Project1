@@ -118,7 +118,7 @@ public class SideBar extends JPanel {
                 repaint();
             }
         });
-        viewInvitations.addActionListener(e -> cardLayout.show(mainPanel, "joinPanel"));
+        viewInvitations.addActionListener(e -> cardLayout.show(mainPanel, "invitationTablePanel"));
         sendInvitations.addActionListener(e -> cardLayout.show(mainPanel, "invitePanel"));
 
         JMenu requestMenu = createMenu("Request", Color.WHITE);
@@ -155,6 +155,8 @@ public class SideBar extends JPanel {
                 repaint();
             }
         });
+        viewRequest.addActionListener(e -> cardLayout.show(mainPanel, "requestViewPanel"));
+        sendRequest.addActionListener(e -> cardLayout.show(mainPanel, "requestSendPanel"));
         add(usernameLabel, gbc);
 
         gbc.gridy++;
