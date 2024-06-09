@@ -119,7 +119,7 @@ public class EventUpdatePanel extends JPanel{
                 }else if(getDate(eventDate).isBefore(LocalDate.now())){
                     System.out.println("Event date not valid");
                 }else{
-                    formListener.formUpdated(eventName, eventDate, eventLocation, eventType);
+                    formListener.formUpdated(eventName, eventLocation, eventDate, eventType);
                 }
                 event = new Event(event.getId() ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
             }catch(Exception ex){

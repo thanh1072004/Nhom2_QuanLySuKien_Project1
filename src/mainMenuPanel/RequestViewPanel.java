@@ -54,11 +54,11 @@ public class RequestViewPanel extends JPanel{
         table.setRowSelectionAllowed(false);
         table.setFocusable(false);
 
-        ImageIcon originalEditIcon = new ImageIcon("src\\icon\\accept.png");
+        ImageIcon originalEditIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/accept.png"));
         Image scaledImage_edit = originalEditIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon editIcon = new ImageIcon(scaledImage_edit);
 
-        ImageIcon originalDeleteIcon = new ImageIcon("src\\icon\\reject.png");
+        ImageIcon originalDeleteIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/reject.png"));
         Image scaledImage_bin = originalDeleteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
 
