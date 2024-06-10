@@ -3,18 +3,29 @@ package src.mainMenuPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.*;
 
 import src.base.MyTextField;
+import src.model.Event;
+import src.model.Request;
+import src.model.User;
+import src.service.ServiceRequest;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
 public class RequestViewPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
-    public RequestViewPanel() {
+    private ServiceRequest serviceRequest;
+    private User user;
+
+    public RequestViewPanel(User user) {
+        this.user = user;
+        serviceRequest = new ServiceRequest();
+
     	setLayout(new BorderLayout());
         JPanel invitationListPanel1 = new JPanel(new BorderLayout());
         invitationListPanel1.setBackground(Color.WHITE);
@@ -101,23 +112,32 @@ public class RequestViewPanel extends JPanel{
         invitationListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
         add(invitationListPanel1, BorderLayout.CENTER);
         
-        addSampleData();
+        loadDataFromDatabase();
     }
     
     public void removeRow(int row){
         tableModel.removeRow(row);
     }
-    
- // Method to add a row to the table
+
     public void addRowToTable(Object[] rowData) {
         tableModel.addRow(rowData);
     }
 
-    // Method to add some sample data
-    private void addSampleData() {
-        addRowToTable(new Object[]{"1", "Event A", "2024-06-10", "New York", "Sender A", "Action"});
-        addRowToTable(new Object[]{"2", "Event B", "2024-07-15", "Los Angeles", "Sender B", "Action"});
-        addRowToTable(new Object[]{"3", "Event C", "2024-08-20", "Chicago", "Sender C", "Action"});
+    private void loadDataFromDatabase() {
+        int id = 1;
+        tableModel.setRowCount(0);
+
+        try {
+            List<Request> requests = serviceRequest.getRequests(user);
+
+            for (Request request : requests) {
+                Event event = request.getEvent();
+                User sender = request.getSender();
+                addRowToTable(new Object[]{id++, event.getName(), event.getDate(), event.getLocation(), sender.getUsername(), "Action"});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 

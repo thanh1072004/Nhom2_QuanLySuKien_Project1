@@ -62,9 +62,9 @@ public class ServiceEvent {
         this.user = user;
         List<Event> events = new ArrayList<>();
         PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, u.user_id AS organizer_id " +
-                "from event e " +
-                "join Users u on e.organizer_id = u.user_id " +
-                "where u.user_id = ?");
+                                                            "from event e " +
+                                                            "join Users u on e.organizer_id = u.user_id " +
+                                                            "where u.user_id = ?");
 
         ps.setInt(1, user.getUserId());
         ResultSet rs = ps.executeQuery();
@@ -108,7 +108,7 @@ public class ServiceEvent {
         List<Event> events = new ArrayList<>();
         PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
                                                             "from event e " +
-                                                            "join Users u on organizer_id != u.user_id " +
+                                                            "join Users u on organizer_id = u.user_id " +
                                                             "where e.type = 'Public' and organizer_id != ?");
 
         ps.setInt(1, user.getUserId());

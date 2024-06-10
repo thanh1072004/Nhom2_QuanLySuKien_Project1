@@ -5,6 +5,8 @@ import src.base.MyTextField;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
+import src.service.ServiceRequest;
+import src.service.ServiceUser;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
@@ -14,21 +16,29 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RequestSendPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
+    private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
+    private ServiceRequest serviceRequest;
     private User user;
 
-    public RequestSendPanel(ServiceEvent serviceEvent, User user) {
+
+    public RequestSendPanel(User user) {
 
         try {
             this.user = user;
-            this.serviceEvent = serviceEvent;
-            java.util.List<src.model.Event> events = serviceEvent.getPublicEvents(user);
+            serviceUser = new ServiceUser();
+            serviceEvent = new ServiceEvent();
+            serviceRequest = new ServiceRequest();
+            List<Event> events = serviceEvent.getPublicEvents(user);
 
             setLayout(new BorderLayout());
             JPanel eventListPanel1 = new JPanel(new BorderLayout());
@@ -66,9 +76,9 @@ public class RequestSendPanel extends JPanel {
             table.setRowSelectionAllowed(false);
             table.setFocusable(false);
 
-            ImageIcon originalEditIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/edit.png"));
-            Image scaledImage_edit = originalEditIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-            ImageIcon editIcon = new ImageIcon(scaledImage_edit);
+            ImageIcon originalSendIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/edit.png"));
+            Image scaledImage_send = originalSendIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            ImageIcon sendIcon = new ImageIcon(scaledImage_send);
 
             ImageIcon originalDeleteIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/delete.png"));
             Image scaledImage_bin = originalDeleteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
@@ -78,7 +88,7 @@ public class RequestSendPanel extends JPanel {
             backgroundColor.add(MyColor.CYAN);
             backgroundColor.add(MyColor.RED);
             List<ImageIcon> icons = new ArrayList<>();
-            icons.add(editIcon);
+            icons.add(sendIcon);
             icons.add(deleteIcon);
 
             ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
@@ -87,10 +97,25 @@ public class RequestSendPanel extends JPanel {
             List<ActionListener> actionListeners = new ArrayList<>();
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
-                System.out.println(row);
+                String name = (String) table.getValueAt(row, 1);
+                try{
+                    Event event = serviceEvent.getSelectedEvent(name);
+                    serviceRequest.addRequest(event, user);
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
+                removeRow(row);
             });
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
+                String name = (String) table.getValueAt(row, 1);
+
+                try {
+                    Event event = serviceEvent.getSelectedEvent(name);
+                    serviceRequest.addRequest(event, user);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
                 removeRow(row);
             });
 
@@ -131,7 +156,7 @@ public class RequestSendPanel extends JPanel {
         tableModel.removeRow(row);
     }
 
-    public void loadPublicEvents(List<src.model.Event> events) {
+    public void loadPublicEvents(List<Event> events) {
         int id = 1;
         tableModel.setRowCount(0);
         for (Event event : events) {

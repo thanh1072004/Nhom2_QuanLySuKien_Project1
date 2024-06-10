@@ -63,10 +63,10 @@ public class InviteViewPanel extends JPanel{
         Image scaledImage_bin = originalDeleteIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
 
-        java.util.List<Color> backgroundColor = new ArrayList<>();
+        List<Color> backgroundColor = new ArrayList<>();
         backgroundColor.add(Color.CYAN);
         backgroundColor.add(MyColor.RED);
-        java.util.List<ImageIcon> icons = new ArrayList<>();
+        List<ImageIcon> icons = new ArrayList<>();
         icons.add(editIcon);
         icons.add(deleteIcon);
 

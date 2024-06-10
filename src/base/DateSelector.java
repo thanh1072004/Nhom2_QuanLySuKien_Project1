@@ -45,6 +45,8 @@ public class DateSelector extends JPanel {
         gbc.gridx = 2;
         gbc.gridy = 0;
         add(yearComboBox, gbc);
+
+        resetToCurrentDate();
     }
 
     public String getSelectedDate(){
@@ -73,5 +75,12 @@ public class DateSelector extends JPanel {
         } catch (IllegalArgumentException e) {
             System.err.println("Error setting date: " + e.getMessage());
         }
+    }
+
+    public void resetToCurrentDate() {
+        Calendar currentDate = Calendar.getInstance();
+        dayComboBox.setSelectedItem(currentDate.get(Calendar.DAY_OF_MONTH));
+        monthComboBox.setSelectedIndex(currentDate.get(Calendar.MONTH));
+        yearComboBox.setSelectedItem(currentDate.get(Calendar.YEAR));
     }
 }

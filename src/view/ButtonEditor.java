@@ -39,7 +39,9 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
             panel.add(button, gbc);
             gbc.gridx++;
         }
+
     }
+
 
     @Override
     public Object getCellEditorValue() {

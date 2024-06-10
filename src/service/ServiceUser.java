@@ -86,4 +86,20 @@ public class ServiceUser {
             return "";
         }
     }
+
+    public User getUser(int user_id) throws SQLException {
+        User user = null;
+        PreparedStatement ps = connection.prepareStatement("select * from Users where user_id = ?");
+        ps.setInt(1, user_id);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+            String username = rs.getString("username");
+            String password = rs.getString("password");
+            user = new User(user_id, username, password);
+        }
+        rs.close();
+        ps.close();
+
+        return user;
+    }
 }

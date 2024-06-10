@@ -196,6 +196,16 @@ public class SideBar extends JPanel {
         menu.setBackground(new Color(52, 58, 64));
         menu.setOpaque(true);
         menu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        menu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                setCursor(Cursor.getDefaultCursor());
+            }
+        });
         return menu;
     }
 
@@ -210,11 +220,12 @@ public class SideBar extends JPanel {
             @Override
             public void mouseEntered(MouseEvent e) {
                 menuItem.setBackground(MyColor.BACKGROUND_MENU_ITEM2);
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
                 menuItem.setBackground(MyColor.BACKGROUND_MENU_ITEM);
+                setCursor(Cursor.getDefaultCursor());
             }
         });
         return menuItem;

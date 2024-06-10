@@ -116,6 +116,7 @@ public class EventCreatePanel extends JPanel{
                 }
                 name.setText("");
                 location.setText("");
+                dateSelector.resetToCurrentDate();
                 typeList.setSelectedIndex(0);
                 description.setText("");
                 event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
