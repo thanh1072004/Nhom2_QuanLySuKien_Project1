@@ -102,4 +102,32 @@ public class ServiceUser {
 
         return user;
     }
+    public User getUser(String username) throws SQLException {
+        User user = null;
+        PreparedStatement ps = connection.prepareStatement("select * from Users where username = ?");
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+            int user_id = rs.getInt("user_id");
+            String password = rs.getString("password");
+            user = new User(user_id, username, password);
+        }
+        rs.close();
+        ps.close();
+
+        return user;
+    }
+
+    public String getUsernameFromUserID(int userId) throws SQLException {
+        String username = null;
+        PreparedStatement ps = connection.prepareStatement("SELECT username FROM Users WHERE user_id = ?");
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            username = rs.getString("username");
+        }
+        rs.close();
+        ps.close();
+        return username;
+    }
 }

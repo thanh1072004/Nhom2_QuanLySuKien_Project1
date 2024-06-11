@@ -56,14 +56,14 @@ public class RequestSendPanel extends JPanel {
             searchPanel.add(searchField);
             topPanel.add(searchPanel, BorderLayout.NORTH);
 
-            JLabel tableNameLabel = new JLabel("Available Event", JLabel.CENTER);
+            JLabel tableNameLabel = new JLabel("Public Event", JLabel.CENTER);
             tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
             tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
             eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
             eventListPanel1.add(topPanel, BorderLayout.NORTH);
 
-            String[] columnNames = {"Event ID", "Name", "Location", "Date", "Type", "Organizer", "Actions"};
+            String[] columnNames = {"Event ID", "Name", "Date", "Location", "Organizer", "Actions"};
             tableModel = new DefaultTableModel(columnNames, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -92,7 +92,7 @@ public class RequestSendPanel extends JPanel {
             icons.add(deleteIcon);
 
             ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
-            table.getColumnModel().getColumn(6).setCellRenderer(buttonRender);
+            table.getColumnModel().getColumn(5).setCellRenderer(buttonRender);
 
             List<ActionListener> actionListeners = new ArrayList<>();
             actionListeners.add(e -> {
@@ -120,7 +120,7 @@ public class RequestSendPanel extends JPanel {
             });
 
             ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
-            table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
+            table.getColumnModel().getColumn(5).setCellEditor(buttonEdit);
 
             table.setRowHeight(48);
 
@@ -143,15 +143,10 @@ public class RequestSendPanel extends JPanel {
             e.printStackTrace();
         }
     }
-    public void addRow(int id, String name, String location, String date, String type, User organizer) {
-        tableModel.addRow(new Object[]{id, name, location, date, type, organizer.getUsername()});
+    public void addRow(int id, String name,  String date, String location, User organizer) {
+        tableModel.addRow(new Object[]{id, name, date, location, organizer.getUsername()});
     }
-    public void updateRow(int row, String name, String location, String date, String type) {
-        tableModel.setValueAt(name, row, 1);
-        tableModel.setValueAt(location, row, 2);
-        tableModel.setValueAt(date, row, 3);
-        tableModel.setValueAt(type, row, 4);
-    }
+
     public void removeRow(int row){
         tableModel.removeRow(row);
     }
@@ -160,7 +155,7 @@ public class RequestSendPanel extends JPanel {
         int id = 1;
         tableModel.setRowCount(0);
         for (Event event : events) {
-            addRow(id++, event.getName(), event.getLocation(), event.getDate(), event.getType(), event.getOrganizer());
+            addRow(id++, event.getName(), event.getDate(), event.getLocation(), event.getOrganizer());
         }
     }
 }

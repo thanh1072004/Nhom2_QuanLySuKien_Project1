@@ -11,6 +11,7 @@ import java.util.List;
 public class ServiceEvent {
     private final Connection connection;
     private User user;
+    private ServiceUser serviceUser;
 
     public ServiceEvent() {
         connection = DatabaseConnection.getInstance().getConnection();
@@ -104,11 +105,11 @@ public class ServiceEvent {
     }
 
     public List<Event> getPublicEvents(User user) throws SQLException {
+        serviceUser = new ServiceUser();
         this.user = user;
         List<Event> events = new ArrayList<>();
         PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
                                                             "from event e " +
-                                                            "join Users u on organizer_id = u.user_id " +
                                                             "where e.type = 'Public' and organizer_id != ?");
 
         ps.setInt(1, user.getUserId());
@@ -120,7 +121,7 @@ public class ServiceEvent {
             String date = rs.getString("date");
             String type = rs.getString("type");
             int organizer_id = rs.getInt("organizer_id");
-            String organizerUsername = getUsernameFromUserID(organizer_id);
+            String organizerUsername = serviceUser.getUsernameFromUserID(organizer_id);
 
             User organizer = new User(organizer_id);
             organizer.setUsername(organizerUsername);
@@ -130,16 +131,4 @@ public class ServiceEvent {
         return events;
     }
 
-    public String getUsernameFromUserID(int userId) throws SQLException {
-        String username = null;
-        PreparedStatement ps = connection.prepareStatement("SELECT username FROM Users WHERE user_id = ?");
-        ps.setInt(1, userId);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            username = rs.getString("username");
-        }
-        rs.close();
-        ps.close();
-        return username;
-    }
 }

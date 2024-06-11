@@ -3,19 +3,30 @@ package src.mainMenuPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.*;
 
 import src.base.MyColor;
 import src.base.MyTextField;
+import src.model.Event;
+import src.model.Invite;
+import src.model.User;
+import src.service.ServiceInvite;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
 public class InviteViewPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
-    public InviteViewPanel() {
+    private User user;
+    private ServiceInvite serviceInvite;
+
+    public InviteViewPanel(User user) {
+        this.user = user;
+        serviceInvite = new ServiceInvite();
+
     	setLayout(new BorderLayout());
         JPanel invitationListPanel1 = new JPanel(new BorderLayout());
         invitationListPanel1.setBackground(Color.WHITE);
@@ -40,7 +51,7 @@ public class InviteViewPanel extends JPanel{
         invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
         invitationListPanel1.add(topPanel, BorderLayout.NORTH);
         
-        String[] columnNames = {"#", "Name", "Event Date", "Location",  "Organizer", "Actions"};
+        String[] columnNames = {"#", "Name", "Date", "Location",  "Organizer", "Actions"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -103,17 +114,33 @@ public class InviteViewPanel extends JPanel{
         add(invitationListPanel1, BorderLayout.CENTER);
         
         addSampleData();
+        getInvite();
     }
     
     public void removeRow(int row){
         tableModel.removeRow(row);
     }
-    
- // Method to add a row to the table
+
     public void addRowToTable(Object[] rowData) {
         tableModel.addRow(rowData);
     }
 
+    private void getInvite() {
+        int id = 1;
+        tableModel.setRowCount(0);
+
+        try {
+            List<Invite> invites = serviceInvite.getInvites(user);
+
+            for (Invite invite : invites) {
+                Event event = invite.getEvent();
+                User sender = invite.getSender();
+                addRowToTable(new Object[]{id++, event.getName(), event.getDate(), event.getLocation(), sender.getUsername(), "Action"});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     // Method to add some sample data
     private void addSampleData() {
         addRowToTable(new Object[]{"1", "Event A", "2024-06-10", "New York", "Org A", "Action"});

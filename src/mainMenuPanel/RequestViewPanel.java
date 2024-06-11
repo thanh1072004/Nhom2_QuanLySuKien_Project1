@@ -43,14 +43,14 @@ public class RequestViewPanel extends JPanel{
         topPanel.add(searchPanel, BorderLayout.NORTH);
 
         // Tạo tên bảng
-        JLabel tableNameLabel = new JLabel("YOUR REQUEST TABLE", JLabel.CENTER);
+        JLabel tableNameLabel = new JLabel("Participation Requests", JLabel.CENTER);
         tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
         invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
         invitationListPanel1.add(topPanel, BorderLayout.NORTH);
         
-        String[] columnNames = {"#", "Name", "Event Date", "Location",  "Sender", "Actions"};
+        String[] columnNames = {"#", "Name", "Date", "Location",  "Sender", "Actions"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -112,7 +112,7 @@ public class RequestViewPanel extends JPanel{
         invitationListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
         add(invitationListPanel1, BorderLayout.CENTER);
         
-        loadDataFromDatabase();
+        getRequest();
     }
     
     public void removeRow(int row){
@@ -123,7 +123,7 @@ public class RequestViewPanel extends JPanel{
         tableModel.addRow(rowData);
     }
 
-    private void loadDataFromDatabase() {
+    private void getRequest() {
         int id = 1;
         tableModel.setRowCount(0);
 

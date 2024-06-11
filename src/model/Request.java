@@ -4,9 +4,9 @@ public class Request {
     private Event event;
     private User sender;
 
-    public Request(Event event, User sender) {
-        this.event = event;
+    public Request(User sender, Event event) {
         this.sender = sender;
+        this.event = event;
     }
 
     public Event getEvent() {

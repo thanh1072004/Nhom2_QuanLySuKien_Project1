@@ -1,26 +1,31 @@
 package src.mainMenuPanel;
 
+import src.MainMenu;
 import src.base.DateSelector;
 import src.model.User;
 import src.model.Event;
+import src.service.ServiceEvent;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
 
 public class EventCreatePanel extends JPanel{
-    private FormListener formListener;
     private User user;
     private Event event;
+    private ServiceEvent serviceEvent;
+    private MainMenu mainMenu;
+    private TableListener tableListener;
 
-    public Event getEvent(){
-        return event;
-    }
 
-    public EventCreatePanel(User user, ActionListener eventCreate) {
+    public EventCreatePanel(User user, MainMenu mainMenu) {
+        this.mainMenu = mainMenu;
         this.user = user;
+        tableListener = mainMenu.getTablePanel();
+        serviceEvent = new ServiceEvent();
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -95,7 +100,6 @@ public class EventCreatePanel extends JPanel{
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton createEventButton = new JButton("Create Event");
-        createEventButton.addActionListener(eventCreate);
         createEventButton.setFont(font);
         createEventButton.setFocusPainted(false);
         createEventButton.addActionListener(e -> {
@@ -105,21 +109,22 @@ public class EventCreatePanel extends JPanel{
                 String eventLocation = location.getText().trim();
                 String eventType = typeList.getSelectedItem().toString().trim();
                 String eventDescription = description.getText().trim();
-                if(eventName.isEmpty() && eventType.isEmpty() && eventDescription.isEmpty()){
-                    System.out.println("Event name or event date or event location or event type or event description is empty");
-                }else if(formListener == null){
-                    System.out.println("FormListener is null");
+                if(eventName.isEmpty() || eventType.isEmpty() || eventLocation.isEmpty()){
+                    System.out.println("Event name or event date or event location or event type is empty");
                 }else if(getDate(eventDate).isBefore(LocalDate.now())){
                     System.out.println("Event date not valid");
                 }else{
-                    formListener.formSubmitted(eventName, eventDate, eventLocation, eventType);
+                    tableListener.addRow(eventName, eventDate, eventLocation, eventType, user);
+                    event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
+                    serviceEvent.addEvent(event, user);
+                    mainMenu.showPanel("tablePanel");
                 }
                 name.setText("");
                 location.setText("");
                 dateSelector.resetToCurrentDate();
                 typeList.setSelectedIndex(0);
                 description.setText("");
-                event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
+
             }catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -128,12 +133,10 @@ public class EventCreatePanel extends JPanel{
 
         add(buttonPanel, gbc);
     }
-    public void setFormListener(FormListener formListener){
-        this.formListener = formListener;
-    }
 
     public LocalDate getDate(String date){
         return LocalDate.parse(date);
     }
+
 }
 

@@ -5,17 +5,16 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import src.MainMenu;
 import src.base.MyColor;
 import src.model.User;
 
 public class SideBar extends JPanel {
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
+    private MainMenu mainMenu;
     private User user;
 
-    public SideBar(JPanel mainPanel, CardLayout cardLayout, User user){
-        this.mainPanel = mainPanel;
-        this.cardLayout = cardLayout;
+    public SideBar(MainMenu mainMenu, User user){
+        this.mainMenu = mainMenu;
         this.user = user;
 
         setPreferredSize(new Dimension(200, getHeight()));
@@ -80,8 +79,8 @@ public class SideBar extends JPanel {
                 repaint();
             }
         });
-        create.addActionListener(e -> cardLayout.show(mainPanel, "eventCreatePanel"));
-        view.addActionListener(e -> cardLayout.show(mainPanel, "tablePanel"));
+        create.addActionListener(e -> mainMenu.showPanel("eventCreatePanel"));
+        view.addActionListener(e -> mainMenu.showPanel("tablePanel"));
 
         JMenu invitationsMenu = createMenu("Invitations", Color.WHITE);
         invitationsMenu.setPreferredSize(new Dimension(200, 50));
@@ -120,8 +119,8 @@ public class SideBar extends JPanel {
                 repaint();
             }
         });
-        viewInvitations.addActionListener(e -> cardLayout.show(mainPanel, "inviteViewPanel"));
-        sendInvitations.addActionListener(e -> cardLayout.show(mainPanel, "inviteSendPanel"));
+        viewInvitations.addActionListener(e -> mainMenu.showPanel("inviteViewPanel"));
+        sendInvitations.addActionListener(e -> mainMenu.showPanel("inviteSendPanel"));
 
         JMenu requestMenu = createMenu("Request", Color.WHITE);
         requestMenu.setPreferredSize(new Dimension(200, 50));
@@ -157,8 +156,8 @@ public class SideBar extends JPanel {
                 repaint();
             }
         });
-        viewRequest.addActionListener(e -> cardLayout.show(mainPanel, "requestViewPanel"));
-        sendRequest.addActionListener(e -> cardLayout.show(mainPanel, "requestSendPanel"));
+        viewRequest.addActionListener(e -> mainMenu.showPanel("requestViewPanel"));
+        sendRequest.addActionListener(e -> mainMenu.showPanel("requestSendPanel"));
         add(usernameLabel, gbc);
 
         gbc.gridy++;

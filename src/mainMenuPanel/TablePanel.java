@@ -2,6 +2,7 @@ package src.mainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import src.MainMenu;
 import src.base.MyColor;
 import src.model.Event;
 import src.model.User;
@@ -17,24 +19,23 @@ import src.base.MyTextField;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
-public class TablePanel extends JPanel{
+public class TablePanel extends JPanel implements TableListener {
     private JTable table;
     private DefaultTableModel tableModel;
     private User user;
     private int id = 1;
     private EventUpdatePanel eventUpdatePanel;
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
-    private ServiceEvent service;
+    private MainMenu mainMenu;
+    private ServiceEvent serviceEvent;
+    private int row;
 
-    public TablePanel(ServiceEvent service, User user, JPanel mainPanel, CardLayout cardLayout) {
+    public TablePanel(User user, MainMenu mainMenu) {
         try {
             this.user = user;
-            this.service = service;
-            this.mainPanel = mainPanel;
-            this.cardLayout = cardLayout;
-            ActionListener eventUpdate = e -> updateEvent();
-            List<Event> events = service.getUserEvent(user);
+            this.mainMenu = mainMenu;
+            serviceEvent = new ServiceEvent();
+
+            List<Event> events = serviceEvent.getUserEvent(user);
 
             setLayout(new BorderLayout());
             JPanel eventListPanel1 = new JPanel(new BorderLayout());
@@ -59,7 +60,7 @@ public class TablePanel extends JPanel{
             eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
             eventListPanel1.add(topPanel, BorderLayout.NORTH);
 
-            String[] columnNames = {"Event ID", "Name", "Location", "Date", "Type", "Organizer", "Actions"};
+            String[] columnNames = {"#", "Name", "Date", "Location", "Type", "Organizer", "Actions"};
             tableModel = new DefaultTableModel(columnNames, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -92,27 +93,15 @@ public class TablePanel extends JPanel{
 
             List<ActionListener> actionListeners = new ArrayList<>();
             actionListeners.add(e -> {
-                int row = table.getSelectedRow();
-                String event_name = table.getValueAt(row, 1).toString();
-
                 try{
-                    Event event = service.getSelectedEvent(event_name);
-                    eventUpdatePanel = new EventUpdatePanel(user, eventUpdate);
-                    eventUpdatePanel.setEventDetails(event);
-                    mainPanel.add(eventUpdatePanel, "eventUpdate");
-                    cardLayout.show(mainPanel, "eventUpdate");
-                    eventUpdatePanel.setFormListener(new FormListener() {
-                        @Override
-                        public void formSubmitted(String name, String date, String location, String type) {
+                    row = table.getSelectedRow();
+                    String event_name = table.getValueAt(row, 1).toString();
 
-                        }
+                    Event event = serviceEvent.getSelectedEvent(event_name);
+                    mainMenu.setEvent(event);
 
-                        @Override
-                        public void formUpdated(String name, String date, String location, String type) {
-                            updateRow(row, name, date, location, type);
-                            cardLayout.show(mainPanel, "tablePanel");
-                        }
-                    });
+                    eventUpdatePanel = new EventUpdatePanel(user, event, mainMenu);
+                    mainMenu.showPanel("eventUpdatePanel");
                 }catch(SQLException ex){
                     ex.printStackTrace();
                 }
@@ -121,7 +110,7 @@ public class TablePanel extends JPanel{
                 int row = table.getSelectedRow();
                 String event_name = table.getModel().getValueAt(row, 1).toString();
                 try {
-                    service.deleteEvent(event_name);
+                    serviceEvent.deleteEvent(event_name);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -147,15 +136,25 @@ public class TablePanel extends JPanel{
             e.printStackTrace();
         }
     }
-    public void addRow(String name, String location, String date, String type, User organizer) {
-        tableModel.addRow(new Object[]{id++, name, location, date, type, organizer.getUsername()});
+
+    @Override
+    public int getRow() {
+        return row;
     }
-    public void updateRow(int row, String name, String location, String date, String type) {
+
+    @Override
+    public void addRow(String name, String date, String location, String type, User organizer) {
+        tableModel.addRow(new Object[]{id++, name, date, location, type, organizer.getUsername()});
+    }
+
+    @Override
+    public void updateRow(int row, String name, String date, String location,  String type) {
         tableModel.setValueAt(name, row, 1);
-        tableModel.setValueAt(location, row, 2);
-        tableModel.setValueAt(date, row, 3);
+        tableModel.setValueAt(date, row, 2);
+        tableModel.setValueAt(location, row, 3);
         tableModel.setValueAt(type, row, 4);
     }
+    @Override
     public void removeRow(int row){
         tableModel.removeRow(row);
     }
@@ -163,29 +162,7 @@ public class TablePanel extends JPanel{
     public void loadUserEvents(List<Event> events) {
         tableModel.setRowCount(0);
         for (Event event : events) {
-            addRow(event.getName(), event.getLocation(), event.getDate(), event.getType(), user);
+            addRow(event.getName(), event.getDate(), event.getLocation(), event.getType(), user);
         }
-    }
-
-    public void updateEvent(){
-        Event event = eventUpdatePanel.getEvent();
-        int event_id = event.getId();
-        String eventDate = event.getDate();
-        try{
-            LocalDate day = getDate(eventDate);
-            if(event.getName().isEmpty()  || event.getLocation().isEmpty()){
-                System.out.println("Please fill all the required fields");
-            }else if (day.isBefore(LocalDate.now())){
-                System.out.println("Invalid date");
-            }else{
-                service.updateEvent(event, event_id);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public LocalDate getDate(String date){
-        return LocalDate.parse(date);
     }
 }

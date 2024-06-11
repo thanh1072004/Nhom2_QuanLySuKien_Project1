@@ -2,6 +2,7 @@ package src.service;
 
 import src.database.DatabaseConnection;
 import src.model.Event;
+import src.model.Invite;
 import src.model.Request;
 import src.model.User;
 
@@ -12,45 +13,47 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceRequest {
+public class ServiceInvite {
     private final Connection connection;
-    private User user;
+    private User sender;
+    private User receiver;
     private Event event;
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
 
-    public ServiceRequest() {
+    public ServiceInvite() {
         connection = DatabaseConnection.getInstance().getConnection();
     }
 
-    public void addRequest(Event event, User user) throws SQLException {
-        this.user = user;
+    public void addInvite(User sender, User receiver, Event event) throws SQLException {
+        this.sender = sender;
+        this.receiver = receiver;
         this.event = event;
-        if(connection == null) {
+        if(connection == null){
             throw new SQLException("Failed to connect to database");
         }
-        PreparedStatement ps = connection.prepareStatement("insert into request(sender_id, event_id, organizer_id) values(?,?,?)");
-        ps.setInt(1, user.getUserId());
-        ps.setInt(2, event.getId());
-        ps.setInt(3, event.getOrganizer().getUserId());
-        System.out.println(user.getUserId());
-        System.out.println(event.getOrganizer().getUserId());
-        System.out.println(event.getId());
+
+        PreparedStatement ps = connection.prepareStatement("INSERT INTO invitation (sender_id, receiver_id, event_id) VALUES (? ,?, ?)");
+        ps.setInt(1, sender.getUserId());
+        ps.setInt(2, receiver.getUserId());
+        ps.setInt(3, event.getId());
         ps.executeUpdate();
+
         ps.close();
     }
 
-    public List<Request> getRequests(User user) throws SQLException {
+    public List<Invite> getInvites(User receiver) throws SQLException {
+        List<Invite> invites = new ArrayList<>();
         serviceEvent = new ServiceEvent();
         serviceUser = new ServiceUser();
-        this.user = user;
+        this.receiver = receiver;
         List<Request> requests = new ArrayList<>();
 
-        PreparedStatement ps = connection.prepareStatement("select e.name, e.location, e.date, r.sender_id " +
+        PreparedStatement ps = connection.prepareStatement("select e.name, e.location, e.date, e.type, i.sender_id " +
                                                             "from event e " +
-                                                            "join request r on e.event_id = r.event_id " +
-                                                            "where r.organizer_id = ?");
-        ps.setInt(1, user.getUserId());
+                                                            "join invitation i on e.event_id = i.event_id " +
+                                                            "where i.receiver_id = ?");
+        ps.setInt(1, receiver.getUserId());
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
@@ -60,11 +63,11 @@ public class ServiceRequest {
             Event event = serviceEvent.getSelectedEvent(event_name);
             User sender = serviceUser.getUser(sender_id);
 
-            requests.add(new Request(sender, event));
+            invites.add(new Invite(sender, event));
         }
         rs.close();
         ps.close();
 
-        return requests;
+        return invites;
     }
 }

@@ -1,5 +1,6 @@
 package src.mainMenuPanel;
 
+import src.MainMenu;
 import src.base.DateSelector;
 import src.model.User;
 import src.model.Event;
@@ -12,20 +13,21 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class EventUpdatePanel extends JPanel{
-    private FormListener formListener;
     private Event event;
-    private JTextField name;
+    private JTextField name, location;
     private DateSelector dateSelector;
-    private JTextField location;
     private JComboBox<String> typeList;
     private JTextArea description;
     private ServiceEvent serviceEvent;
+    private MainMenu mainMenu;
+    private TableListener tableListener;
 
-    public Event getEvent(){
-        return event;
-    }
 
-    public EventUpdatePanel(User user, ActionListener eventUpdate) {
+    public EventUpdatePanel(User user, Event event, MainMenu mainMenu) {
+        this.event = event;
+
+        this.mainMenu = mainMenu;
+        tableListener = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
 
         setLayout(new GridBagLayout());
@@ -98,11 +100,14 @@ public class EventUpdatePanel extends JPanel{
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.NONE;
-
+        try {
+            setEventDetails(event);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton updateEventButton = new JButton("Update Event");
-        updateEventButton.addActionListener(eventUpdate);
         updateEventButton.setFont(font);
         updateEventButton.setFocusPainted(false);
         updateEventButton.addActionListener(e -> {
@@ -113,15 +118,16 @@ public class EventUpdatePanel extends JPanel{
                 String eventType = typeList.getSelectedItem().toString().trim();
                 String eventDescription = description.getText().trim();
                 if(eventName.isEmpty() && eventType.isEmpty() && eventDescription.isEmpty()){
-                    System.out.println("Event name or event date or event location or event type or event description is empty");
-                }else if(formListener == null){
-                    System.out.println("FormListener is null");
+                    System.out.println("Event name or event date or event location or event type or event description is empty");;
                 }else if(getDate(eventDate).isBefore(LocalDate.now())){
                     System.out.println("Event date not valid");
                 }else{
-                    formListener.formUpdated(eventName, eventLocation, eventDate, eventType);
+                    int row = tableListener.getRow();
+                    tableListener.updateRow(row, eventName, eventDate, eventLocation, eventType);
+                    Event updatedEvent = new Event(event.getId() ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
+                    serviceEvent.updateEvent(updatedEvent, event.getId());
+                    mainMenu.showPanel("tablePanel");
                 }
-                event = new Event(event.getId() ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
             }catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -129,9 +135,6 @@ public class EventUpdatePanel extends JPanel{
         buttonPanel.add(updateEventButton);
 
         add(buttonPanel, gbc);
-    }
-    public void setFormListener(FormListener formListener){
-        this.formListener = formListener;
     }
 
     public LocalDate getDate(String date){
@@ -141,8 +144,8 @@ public class EventUpdatePanel extends JPanel{
     public void setEventDetails(Event event) throws SQLException {
         this.event = serviceEvent.getSelectedEvent(event.getName());
         name.setText(event.getName());
-        location.setText(event.getLocation());
         dateSelector.setDate(event.getDate());
+        location.setText(event.getLocation());
         typeList.setSelectedItem(event.getType());
         description.setText(event.getDescription());
     }
