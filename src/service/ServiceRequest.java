@@ -23,7 +23,7 @@ public class ServiceRequest {
         connection = DatabaseConnection.getInstance().getConnection();
     }
 
-    public void addRequest(Event event, User user) throws SQLException {
+    public void addRequest(User user, Event event) throws SQLException {
         this.user = user;
         this.event = event;
         if(connection == null) {
@@ -33,13 +33,16 @@ public class ServiceRequest {
         ps.setInt(1, user.getUserId());
         ps.setInt(2, event.getId());
         ps.setInt(3, event.getOrganizer().getUserId());
-        System.out.println(user.getUserId());
-        System.out.println(event.getOrganizer().getUserId());
-        System.out.println(event.getId());
         ps.executeUpdate();
         ps.close();
     }
 
+    public void removeRequest(User user, Event event) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("delete from request where sender_id=? and event_id=?");
+        ps.setInt(1, user.getUserId());
+        ps.setInt(2, event.getId());
+        ps.executeUpdate();
+    }
     public List<Request> getRequests(User user) throws SQLException {
         serviceEvent = new ServiceEvent();
         serviceUser = new ServiceUser();

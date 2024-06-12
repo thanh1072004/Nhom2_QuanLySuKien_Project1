@@ -42,6 +42,12 @@ public class ServiceInvite {
         ps.close();
     }
 
+    public void removeInvite(User receiver, Event event) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("delete from invitation where receiver_id=? and event_id=?");
+        ps.setInt(1, receiver.getUserId());
+        ps.setInt(2, event.getId());
+        ps.executeUpdate();
+    }
     public List<Invite> getInvites(User receiver) throws SQLException {
         List<Invite> invites = new ArrayList<>();
         serviceEvent = new ServiceEvent();

@@ -162,7 +162,7 @@ public class TablePanel extends JPanel implements TableListener {
     public void loadUserEvents(List<Event> events) {
         tableModel.setRowCount(0);
         for (Event event : events) {
-            addRow(event.getName(), event.getDate(), event.getLocation(), event.getType(), user);
+            addRow(event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
         }
     }
 }

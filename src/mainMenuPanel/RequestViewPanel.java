@@ -12,7 +12,10 @@ import src.base.MyTextField;
 import src.model.Event;
 import src.model.Request;
 import src.model.User;
+import src.service.ServiceAttendee;
+import src.service.ServiceEvent;
 import src.service.ServiceRequest;
+import src.service.ServiceUser;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
@@ -20,11 +23,17 @@ public class RequestViewPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private ServiceRequest serviceRequest;
+    private ServiceAttendee serviceAttendee;
+    private ServiceEvent serviceEvent;
+    private ServiceUser serviceUser;
     private User user;
 
     public RequestViewPanel(User user) {
         this.user = user;
         serviceRequest = new ServiceRequest();
+        serviceAttendee = new ServiceAttendee();
+        serviceEvent = new ServiceEvent();
+        serviceUser = new ServiceUser();
 
     	setLayout(new BorderLayout());
         JPanel invitationListPanel1 = new JPanel(new BorderLayout());
@@ -85,8 +94,19 @@ public class RequestViewPanel extends JPanel{
 
         List<ActionListener> actionListeners = new ArrayList<>();
         actionListeners.add(e -> {
-            int row = table.getSelectedRow();
-            System.out.println(row);
+            try {
+                int row = table.getSelectedRow();
+                String event_name = tableModel.getValueAt(row, 1).toString();
+                String username = tableModel.getValueAt(row, 4).toString();
+                Event event = serviceEvent.getSelectedEvent(event_name);
+                User sender = serviceUser.getUser(username);
+                serviceAttendee.addAttendee(sender, event);
+                serviceRequest.removeRequest(sender, event);
+
+                removeRow(row);
+            }catch(Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         actionListeners.add(e -> {
@@ -114,7 +134,7 @@ public class RequestViewPanel extends JPanel{
         
         getRequest();
     }
-    
+
     public void removeRow(int row){
         tableModel.removeRow(row);
     }

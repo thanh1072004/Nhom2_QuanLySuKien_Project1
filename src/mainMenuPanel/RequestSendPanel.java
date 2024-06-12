@@ -18,9 +18,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class RequestSendPanel extends JPanel {
     private JTable table;
@@ -32,7 +30,6 @@ public class RequestSendPanel extends JPanel {
 
 
     public RequestSendPanel(User user) {
-
         try {
             this.user = user;
             serviceUser = new ServiceUser();
@@ -100,7 +97,7 @@ public class RequestSendPanel extends JPanel {
                 String name = (String) table.getValueAt(row, 1);
                 try{
                     Event event = serviceEvent.getSelectedEvent(name);
-                    serviceRequest.addRequest(event, user);
+                    serviceRequest.addRequest(user, event);
                 }catch(SQLException ex){
                     ex.printStackTrace();
                 }
@@ -112,7 +109,6 @@ public class RequestSendPanel extends JPanel {
 
                 try {
                     Event event = serviceEvent.getSelectedEvent(name);
-                    serviceRequest.addRequest(event, user);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }

@@ -17,7 +17,7 @@ public class ServiceEvent {
         connection = DatabaseConnection.getInstance().getConnection();
     }
 
-    public void addEvent(Event event, User user) throws SQLException {
+    public void addEvent(User user, Event event) throws SQLException {
         this.user = user;
         if (connection == null) {
             throw new SQLException("Failed to establish a connection");
@@ -61,10 +61,12 @@ public class ServiceEvent {
 
     public List<Event> getUserEvent(User user) throws SQLException {
         this.user = user;
+        serviceUser = new ServiceUser();
         List<Event> events = new ArrayList<>();
-        PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, u.user_id AS organizer_id " +
+        PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
                                                             "from event e " +
-                                                            "join Users u on e.organizer_id = u.user_id " +
+                                                            "join attendee a on e.event_id = a.event_id " +
+                                                            "join Users u on u.user_id = a.user_id " +
                                                             "where u.user_id = ?");
 
         ps.setInt(1, user.getUserId());
@@ -76,7 +78,7 @@ public class ServiceEvent {
             String date = rs.getString("date");
             String type = rs.getString("type");
             int organizer_id = rs.getInt("organizer_id");
-            User organizer = new User(organizer_id);
+            User organizer = serviceUser.getUser(organizer_id);
 
             events.add(new Event(name, date, location, type, organizer));
         }
@@ -109,10 +111,17 @@ public class ServiceEvent {
         this.user = user;
         List<Event> events = new ArrayList<>();
         PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
-                                                            "from event e " +
-                                                            "where e.type = 'Public' and organizer_id != ?");
+                                                            "FROM event e " +
+                                                            "WHERE e.type = 'Public' AND e.organizer_id != ? " +
+                                                            "AND NOT EXISTS (" +
+                                                            "    SELECT 1 " +
+                                                            "    FROM request r " +
+                                                            "    WHERE r.event_id = e.event_id " +
+                                                            "    AND r.sender_id = ?" +
+                                                            ")");
 
         ps.setInt(1, user.getUserId());
+        ps.setInt(2, user.getUserId());
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {

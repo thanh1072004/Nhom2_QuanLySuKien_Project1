@@ -13,7 +13,7 @@ import src.base.MyTextField;
 import src.model.Event;
 import src.model.Invite;
 import src.model.User;
-import src.service.ServiceInvite;
+import src.service.*;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
@@ -21,11 +21,18 @@ public class InviteViewPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private User user;
+    private ServiceUser serviceUser;
+    private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
+    private ServiceAttendee serviceAttendee;
+
 
     public InviteViewPanel(User user) {
         this.user = user;
+        serviceUser = new ServiceUser();
+        serviceEvent = new ServiceEvent();
         serviceInvite = new ServiceInvite();
+        serviceAttendee = new ServiceAttendee();
 
     	setLayout(new BorderLayout());
         JPanel invitationListPanel1 = new JPanel(new BorderLayout());
@@ -86,8 +93,17 @@ public class InviteViewPanel extends JPanel{
 
         List<ActionListener> actionListeners = new ArrayList<>();
         actionListeners.add(e -> {
-            int row = table.getSelectedRow();
-            System.out.println(row);
+            try {
+                int row = table.getSelectedRow();
+                String event_name = tableModel.getValueAt(row, 1).toString();
+                Event event = serviceEvent.getSelectedEvent(event_name);
+                serviceAttendee.addAttendee(user, event);
+                serviceInvite.removeInvite(user, event);
+
+                removeRow(row);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
         });
 
         actionListeners.add(e -> {

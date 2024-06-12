@@ -4,10 +4,10 @@ import src.MainMenu;
 import src.base.DateSelector;
 import src.model.User;
 import src.model.Event;
+import src.service.ServiceAttendee;
 import src.service.ServiceEvent;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
 
@@ -16,6 +16,7 @@ public class EventCreatePanel extends JPanel{
     private User user;
     private Event event;
     private ServiceEvent serviceEvent;
+    private ServiceAttendee serviceAttendee;
     private MainMenu mainMenu;
     private TableListener tableListener;
 
@@ -25,6 +26,7 @@ public class EventCreatePanel extends JPanel{
         this.user = user;
         tableListener = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
+        serviceAttendee = new ServiceAttendee();
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -116,7 +118,8 @@ public class EventCreatePanel extends JPanel{
                 }else{
                     tableListener.addRow(eventName, eventDate, eventLocation, eventType, user);
                     event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
-                    serviceEvent.addEvent(event, user);
+                    serviceEvent.addEvent(user, event);
+                    serviceAttendee.addAttendee(user, event);
                     mainMenu.showPanel("tablePanel");
                 }
                 name.setText("");
