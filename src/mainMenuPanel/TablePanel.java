@@ -14,6 +14,7 @@ import src.MainMenu;
 import src.base.MyColor;
 import src.model.Event;
 import src.model.User;
+import src.service.ServiceAttendee;
 import src.service.ServiceEvent;
 import src.base.MyTextField;
 import src.view.ButtonEditor;
@@ -22,19 +23,13 @@ import src.view.ButtonRenderer;
 public class TablePanel extends JPanel implements TableListener {
     private JTable table;
     private DefaultTableModel tableModel;
-    private User user;
     private int id = 1;
-    private EventUpdatePanel eventUpdatePanel;
-    private MainMenu mainMenu;
     private ServiceEvent serviceEvent;
     private int row;
 
     public TablePanel(User user, MainMenu mainMenu) {
         try {
-            this.user = user;
-            this.mainMenu = mainMenu;
             serviceEvent = new ServiceEvent();
-
             List<Event> events = serviceEvent.getUserEvent(user);
 
             setLayout(new BorderLayout());
@@ -96,13 +91,10 @@ public class TablePanel extends JPanel implements TableListener {
                 try{
                     row = table.getSelectedRow();
                     String event_name = table.getValueAt(row, 1).toString();
-
                     Event event = serviceEvent.getSelectedEvent(event_name);
                     mainMenu.setEvent(event);
-
-                    eventUpdatePanel = new EventUpdatePanel(user, event, mainMenu);
                     mainMenu.showPanel("eventUpdatePanel");
-                }catch(SQLException ex){
+                }catch(Exception ex){
                     ex.printStackTrace();
                 }
             });
@@ -110,8 +102,10 @@ public class TablePanel extends JPanel implements TableListener {
                 int row = table.getSelectedRow();
                 String event_name = table.getModel().getValueAt(row, 1).toString();
                 try {
-                    serviceEvent.deleteEvent(event_name);
-                } catch (SQLException ex) {
+                    /*serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_name));
+                    serviceEvent.deleteEvent(event_name);*/
+                    System.out.println(event_name);
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 removeRow(row);

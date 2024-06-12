@@ -9,8 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ServiceAttendee {
-    private User user;
-    private Event event;
     private Connection connection;
 
     public ServiceAttendee() {
@@ -18,8 +16,6 @@ public class ServiceAttendee {
     }
 
     public void addAttendee(User user, Event event) throws SQLException {
-        this.user = user;
-        this.event = event;
         if(connection == null) {
             throw new SQLException("Failed to connect to database");
         }
@@ -30,8 +26,6 @@ public class ServiceAttendee {
     }
 
     public void removeAttendee(User user, Event event) throws SQLException {
-        this.user = user;
-        this.event = event;
         PreparedStatement ps = connection.prepareStatement("delete from attendee where event_id = ? and user_id = ?");
         ps.setInt(1, event.getId());
         ps.setInt(2, user.getUserId());

@@ -8,12 +8,7 @@ import java.util.List;
 
 public class ButtonRenderer extends JPanel implements TableCellRenderer {
 
-    private List<ImageIcon> icons;
-    private List<Color> backgroundColors;
-
     public ButtonRenderer(List<ImageIcon> icons, List<Color> backgroundColors) {
-        this.icons = icons;
-        this.backgroundColors = backgroundColors;
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();

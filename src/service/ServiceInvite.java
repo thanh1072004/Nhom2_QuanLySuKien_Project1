@@ -15,9 +15,6 @@ import java.util.List;
 
 public class ServiceInvite {
     private final Connection connection;
-    private User sender;
-    private User receiver;
-    private Event event;
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
 
@@ -26,9 +23,6 @@ public class ServiceInvite {
     }
 
     public void addInvite(User sender, User receiver, Event event) throws SQLException {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.event = event;
         if(connection == null){
             throw new SQLException("Failed to connect to database");
         }
@@ -52,7 +46,6 @@ public class ServiceInvite {
         List<Invite> invites = new ArrayList<>();
         serviceEvent = new ServiceEvent();
         serviceUser = new ServiceUser();
-        this.receiver = receiver;
         List<Request> requests = new ArrayList<>();
 
         PreparedStatement ps = connection.prepareStatement("select e.name, e.location, e.date, e.type, i.sender_id " +

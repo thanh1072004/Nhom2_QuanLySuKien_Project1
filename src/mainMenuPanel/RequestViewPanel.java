@@ -101,7 +101,6 @@ public class RequestViewPanel extends JPanel{
                 Event event = serviceEvent.getSelectedEvent(event_name);
                 User sender = serviceUser.getUser(username);
                 serviceAttendee.addAttendee(sender, event);
-                serviceRequest.removeRequest(sender, event);
 
                 removeRow(row);
             }catch(Exception ex) {

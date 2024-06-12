@@ -10,13 +10,8 @@ import src.base.MyColor;
 import src.model.User;
 
 public class SideBar extends JPanel {
-    private MainMenu mainMenu;
-    private User user;
 
     public SideBar(MainMenu mainMenu, User user){
-        this.mainMenu = mainMenu;
-        this.user = user;
-
         setPreferredSize(new Dimension(200, getHeight()));
         setLayout(new GridBagLayout());
         setBackground(MyColor.BACKGROUND_MENU_ITEM);

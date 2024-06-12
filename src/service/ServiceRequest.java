@@ -14,8 +14,6 @@ import java.util.List;
 
 public class ServiceRequest {
     private final Connection connection;
-    private User user;
-    private Event event;
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
 
@@ -24,8 +22,6 @@ public class ServiceRequest {
     }
 
     public void addRequest(User user, Event event) throws SQLException {
-        this.user = user;
-        this.event = event;
         if(connection == null) {
             throw new SQLException("Failed to connect to database");
         }
@@ -46,7 +42,6 @@ public class ServiceRequest {
     public List<Request> getRequests(User user) throws SQLException {
         serviceEvent = new ServiceEvent();
         serviceUser = new ServiceUser();
-        this.user = user;
         List<Request> requests = new ArrayList<>();
 
         PreparedStatement ps = connection.prepareStatement("select e.name, e.location, e.date, r.sender_id " +

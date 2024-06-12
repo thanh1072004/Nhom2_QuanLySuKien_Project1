@@ -8,7 +8,7 @@ import src.service.ServiceEvent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 
@@ -19,14 +19,12 @@ public class EventUpdatePanel extends JPanel{
     private JComboBox<String> typeList;
     private JTextArea description;
     private ServiceEvent serviceEvent;
-    private MainMenu mainMenu;
     private TableListener tableListener;
 
 
     public EventUpdatePanel(User user, Event event, MainMenu mainMenu) {
         this.event = event;
 
-        this.mainMenu = mainMenu;
         tableListener = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
 

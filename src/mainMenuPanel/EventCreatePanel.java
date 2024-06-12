@@ -1,6 +1,7 @@
 package src.mainMenuPanel;
 
 import src.MainMenu;
+import src.base.ComboBox;
 import src.base.DateSelector;
 import src.model.User;
 import src.model.Event;
@@ -13,25 +14,22 @@ import java.time.LocalDate;
 
 
 public class EventCreatePanel extends JPanel{
-    private User user;
     private Event event;
     private ServiceEvent serviceEvent;
     private ServiceAttendee serviceAttendee;
-    private MainMenu mainMenu;
     private TableListener tableListener;
 
 
     public EventCreatePanel(User user, MainMenu mainMenu) {
-        this.mainMenu = mainMenu;
-        this.user = user;
         tableListener = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
         serviceAttendee = new ServiceAttendee();
 
         setLayout(new GridBagLayout());
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(16, 10, 16, 10);
 
         Font font = new Font("Arial", Font.PLAIN, 16);
 
@@ -74,9 +72,9 @@ public class EventCreatePanel extends JPanel{
         gbc.gridy = 3;
         add(typeLabel, gbc);
 
-        JComboBox<String> typeList = new JComboBox<>(type);
-        typeList.setBackground(Color.WHITE);
-        typeList.setFont(font);
+        ComboBox<String> typeList = new ComboBox<>();
+        typeList.setModel(new DefaultComboBoxModel(type));
+        typeList.setSelectedIndex(0);
         gbc.gridx = 1;
         add(typeList, gbc);
 

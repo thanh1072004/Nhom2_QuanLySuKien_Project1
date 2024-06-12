@@ -21,7 +21,6 @@ public class InviteViewPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private User user;
-    private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
     private ServiceAttendee serviceAttendee;
@@ -29,7 +28,6 @@ public class InviteViewPanel extends JPanel{
 
     public InviteViewPanel(User user) {
         this.user = user;
-        serviceUser = new ServiceUser();
         serviceEvent = new ServiceEvent();
         serviceInvite = new ServiceInvite();
         serviceAttendee = new ServiceAttendee();
@@ -58,7 +56,7 @@ public class InviteViewPanel extends JPanel{
         invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
         invitationListPanel1.add(topPanel, BorderLayout.NORTH);
         
-        String[] columnNames = {"#", "Name", "Date", "Location",  "Organizer", "Actions"};
+        String[] columnNames = {"#", "Name", "Date", "Location", "Type", "Organizer", "Actions"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -89,7 +87,7 @@ public class InviteViewPanel extends JPanel{
         icons.add(deleteIcon);
 
         ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
-        table.getColumnModel().getColumn(5).setCellRenderer(buttonRender);
+        table.getColumnModel().getColumn(6).setCellRenderer(buttonRender);
 
         List<ActionListener> actionListeners = new ArrayList<>();
         actionListeners.add(e -> {
@@ -98,7 +96,6 @@ public class InviteViewPanel extends JPanel{
                 String event_name = tableModel.getValueAt(row, 1).toString();
                 Event event = serviceEvent.getSelectedEvent(event_name);
                 serviceAttendee.addAttendee(user, event);
-                serviceInvite.removeInvite(user, event);
 
                 removeRow(row);
             }catch(Exception ex){
@@ -112,7 +109,7 @@ public class InviteViewPanel extends JPanel{
         });
 
         ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
-        table.getColumnModel().getColumn(5).setCellEditor(buttonEdit);
+        table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
 
         table.setRowHeight(48);
 
@@ -128,8 +125,7 @@ public class InviteViewPanel extends JPanel{
         
         invitationListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
         add(invitationListPanel1, BorderLayout.CENTER);
-        
-        addSampleData();
+
         getInvite();
     }
     
@@ -151,16 +147,10 @@ public class InviteViewPanel extends JPanel{
             for (Invite invite : invites) {
                 Event event = invite.getEvent();
                 User sender = invite.getSender();
-                addRowToTable(new Object[]{id++, event.getName(), event.getDate(), event.getLocation(), sender.getUsername(), "Action"});
+                addRowToTable(new Object[]{id++, event.getName(), event.getDate(), event.getLocation(), event.getType(), sender.getUsername(), "Action"});
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-    // Method to add some sample data
-    private void addSampleData() {
-        addRowToTable(new Object[]{"1", "Event A", "2024-06-10", "New York", "Org A", "Action"});
-        addRowToTable(new Object[]{"2", "Event B", "2024-07-15", "Los Angeles", "Org B", "Action"});
-        addRowToTable(new Object[]{"3", "Event C", "2024-08-20", "Chicago", "Org C", "Action"});
     }
 }

@@ -23,16 +23,12 @@ import java.util.List;
 public class RequestSendPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
-    private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
     private ServiceRequest serviceRequest;
-    private User user;
 
 
     public RequestSendPanel(User user) {
         try {
-            this.user = user;
-            serviceUser = new ServiceUser();
             serviceEvent = new ServiceEvent();
             serviceRequest = new ServiceRequest();
             List<Event> events = serviceEvent.getPublicEvents(user);

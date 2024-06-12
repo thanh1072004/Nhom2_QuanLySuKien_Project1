@@ -15,12 +15,10 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
     private JPanel panel;
     private List<JButton> buttons;
     private List<ActionListener> actionListeners;
-    private List<Color> backgroundColors;
 
     public ButtonEditor(List<ImageIcon> icons, List<ActionListener> actionListeners, List<Color> backgroundColors) {
         panel = new JPanel(new GridBagLayout());
         this.actionListeners = actionListeners;
-        this.backgroundColors = backgroundColors;
         buttons = new ArrayList<>();
 
         GridBagConstraints gbc = new GridBagConstraints();

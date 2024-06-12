@@ -2,17 +2,12 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.util.Objects;
 
 import src.mainMenuPanel.*;
 import src.database.DatabaseConnection;
 import src.model.Event;
 import src.model.User;
-import src.service.ServiceEvent;
 import src.mainMenuPanel.TablePanel;
-import src.service.ServiceUser;
 
 public class MainMenu extends JFrame {
     private JPanel mainPanel;
@@ -24,16 +19,11 @@ public class MainMenu extends JFrame {
     private InviteSendPanel inviteSendPanel;
     private RequestViewPanel requestViewPanel;
     private RequestSendPanel requestSendPanel;
-    private ServiceUser serviceUser;
-    private ServiceEvent serviceEvent;
     private User user;
     private Event event;
-    private int row;
 
     public MainMenu(User user) {
         this.user = user;
-        serviceEvent = new ServiceEvent();
-        serviceUser = new ServiceUser();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 650);
@@ -88,8 +78,8 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-        	User user = new User(1017, "hvt", "b3a1ac98cfce29720ecbdd60067193f4");
-            //User user = new User(1018, "tung", "bb7d4b236b564cf1ec27aa891331e0af");
+        	//User user = new User(1019, "t", "e358efa489f58062f10dd7316b65649e");
+            User user = new User(1020, "h", "2510c39011c5be704182423e3a695e91");
             MainMenu frame = new MainMenu(user);
             frame.setVisible(true);
         });

@@ -6,13 +6,14 @@ import java.util.Calendar;
 
 
 public class DateSelector extends JPanel {
-    private JComboBox<Integer> dayComboBox;
-    private JComboBox<String> monthComboBox;
-    private JComboBox<Integer> yearComboBox;
+    private ComboBox <Integer> dayComboBox;
+    private ComboBox <String> monthComboBox;
+    private ComboBox <Integer> yearComboBox;
 
     public DateSelector() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
+        Calendar currentDate = Calendar.getInstance();
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -25,13 +26,17 @@ public class DateSelector extends JPanel {
         for (int i = 0; i < 31; i++) {
             days[i] = i + 1;
         }
-        dayComboBox = new JComboBox<>(days);
+        dayComboBox = new ComboBox<>();
+        dayComboBox.setModel(new DefaultComboBoxModel<>(days));
+        dayComboBox.setSelectedIndex(currentDate.get(Calendar.DAY_OF_MONTH) - 1);
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(dayComboBox, gbc);
 
         String[] months = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-        monthComboBox = new JComboBox<>(months);
+        monthComboBox = new ComboBox<>();
+        monthComboBox.setModel(new DefaultComboBoxModel<>(months));
+        monthComboBox.setSelectedIndex(currentDate.get(Calendar.MONTH));
         gbc.gridx = 1;
         gbc.gridy = 0;
         add(monthComboBox, gbc);
@@ -41,7 +46,9 @@ public class DateSelector extends JPanel {
         for (int i = 0; i < 100; i++) {
             years[i] = currentYear + 50 - i;
         }
-        yearComboBox = new JComboBox<>(years);
+        yearComboBox = new ComboBox<>();
+        yearComboBox.setModel(new DefaultComboBoxModel<>(years));
+        yearComboBox.setSelectedItem(currentDate.get(Calendar.YEAR));
         gbc.gridx = 2;
         gbc.gridy = 0;
         add(yearComboBox, gbc);
