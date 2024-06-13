@@ -7,11 +7,7 @@ import src.service.ServiceEvent;
 import src.service.ServiceInvite;
 import src.service.ServiceUser;
 
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -23,6 +19,9 @@ public class InviteSendPanel extends JPanel {
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
+    private DefaultComboBoxModel<String> eventModel;
+    private ComboBox<String> event_name;
+    private JTextField receiver_name;
 
     public InviteSendPanel(User sender) {
         try {
@@ -43,12 +42,13 @@ public class InviteSendPanel extends JPanel {
             gbc.gridx = 0;
             gbc.gridy = 0;
             add(nameLabel, gbc);
-            String[] eventNames = new String[events.size()];
+            String[] event_names = new String[events.size()];
             for (int i = 0; i < events.size(); i++) {
-                eventNames[i] = events.get(i).getName();
+                event_names[i] = events.get(i).getName();
             }
-            ComboBox<String> event_name = new ComboBox<>();
-            event_name.setModel(new DefaultComboBoxModel<>(eventNames));
+            event_name = new ComboBox<>();
+            eventModel = new DefaultComboBoxModel<>(event_names);
+            event_name.setModel(eventModel);
             gbc.gridx = 1;
             add(event_name, gbc);
 
@@ -58,7 +58,7 @@ public class InviteSendPanel extends JPanel {
             gbc.gridy = 1;
             add(usernameLabel, gbc);
 
-            JTextField receiver_name = new JTextField(20);
+            receiver_name = new JTextField(20);
             receiver_name.setFont(font);
             gbc.gridx = 1;
             add(receiver_name, gbc);
@@ -103,5 +103,9 @@ public class InviteSendPanel extends JPanel {
         }catch(Exception ex){
             ex.printStackTrace();
         }
+    }
+
+    public void addEvent(Event event) {
+        eventModel.addElement(event.getName());
     }
 }

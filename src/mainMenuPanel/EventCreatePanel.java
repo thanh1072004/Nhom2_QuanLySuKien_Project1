@@ -14,13 +14,15 @@ import java.time.LocalDate;
 
 
 public class EventCreatePanel extends JPanel{
-    private Event event;
+    private MainMenu mainMenu;
     private ServiceEvent serviceEvent;
     private ServiceAttendee serviceAttendee;
     private TableListener tableListener;
-
+    private InviteSendPanel inviteSendPanel;
 
     public EventCreatePanel(User user, MainMenu mainMenu) {
+        this.mainMenu = mainMenu;
+        inviteSendPanel = mainMenu.getInviteSendPanel();
         tableListener = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
         serviceAttendee = new ServiceAttendee();
@@ -114,11 +116,7 @@ public class EventCreatePanel extends JPanel{
                 }else if(getDate(eventDate).isBefore(LocalDate.now())){
                     System.out.println("Event date not valid");
                 }else{
-                    tableListener.addRow(eventName, eventDate, eventLocation, eventType, user);
-                    event = new Event(0 ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
-                    serviceEvent.addEvent(user, event);
-                    serviceAttendee.addAttendee(user, event);
-                    mainMenu.showPanel("tablePanel");
+                    createEvent(eventName, eventDate, eventLocation, eventType, eventDescription, user);
                 }
                 name.setText("");
                 location.setText("");
@@ -133,6 +131,31 @@ public class EventCreatePanel extends JPanel{
         buttonPanel.add(createEventButton);
 
         add(buttonPanel, gbc);
+    }
+
+    public void createEvent(String name, String date, String location, String type, String description, User organizer){
+        SwingWorker<Event, Void> worker = new SwingWorker<Event, Void>() {
+            @Override
+            protected Event doInBackground() throws Exception {
+                Event event = new Event(0 ,name, date, location, type, description, organizer);
+                serviceEvent.addEvent(organizer, event);
+                serviceAttendee.addAttendee(organizer, event);
+                mainMenu.showPanel("tablePanel");
+                return event;
+            }
+
+            @Override
+            protected void done() {
+                try{
+                    Event event = get();
+                    tableListener.addRow(name, date, location, type, organizer);
+                    inviteSendPanel.addEvent(event);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        worker.execute();
     }
 
     public LocalDate getDate(String date){

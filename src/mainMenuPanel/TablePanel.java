@@ -2,11 +2,8 @@ package src.mainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +20,15 @@ import src.view.ButtonRenderer;
 public class TablePanel extends JPanel implements TableListener {
     private JTable table;
     private DefaultTableModel tableModel;
-    private int id = 1;
     private ServiceEvent serviceEvent;
+    private ServiceAttendee serviceAttendee;
+    private int id = 1;
     private int row;
 
     public TablePanel(User user, MainMenu mainMenu) {
         try {
             serviceEvent = new ServiceEvent();
+            serviceAttendee = new ServiceAttendee();
             List<Event> events = serviceEvent.getUserEvent(user);
 
             setLayout(new BorderLayout());
@@ -102,9 +101,9 @@ public class TablePanel extends JPanel implements TableListener {
                 int row = table.getSelectedRow();
                 String event_name = table.getModel().getValueAt(row, 1).toString();
                 try {
-                    /*serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_name));
-                    serviceEvent.deleteEvent(event_name);*/
-                    System.out.println(event_name);
+                    serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_name));
+                    serviceEvent.deleteEvent(event_name);
+                    System.out.println("delete successfully");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

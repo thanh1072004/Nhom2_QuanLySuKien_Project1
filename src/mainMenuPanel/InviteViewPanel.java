@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.*;
 
+import src.MainMenu;
 import src.base.MyColor;
 import src.base.MyTextField;
 import src.model.Event;
@@ -18,6 +19,7 @@ import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
 public class InviteViewPanel extends JPanel{
+    private TablePanel tablePanel;
     private JTable table;
     private DefaultTableModel tableModel;
     private User user;
@@ -26,8 +28,9 @@ public class InviteViewPanel extends JPanel{
     private ServiceAttendee serviceAttendee;
 
 
-    public InviteViewPanel(User user) {
+    public InviteViewPanel(User user, MainMenu mainMenu) {
         this.user = user;
+        tablePanel = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
         serviceInvite = new ServiceInvite();
         serviceAttendee = new ServiceAttendee();
@@ -91,16 +94,7 @@ public class InviteViewPanel extends JPanel{
 
         List<ActionListener> actionListeners = new ArrayList<>();
         actionListeners.add(e -> {
-            try {
-                int row = table.getSelectedRow();
-                String event_name = tableModel.getValueAt(row, 1).toString();
-                Event event = serviceEvent.getSelectedEvent(event_name);
-                serviceAttendee.addAttendee(user, event);
-
-                removeRow(row);
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
+            acceptInvite();
         });
 
         actionListeners.add(e -> {
@@ -152,5 +146,31 @@ public class InviteViewPanel extends JPanel{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void acceptInvite(){
+        SwingWorker<Event, Void> worker = new SwingWorker<>() {
+
+            @Override
+            protected Event doInBackground() throws Exception {
+                int row = table.getSelectedRow();
+                String event_name = tableModel.getValueAt(row, 1).toString();
+                Event event = serviceEvent.getSelectedEvent(event_name);
+                serviceAttendee.addAttendee(user, event);
+                removeRow(row);
+                return event;
+            }
+
+            @Override
+            protected void done() {
+                try{
+                    Event event = get();
+                    tablePanel.addRow(event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        };
+        worker.execute();
     }
 }
