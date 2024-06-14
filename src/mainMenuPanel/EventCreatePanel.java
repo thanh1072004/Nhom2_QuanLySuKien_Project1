@@ -122,7 +122,7 @@ public class EventCreatePanel extends JPanel{
                 String eventType = typeList.getSelectedItem().toString().trim();
                 String eventDescription = description.getText().trim();
                 if(eventName.isEmpty() || eventType.isEmpty() || eventLocation.isEmpty()){
-                	showMessage(CustomMessage.MessageType.WARNING, "Event name or event date or event location or event type is empty");
+                	showMessage(CustomMessage.MessageType.WARNING, "Event details cannot be empty");
                 }else if(getDate(eventDate).isBefore(LocalDate.now())){
                 	showMessage(CustomMessage.MessageType.ERROR, "Event date not valid");
                 }else{
