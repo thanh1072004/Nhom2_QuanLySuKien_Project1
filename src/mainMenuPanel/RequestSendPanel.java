@@ -100,7 +100,7 @@ public class RequestSendPanel extends JPanel {
                 try{
                     Event event = serviceEvent.getSelectedEvent(name);
                     serviceRequest.addRequest(user, event);
-                    showMessage("Join event successfully.", Color.GREEN);
+                    showMessage("Request successfully.", Color.GREEN);
                 }catch(SQLException ex){
                     ex.printStackTrace();
                 }
@@ -141,7 +141,7 @@ public class RequestSendPanel extends JPanel {
             
             messageLabel = new JLabel("", JLabel.CENTER);
             messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
-            messageLabel.setForeground(Color.GREEN); // Màu của thông báo thành công
+            messageLabel.setForeground(Color.GREEN); 
 
             JPanel messagePanel = new JPanel(new BorderLayout());
             messagePanel.add(messageLabel, BorderLayout.CENTER);
@@ -184,7 +184,7 @@ public class RequestSendPanel extends JPanel {
             if (c instanceof JLabel) {
                 JLabel label = (JLabel) c;
                 label.setFont(label.getFont().deriveFont(Font.BOLD));
-                label.setHorizontalAlignment(JLabel.CENTER); // Optional: Center align the header text
+                label.setHorizontalAlignment(JLabel.CENTER); 
             }
             return c;
         }
