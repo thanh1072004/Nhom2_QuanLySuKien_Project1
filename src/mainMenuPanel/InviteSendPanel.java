@@ -1,6 +1,8 @@
 package src.mainMenuPanel;
 
 import src.base.ComboBox;
+import src.base.CustomMessage;
+import src.base.MyColor;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
@@ -13,15 +15,20 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTarget;
+import org.jdesktop.animation.timing.TimingTargetAdapter;
+
 public class InviteSendPanel extends JPanel {
     private User receiver;
     private Event event;
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
-    private DefaultComboBoxModel<Event> eventModel;
-    private ComboBox<Event> event_user;
+    private DefaultComboBoxModel<String> eventModel;
+    private ComboBox<String> event_name;
     private JTextField receiver_name;
+	private JPanel messagePanel;
 
     public InviteSendPanel(User sender) {
         try {
@@ -42,15 +49,15 @@ public class InviteSendPanel extends JPanel {
             gbc.gridx = 0;
             gbc.gridy = 0;
             add(nameLabel, gbc);
-            Event[] event0 = new Event[events.size()];
+            String[] event_names = new String[events.size()];
             for (int i = 0; i < events.size(); i++) {
-                event0[i] = events.get(i);
+                event_names[i] = events.get(i).getName();
             }
-            event_user = new ComboBox<>();
-            eventModel = new DefaultComboBoxModel<>(event0);
-            event_user.setModel(eventModel);
+            event_name = new ComboBox<>();
+            eventModel = new DefaultComboBoxModel<>(event_names);
+            event_name.setModel(eventModel);
             gbc.gridx = 1;
-            add(event_user, gbc);
+            add(event_name, gbc);
 
             JLabel usernameLabel = new JLabel("Username:");
             usernameLabel.setFont(font);
@@ -72,26 +79,29 @@ public class InviteSendPanel extends JPanel {
             buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
             JButton inviteUserButton = new JButton("Invite User");
             inviteUserButton.setFont(font);
+            inviteUserButton.setBackground(MyColor.CYAN);
+            inviteUserButton.setForeground(Color.WHITE);
             inviteUserButton.setFocusPainted(false);
 
             inviteUserButton.addActionListener(e -> {
                 try {
-                    Event selectedEvent = (Event) event_user.getSelectedItem();
-                    int event_id = selectedEvent.getId();
+                    String eventName = event_name.getSelectedItem().toString();
+
                     String receiverName = receiver_name.getText();
                     if (receiverName.isEmpty()) {
-                        System.out.println("Please fill out all the fields");
+                    	showMessage(CustomMessage.MessageType.WARNING, "Please fill out all the fields");
                     } else {
-                        Event event = serviceEvent.getSelectedEvent(event_id);
+                        event = serviceEvent.getSelectedEvent(eventName);
                         receiver = serviceUser.getUser(receiverName);
 
                         if (event.getOrganizer().getUserId() == sender.getUserId()) {
-                            serviceInvite.addInvite(sender, receiver, this.event);
+                        	showMessage(CustomMessage.MessageType.INFO, "Event invited successfully");
+                            serviceInvite.addInvite(sender, receiver, event);
                         } else {
                             throw new SQLException("Event not found");
                         }
                     }
-                    event_user.setSelectedItem(null);
+                    event_name.setSelectedItem(null);
                     receiver_name.setText("");
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -100,12 +110,74 @@ public class InviteSendPanel extends JPanel {
 
             buttonPanel.add(inviteUserButton);
             add(buttonPanel, gbc);
+            
+         // Add a panel for messages
+            messagePanel = new JPanel();
+            messagePanel.setLayout(new BorderLayout());
+            gbc.gridy = 3;
+            add(messagePanel, gbc);
+            
         }catch(Exception ex){
             ex.printStackTrace();
         }
     }
 
     public void addEvent(Event event) {
-        eventModel.addElement(event);
+        eventModel.addElement(event.getName());
+    }
+    
+    private void showMessage(CustomMessage.MessageType messageType, String message) {
+        CustomMessage msg = new CustomMessage();
+        msg.showMessage(messageType, message);
+
+        TimingTarget target = new TimingTargetAdapter() {
+            @Override
+            public void begin() {
+                if (!msg.isShow()) {
+                    messagePanel.add(msg, BorderLayout.CENTER);
+                    msg.setVisible(true);
+                    messagePanel.repaint();
+                }
+            }
+
+            @Override
+            public void timingEvent(float fraction) {
+                float f;
+                if (msg.isShow()) {
+                    f = 40 * (1f - fraction);
+                } else {
+                    f = 40 * fraction;
+                }
+                msg.setLocation(msg.getX(), (int) (f - 30));
+                messagePanel.repaint();
+                messagePanel.revalidate();
+            }
+
+            @Override
+            public void end() {
+                if (msg.isShow()) {
+                    messagePanel.remove(msg);
+                    messagePanel.repaint();
+                    messagePanel.revalidate();
+                } else {
+                    msg.setShow(true);
+                }
+            }
+        };
+
+        Animator animator = new Animator(300, target);
+        animator.setAcceleration(0.5f);
+        animator.setDeceleration(0.5f);
+        animator.setResolution(0);
+        animator.start();
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+                animator.start();
+            } catch (InterruptedException e) {
+                System.err.println(e);
+            }
+        }).start();
     }
 }

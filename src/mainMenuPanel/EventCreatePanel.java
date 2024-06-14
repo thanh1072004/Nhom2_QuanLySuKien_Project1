@@ -2,13 +2,20 @@ package src.mainMenuPanel;
 
 import src.MainMenu;
 import src.base.ComboBox;
+import src.base.CustomMessage;
 import src.base.DateSelector;
+import src.base.MyColor;
 import src.model.User;
 import src.model.Event;
 import src.service.ServiceAttendee;
 import src.service.ServiceEvent;
 
 import javax.swing.*;
+
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTarget;
+import org.jdesktop.animation.timing.TimingTargetAdapter;
+
 import java.awt.*;
 import java.time.LocalDate;
 
@@ -19,6 +26,7 @@ public class EventCreatePanel extends JPanel{
     private ServiceAttendee serviceAttendee;
     private TableListener tableListener;
     private InviteSendPanel inviteSendPanel;
+    private JPanel messagePanel;
 
     public EventCreatePanel(User user, MainMenu mainMenu) {
         this.mainMenu = mainMenu;
@@ -103,6 +111,8 @@ public class EventCreatePanel extends JPanel{
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton createEventButton = new JButton("Create Event");
         createEventButton.setFont(font);
+        createEventButton.setBackground(MyColor.CYAN);
+        createEventButton.setForeground(Color.WHITE);
         createEventButton.setFocusPainted(false);
         createEventButton.addActionListener(e -> {
             try{
@@ -112,11 +122,20 @@ public class EventCreatePanel extends JPanel{
                 String eventType = typeList.getSelectedItem().toString().trim();
                 String eventDescription = description.getText().trim();
                 if(eventName.isEmpty() || eventType.isEmpty() || eventLocation.isEmpty()){
-                    System.out.println("Event name or event date or event location or event type is empty");
+                	showMessage(CustomMessage.MessageType.WARNING, "Event details cannot be empty");
                 }else if(getDate(eventDate).isBefore(LocalDate.now())){
-                    System.out.println("Event date not valid");
+                	showMessage(CustomMessage.MessageType.ERROR, "Event date not valid");
                 }else{
                     createEvent(eventName, eventDate, eventLocation, eventType, eventDescription, user);
+                    showMessage(CustomMessage.MessageType.INFO, "Event created successfully.");
+                    new Thread(() -> {
+                        try {
+                            Thread.sleep(2000); 
+                            SwingUtilities.invokeLater(() -> mainMenu.showPanel("tablePanel"));
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }).start();
                 }
                 name.setText("");
                 location.setText("");
@@ -128,9 +147,16 @@ public class EventCreatePanel extends JPanel{
                 ex.printStackTrace();
             }
         });
+        
         buttonPanel.add(createEventButton);
 
         add(buttonPanel, gbc);
+        
+     // Add a panel for messages
+        messagePanel = new JPanel();
+        messagePanel.setLayout(new BorderLayout());
+        gbc.gridy = 6;
+        add(messagePanel, gbc);
     }
 
     public void createEvent(String name, String date, String location, String type, String description, User organizer){
@@ -160,6 +186,61 @@ public class EventCreatePanel extends JPanel{
 
     public LocalDate getDate(String date){
         return LocalDate.parse(date);
+    }
+    
+    private void showMessage(CustomMessage.MessageType messageType, String message) {
+        CustomMessage msg = new CustomMessage();
+        msg.showMessage(messageType, message);
+
+        TimingTarget target = new TimingTargetAdapter() {
+            @Override
+            public void begin() {
+                if (!msg.isShow()) {
+                    messagePanel.add(msg, BorderLayout.CENTER);
+                    msg.setVisible(true);
+                    messagePanel.repaint();
+                }
+            }
+
+            @Override
+            public void timingEvent(float fraction) {
+                float f;
+                if (msg.isShow()) {
+                    f = 40 * (1f - fraction);
+                } else {
+                    f = 40 * fraction;
+                }
+                msg.setLocation(msg.getX(), (int) (f - 30));
+                messagePanel.repaint();
+                messagePanel.revalidate();
+            }
+
+            @Override
+            public void end() {
+                if (msg.isShow()) {
+                    messagePanel.remove(msg);
+                    messagePanel.repaint();
+                    messagePanel.revalidate();
+                } else {
+                    msg.setShow(true);
+                }
+            }
+        };
+
+        Animator animator = new Animator(300, target);
+        animator.setAcceleration(0.5f);
+        animator.setDeceleration(0.5f);
+        animator.setResolution(0);
+        animator.start();
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+                animator.start();
+            } catch (InterruptedException e) {
+                System.err.println(e);
+            }
+        }).start();
     }
 
 }

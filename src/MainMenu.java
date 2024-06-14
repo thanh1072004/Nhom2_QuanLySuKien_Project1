@@ -27,6 +27,7 @@ public class MainMenu extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 650);
+        setTitle("Event Management System");
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -83,7 +84,7 @@ public class MainMenu extends JFrame {
         }
         SwingUtilities.invokeLater(() -> {
         	//User user = new User(1024, "hoang", "f82e62d7c3ea69cc12b5cdb8d621dab6");
-            User user = new User(1023, "tung", "bb7d4b236b564cf1ec27aa891331e0af");
+            User user = new User(2007, "thanh", "202cb962ac59075b964b07152d234b70");
             MainMenu frame = new MainMenu(user);
             frame.setVisible(true);
         });

@@ -13,8 +13,12 @@ import src.view.ButtonRenderer;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.text.JTextComponent;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ public class RequestSendPanel extends JPanel {
     private DefaultTableModel tableModel;
     private ServiceEvent serviceEvent;
     private ServiceRequest serviceRequest;
+	private JLabel messageLabel;
 
 
     public RequestSendPanel(User user) {
@@ -50,8 +55,9 @@ public class RequestSendPanel extends JPanel {
             topPanel.add(searchPanel, BorderLayout.NORTH);
 
             JLabel tableNameLabel = new JLabel("Public Event", JLabel.CENTER);
-            tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
+            tableNameLabel.setFont(new Font("Serif", Font.BOLD, 38));
             tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+            startBlinking(tableNameLabel);
 
             eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
             eventListPanel1.add(topPanel, BorderLayout.NORTH);
@@ -69,8 +75,8 @@ public class RequestSendPanel extends JPanel {
             table.setRowSelectionAllowed(false);
             table.setFocusable(false);
 
-            ImageIcon originalSendIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/edit.png"));
-            Image scaledImage_send = originalSendIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            ImageIcon originalSendIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/join.png"));
+            Image scaledImage_send = originalSendIcon.getImage().getScaledInstance(17, 17, Image.SCALE_SMOOTH);
             ImageIcon sendIcon = new ImageIcon(scaledImage_send);
 
             ImageIcon originalDeleteIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/delete.png"));
@@ -90,10 +96,11 @@ public class RequestSendPanel extends JPanel {
             List<ActionListener> actionListeners = new ArrayList<>();
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
-                int event_id = (int) table.getValueAt(row, 1);
+                String name = (String) table.getValueAt(row, 1);
                 try{
-                    Event event = serviceEvent.getSelectedEvent(event_id);
+                    Event event = serviceEvent.getSelectedEvent(name);
                     serviceRequest.addRequest(user, event);
+                    showMessage("Request successfully.", Color.GREEN);
                 }catch(SQLException ex){
                     ex.printStackTrace();
                 }
@@ -101,9 +108,11 @@ public class RequestSendPanel extends JPanel {
             });
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
-                int event_id = (int) table.getValueAt(row, 1);
+                String name = (String) table.getValueAt(row, 1);
+
                 try {
-                    Event event = serviceEvent.getSelectedEvent(event_id);
+                    Event event = serviceEvent.getSelectedEvent(name);
+                    showMessage("Delete successfully.", Color.GREEN);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -115,6 +124,10 @@ public class RequestSendPanel extends JPanel {
 
             table.setRowHeight(48);
 
+            JTableHeader tableHeader = table.getTableHeader();
+            tableHeader.setDefaultRenderer(new HeaderRenderer(tableHeader.getDefaultRenderer()));
+            tableHeader.setFont(new Font("Calibri", Font.BOLD, 15));
+            
             // Center align all data
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
             centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -125,6 +138,14 @@ public class RequestSendPanel extends JPanel {
             table.getTableHeader().setResizingAllowed(false);
 
             JScrollPane tableScrollPane = new JScrollPane(table);
+            
+            messageLabel = new JLabel("", JLabel.CENTER);
+            messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            messageLabel.setForeground(Color.GREEN); 
+
+            JPanel messagePanel = new JPanel(new BorderLayout());
+            messagePanel.add(messageLabel, BorderLayout.CENTER);
+            add(messagePanel, BorderLayout.SOUTH);
 
             eventListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
             add(eventListPanel1, BorderLayout.CENTER);
@@ -148,6 +169,56 @@ public class RequestSendPanel extends JPanel {
         for (Event event : events) {
             addRow(id++, event.getName(), event.getDate(), event.getLocation(), event.getOrganizer());
         }
+    }
+    
+    private static class HeaderRenderer implements TableCellRenderer {
+        private final TableCellRenderer delegate;
+
+        public HeaderRenderer(TableCellRenderer delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (c instanceof JLabel) {
+                JLabel label = (JLabel) c;
+                label.setFont(label.getFont().deriveFont(Font.BOLD));
+                label.setHorizontalAlignment(JLabel.CENTER); 
+            }
+            return c;
+        }
+    }
+    
+    private void startBlinking(JLabel label) {
+        Timer timer = new Timer(2500, new ActionListener() {
+            private boolean isBlue = true;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isBlue) {
+                    label.setForeground(Color.BLUE);
+                } else {
+                    label.setForeground(Color.MAGENTA);
+                }
+                isBlue = !isBlue;
+            }
+        });
+        timer.start();
+    }
+    
+    private void showMessage(String message, Color color) {
+        messageLabel.setText(message);
+        messageLabel.setForeground(color);
+
+        Timer timer = new Timer(2000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                messageLabel.setText("");
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 }
 
