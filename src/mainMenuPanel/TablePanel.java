@@ -3,6 +3,8 @@ package src.mainMenuPanel;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.*;
+
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +50,9 @@ public class TablePanel extends JPanel implements TableListener {
             topPanel.add(searchPanel, BorderLayout.NORTH);
 
             JLabel tableNameLabel = new JLabel("YOUR EVENT TABLE", JLabel.CENTER);
-            tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
+            tableNameLabel.setFont(new Font("Serif", Font.BOLD, 36));
             tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+            startBlinking(tableNameLabel);
 
             eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
             eventListPanel1.add(topPanel, BorderLayout.NORTH);
@@ -114,6 +117,11 @@ public class TablePanel extends JPanel implements TableListener {
             table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
 
             table.setRowHeight(48);
+            
+            JTableHeader tableHeader = table.getTableHeader();
+            tableHeader.setDefaultRenderer(new HeaderRenderer(tableHeader.getDefaultRenderer()));
+            tableHeader.setFont(new Font("Calibri", Font.BOLD, 15));
+            
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
             centerRenderer.setHorizontalAlignment(JLabel.CENTER);
             for (int i = 0; i < table.getColumnCount() - 1; i++) {
@@ -158,4 +166,41 @@ public class TablePanel extends JPanel implements TableListener {
             addRow(event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
         }
     }
+    
+    private static class HeaderRenderer implements TableCellRenderer {
+        private final TableCellRenderer delegate;
+
+        public HeaderRenderer(TableCellRenderer delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (c instanceof JLabel) {
+                JLabel label = (JLabel) c;
+                label.setFont(label.getFont().deriveFont(Font.BOLD));
+                label.setHorizontalAlignment(JLabel.CENTER); // Optional: Center align the header text
+            }
+            return c;
+        }
+    }
+    
+    private void startBlinking(JLabel label) {
+        Timer timer = new Timer(2500, new ActionListener() {
+            private boolean isBlue = true;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isBlue) {
+                    label.setForeground(Color.BLUE);
+                } else {
+                    label.setForeground(Color.MAGENTA);
+                }
+                isBlue = !isBlue;
+            }
+        });
+        timer.start();
+    }
+    
 }

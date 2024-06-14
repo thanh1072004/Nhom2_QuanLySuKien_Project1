@@ -2,6 +2,7 @@ package src.mainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class InviteViewPanel extends JPanel{
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
     private ServiceAttendee serviceAttendee;
+	private JLabel messageLabel;
 
 
     public InviteViewPanel(User user, MainMenu mainMenu) {
@@ -53,8 +55,9 @@ public class InviteViewPanel extends JPanel{
 
         // Tạo tên bảng
         JLabel tableNameLabel = new JLabel("INVITATION", JLabel.CENTER);
-        tableNameLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        tableNameLabel.setFont(new Font("Serif", Font.BOLD, 38));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        startBlinking(tableNameLabel);
 
         invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
         invitationListPanel1.add(topPanel, BorderLayout.NORTH);
@@ -75,7 +78,7 @@ public class InviteViewPanel extends JPanel{
         table.setFocusable(false);
 
         ImageIcon originalEditIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/accept.png"));
-        Image scaledImage_edit = originalEditIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        Image scaledImage_edit = originalEditIcon.getImage().getScaledInstance(17, 17, Image.SCALE_SMOOTH);
         ImageIcon editIcon = new ImageIcon(scaledImage_edit);
 
         ImageIcon originalDeleteIcon = new ImageIcon(ButtonEditor.class.getResource("/src/icon/delete.png"));
@@ -83,7 +86,7 @@ public class InviteViewPanel extends JPanel{
         ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
 
         List<Color> backgroundColor = new ArrayList<>();
-        backgroundColor.add(Color.CYAN);
+        backgroundColor.add(MyColor.CYAN);
         backgroundColor.add(MyColor.RED);
         List<ImageIcon> icons = new ArrayList<>();
         icons.add(editIcon);
@@ -100,6 +103,7 @@ public class InviteViewPanel extends JPanel{
         actionListeners.add(e -> {
             int row = table.getSelectedRow();
             removeRow(row);
+            showMessage("Invite deleted successfully.", Color.GREEN);
         });
 
         ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
@@ -107,6 +111,10 @@ public class InviteViewPanel extends JPanel{
 
         table.setRowHeight(48);
 
+        JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setDefaultRenderer(new HeaderRenderer(tableHeader.getDefaultRenderer()));
+        tableHeader.setFont(new Font("Calibri", Font.BOLD, 15));
+        
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         for (int i = 0; i < table.getColumnCount() - 1; i++) {
@@ -116,6 +124,14 @@ public class InviteViewPanel extends JPanel{
         table.getTableHeader().setResizingAllowed(false);
 
         JScrollPane tableScrollPane = new JScrollPane(table);
+        
+        messageLabel = new JLabel("", JLabel.CENTER);
+        messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        messageLabel.setForeground(Color.GREEN); // Màu của thông báo thành công
+
+        JPanel messagePanel = new JPanel(new BorderLayout());
+        messagePanel.add(messageLabel, BorderLayout.CENTER);
+        add(messagePanel, BorderLayout.SOUTH);
         
         invitationListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
         add(invitationListPanel1, BorderLayout.CENTER);
@@ -166,11 +182,62 @@ public class InviteViewPanel extends JPanel{
                 try{
                     Event event = get();
                     tablePanel.addRow(event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+                    showMessage("Invite accepted successfully.", Color.GREEN);
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
             }
         };
         worker.execute();
+    }
+    
+    private static class HeaderRenderer implements TableCellRenderer {
+        private final TableCellRenderer delegate;
+
+        public HeaderRenderer(TableCellRenderer delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (c instanceof JLabel) {
+                JLabel label = (JLabel) c;
+                label.setFont(label.getFont().deriveFont(Font.BOLD));
+                label.setHorizontalAlignment(JLabel.CENTER); // Optional: Center align the header text
+            }
+            return c;
+        }
+    }
+    
+    private void startBlinking(JLabel label) {
+        Timer timer = new Timer(2500, new ActionListener() {
+            private boolean isBlue = true;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isBlue) {
+                    label.setForeground(Color.BLUE);
+                } else {
+                    label.setForeground(Color.MAGENTA);
+                }
+                isBlue = !isBlue;
+            }
+        });
+        timer.start();
+    }
+    
+    private void showMessage(String message, Color color) {
+        messageLabel.setText(message);
+        messageLabel.setForeground(color);
+
+        Timer timer = new Timer(2000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                messageLabel.setText("");
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 }
