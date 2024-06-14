@@ -51,9 +51,9 @@ public class ServiceEvent {
         ps.executeUpdate();
     }
 
-    public void deleteEvent(String event_name) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("delete from event where name = ?");
-        ps.setString(1, event_name);
+    public void deleteEvent(int event_id) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("delete from event where event_id = ?");
+        ps.setInt(1, event_id);
         ps.execute();
         ps.close();
     }
@@ -61,7 +61,7 @@ public class ServiceEvent {
     public List<Event> getUserEvent(User user) throws SQLException {
         serviceUser = new ServiceUser();
         List<Event> events = new ArrayList<>();
-        PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
+        PreparedStatement ps = connection.prepareStatement("SELECT e.event_id, e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
                                                             "from event e " +
                                                             "join attendee a on e.event_id = a.event_id " +
                                                             "join Users u on u.user_id = a.user_id " +
@@ -71,6 +71,7 @@ public class ServiceEvent {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
+            int event_id = rs.getInt("event_id");
             String name = rs.getString("name");
             String location = rs.getString("location");
             String date = rs.getString("date");
@@ -78,7 +79,7 @@ public class ServiceEvent {
             int organizer_id = rs.getInt("organizer_id");
             User organizer = serviceUser.getUser(organizer_id);
 
-            events.add(new Event(name, date, location, type, organizer));
+            events.add(new Event(event_id, name, date, location, type, organizer));
         }
         return events;
     }
@@ -87,7 +88,7 @@ public class ServiceEvent {
         this.user = user;
         serviceUser = new ServiceUser();
         List<Event> events = new ArrayList<>();
-        PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, u.user_id AS organizer_id " +
+        PreparedStatement ps = connection.prepareStatement("SELECT e.event_id, e.name, e.location, e.date, e.type, u.user_id AS organizer_id " +
                                                             "from event e " +
                                                             "join Users u on e.organizer_id = u.user_id " +
                                                             "where u.user_id = ?");
@@ -96,6 +97,7 @@ public class ServiceEvent {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
+            int event_id = rs.getInt("event_id");
             String name = rs.getString("name");
             String location = rs.getString("location");
             String date = rs.getString("date");
@@ -103,18 +105,17 @@ public class ServiceEvent {
             int organizer_id = rs.getInt("organizer_id");
             User organizer = serviceUser.getUser(organizer_id);
 
-            events.add(new Event(name, date, location, type, organizer));
+            events.add(new Event(event_id, name, date, location, type, organizer));
         }
         return events;
     }
 
-    public Event getSelectedEvent(String event_name) throws SQLException {
+    public Event getSelectedEvent(int event_id) throws SQLException {
         Event event = null;
-        PreparedStatement ps = connection.prepareStatement("select * from event where name = ?");
-        ps.setString(1, event_name);
+        PreparedStatement ps = connection.prepareStatement("select * from event where event_id = ?");
+        ps.setInt(1, event_id);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            int event_id = rs.getInt("event_id");
             String name = rs.getString("name");
             String location = rs.getString("location");
             String date = rs.getString("date");
@@ -132,7 +133,7 @@ public class ServiceEvent {
     public List<Event> getPublicEvents(User user) throws SQLException {
         serviceUser = new ServiceUser();
         List<Event> events = new ArrayList<>();
-        PreparedStatement ps = connection.prepareStatement("SELECT e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
+        PreparedStatement ps = connection.prepareStatement("SELECT e.event_id, e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
                                                             "FROM event e " +
                                                             "WHERE e.type = 'Public' AND e.organizer_id != ? " +
                                                             "AND NOT EXISTS (" +
@@ -147,6 +148,7 @@ public class ServiceEvent {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
+            int event_id = rs.getInt("event_id");
             String name = rs.getString("name");
             String location = rs.getString("location");
             String date = rs.getString("date");
@@ -157,7 +159,7 @@ public class ServiceEvent {
             User organizer = new User(organizer_id);
             organizer.setUsername(organizerUsername);
 
-            events.add(new Event(name, date, location, type, organizer));
+            events.add(new Event(event_id, name, date, location, type, organizer));
         }
         return events;
     }

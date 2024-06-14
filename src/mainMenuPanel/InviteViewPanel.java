@@ -59,7 +59,7 @@ public class InviteViewPanel extends JPanel{
         invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
         invitationListPanel1.add(topPanel, BorderLayout.NORTH);
         
-        String[] columnNames = {"#", "Name", "Date", "Location", "Type", "Organizer", "Actions"};
+        String[] columnNames = {"#", "Event Id", "Name", "Date", "Location", "Type", "Organizer", "Actions"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -90,7 +90,7 @@ public class InviteViewPanel extends JPanel{
         icons.add(deleteIcon);
 
         ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
-        table.getColumnModel().getColumn(6).setCellRenderer(buttonRender);
+        table.getColumnModel().getColumn(7).setCellRenderer(buttonRender);
 
         List<ActionListener> actionListeners = new ArrayList<>();
         actionListeners.add(e -> {
@@ -103,7 +103,7 @@ public class InviteViewPanel extends JPanel{
         });
 
         ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
-        table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
+        table.getColumnModel().getColumn(7).setCellEditor(buttonEdit);
 
         table.setRowHeight(48);
 
@@ -114,6 +114,12 @@ public class InviteViewPanel extends JPanel{
         }
         table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setResizingAllowed(false);
+
+        /*TableColumn eventIDColumn = table.getColumnModel().getColumn(1);
+            eventIDColumn.setMinWidth(0);
+            eventIDColumn.setMaxWidth(0);
+            eventIDColumn.setWidth(0);
+            eventIDColumn.setPreferredWidth(0);*/
 
         JScrollPane tableScrollPane = new JScrollPane(table);
         
@@ -141,7 +147,7 @@ public class InviteViewPanel extends JPanel{
             for (Invite invite : invites) {
                 Event event = invite.getEvent();
                 User sender = invite.getSender();
-                addRowToTable(new Object[]{id++, event.getName(), event.getDate(), event.getLocation(), event.getType(), sender.getUsername(), "Action"});
+                addRowToTable(new Object[]{id++, event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), sender.getUsername(), "Action"});
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -154,8 +160,8 @@ public class InviteViewPanel extends JPanel{
             @Override
             protected Event doInBackground() throws Exception {
                 int row = table.getSelectedRow();
-                String event_name = tableModel.getValueAt(row, 1).toString();
-                Event event = serviceEvent.getSelectedEvent(event_name);
+                int event_id = (int) table.getValueAt(row, 1);
+                Event event = serviceEvent.getSelectedEvent(event_id);
                 serviceAttendee.addAttendee(user, event);
                 removeRow(row);
                 return event;
@@ -165,7 +171,7 @@ public class InviteViewPanel extends JPanel{
             protected void done() {
                 try{
                     Event event = get();
-                    tablePanel.addRow(event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+                    tablePanel.addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }

@@ -54,7 +54,7 @@ public class TablePanel extends JPanel implements TableListener {
             eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
             eventListPanel1.add(topPanel, BorderLayout.NORTH);
 
-            String[] columnNames = {"#", "Name", "Date", "Location", "Type", "Organizer", "Actions"};
+            String[] columnNames = {"#", "Event ID",  "Name", "Date", "Location", "Type", "Organizer", "Actions"};
             tableModel = new DefaultTableModel(columnNames, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -83,14 +83,14 @@ public class TablePanel extends JPanel implements TableListener {
             icons.add(deleteIcon);
 
             ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
-            table.getColumnModel().getColumn(6).setCellRenderer(buttonRender);
+            table.getColumnModel().getColumn(7).setCellRenderer(buttonRender);
 
             List<ActionListener> actionListeners = new ArrayList<>();
             actionListeners.add(e -> {
                 try{
                     row = table.getSelectedRow();
-                    String event_name = table.getValueAt(row, 1).toString();
-                    Event event = serviceEvent.getSelectedEvent(event_name);
+                    int event_id = (int) table.getValueAt(row, 1);
+                    Event event = serviceEvent.getSelectedEvent(event_id);
                     mainMenu.setEvent(event);
                     mainMenu.showPanel("eventUpdatePanel");
                 }catch(Exception ex){
@@ -99,10 +99,10 @@ public class TablePanel extends JPanel implements TableListener {
             });
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
-                String event_name = table.getModel().getValueAt(row, 1).toString();
+                int event_id = (int) table.getValueAt(row, 1);
                 try {
-                    serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_name));
-                    serviceEvent.deleteEvent(event_name);
+                    serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_id));
+                    serviceEvent.deleteEvent(event_id);
                     System.out.println("delete successfully");
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -111,7 +111,7 @@ public class TablePanel extends JPanel implements TableListener {
             });
 
             ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
-            table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
+            table.getColumnModel().getColumn(7).setCellEditor(buttonEdit);
 
             table.setRowHeight(48);
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -119,6 +119,12 @@ public class TablePanel extends JPanel implements TableListener {
             for (int i = 0; i < table.getColumnCount() - 1; i++) {
                 table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
             }
+            /*TableColumn eventIDColumn = table.getColumnModel().getColumn(1);
+            eventIDColumn.setMinWidth(0);
+            eventIDColumn.setMaxWidth(0);
+            eventIDColumn.setWidth(0);
+            eventIDColumn.setPreferredWidth(0);*/
+
             JScrollPane tableScrollPane = new JScrollPane(table);
 
             eventListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
@@ -136,8 +142,8 @@ public class TablePanel extends JPanel implements TableListener {
     }
 
     @Override
-    public void addRow(String name, String date, String location, String type, User organizer) {
-        tableModel.addRow(new Object[]{id++, name, date, location, type, organizer.getUsername()});
+    public void addRow(int event_id, String name, String date, String location, String type, User organizer) {
+        tableModel.addRow(new Object[]{id++, event_id, name, date, location, type, organizer.getUsername()});
     }
 
     @Override
@@ -155,7 +161,7 @@ public class TablePanel extends JPanel implements TableListener {
     public void loadUserEvents(List<Event> events) {
         tableModel.setRowCount(0);
         for (Event event : events) {
-            addRow(event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+            addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
         }
     }
 }

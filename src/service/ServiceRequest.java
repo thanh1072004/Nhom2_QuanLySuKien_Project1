@@ -44,7 +44,7 @@ public class ServiceRequest {
         serviceUser = new ServiceUser();
         List<Request> requests = new ArrayList<>();
 
-        PreparedStatement ps = connection.prepareStatement("select e.name, e.location, e.date, r.sender_id " +
+        PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, r.sender_id " +
                                                             "from event e " +
                                                             "join request r on e.event_id = r.event_id " +
                                                             "where r.organizer_id = ?");
@@ -52,10 +52,10 @@ public class ServiceRequest {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
-            String event_name = rs.getString("name");
+            int event_id = rs.getInt("event_id");
             int sender_id = rs.getInt("sender_id");
 
-            Event event = serviceEvent.getSelectedEvent(event_name);
+            Event event = serviceEvent.getSelectedEvent(event_id);
             User sender = serviceUser.getUser(sender_id);
 
             requests.add(new Request(sender, event));

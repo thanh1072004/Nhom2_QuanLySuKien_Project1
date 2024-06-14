@@ -90,9 +90,9 @@ public class RequestSendPanel extends JPanel {
             List<ActionListener> actionListeners = new ArrayList<>();
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
-                String name = (String) table.getValueAt(row, 1);
+                int event_id = (int) table.getValueAt(row, 1);
                 try{
-                    Event event = serviceEvent.getSelectedEvent(name);
+                    Event event = serviceEvent.getSelectedEvent(event_id);
                     serviceRequest.addRequest(user, event);
                 }catch(SQLException ex){
                     ex.printStackTrace();
@@ -101,10 +101,9 @@ public class RequestSendPanel extends JPanel {
             });
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
-                String name = (String) table.getValueAt(row, 1);
-
+                int event_id = (int) table.getValueAt(row, 1);
                 try {
-                    Event event = serviceEvent.getSelectedEvent(name);
+                    Event event = serviceEvent.getSelectedEvent(event_id);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }

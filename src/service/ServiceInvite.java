@@ -46,9 +46,8 @@ public class ServiceInvite {
         List<Invite> invites = new ArrayList<>();
         serviceEvent = new ServiceEvent();
         serviceUser = new ServiceUser();
-        List<Request> requests = new ArrayList<>();
 
-        PreparedStatement ps = connection.prepareStatement("select e.name, e.location, e.date, e.type, i.sender_id " +
+        PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, e.type, i.sender_id " +
                                                             "from event e " +
                                                             "join invitation i on e.event_id = i.event_id " +
                                                             "where i.receiver_id = ?");
@@ -56,10 +55,10 @@ public class ServiceInvite {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
-            String event_name = rs.getString("name");
+            int event_id = rs.getInt("event_id");
             int sender_id = rs.getInt("sender_id");
 
-            Event event = serviceEvent.getSelectedEvent(event_name);
+            Event event = serviceEvent.getSelectedEvent(event_id);
             User sender = serviceUser.getUser(sender_id);
 
             invites.add(new Invite(sender, event));

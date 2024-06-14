@@ -115,8 +115,8 @@ public class EventUpdatePanel extends JPanel{
                 String eventLocation = location.getText().trim();
                 String eventType = typeList.getSelectedItem().toString().trim();
                 String eventDescription = description.getText().trim();
-                if(eventName.isEmpty() && eventType.isEmpty() && eventDescription.isEmpty()){
-                    System.out.println("Event name or event date or event location or event type or event description is empty");;
+                if(eventName.isEmpty() && eventType.isEmpty()){
+                    System.out.println("Event name or event date or event location is empty");;
                 }else if(getDate(eventDate).isBefore(LocalDate.now())){
                     System.out.println("Event date not valid");
                 }else{
@@ -140,7 +140,7 @@ public class EventUpdatePanel extends JPanel{
     }
 
     public void setEventDetails(Event event) throws SQLException {
-        this.event = serviceEvent.getSelectedEvent(event.getName());
+        this.event = serviceEvent.getSelectedEvent(event.getId());
         name.setText(event.getName());
         dateSelector.setDate(event.getDate());
         location.setText(event.getLocation());

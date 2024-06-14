@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 
-    private JPanel panel;
+    protected JPanel panel;
     private List<JButton> buttons;
     private List<ActionListener> actionListeners;
 

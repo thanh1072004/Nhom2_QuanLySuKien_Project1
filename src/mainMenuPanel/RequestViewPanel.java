@@ -96,9 +96,9 @@ public class RequestViewPanel extends JPanel{
         actionListeners.add(e -> {
             try {
                 int row = table.getSelectedRow();
-                String event_name = tableModel.getValueAt(row, 1).toString();
+                int event_id = (int) table.getValueAt(row, 1);
                 String username = tableModel.getValueAt(row, 4).toString();
-                Event event = serviceEvent.getSelectedEvent(event_name);
+                Event event = serviceEvent.getSelectedEvent(event_id);
                 User sender = serviceUser.getUser(username);
                 serviceAttendee.addAttendee(sender, event);
 
@@ -127,7 +127,7 @@ public class RequestViewPanel extends JPanel{
         table.setRowHeight(48);
 
         JScrollPane tableScrollPane = new JScrollPane(table);
-        
+
         invitationListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
         add(invitationListPanel1, BorderLayout.CENTER);
         

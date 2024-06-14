@@ -148,7 +148,7 @@ public class EventCreatePanel extends JPanel{
             protected void done() {
                 try{
                     Event event = get();
-                    tableListener.addRow(name, date, location, type, organizer);
+                    tableListener.addRow(event.getId(), name, date, location, type, organizer);
                     inviteSendPanel.addEvent(event);
                 }catch(Exception e){
                     e.printStackTrace();

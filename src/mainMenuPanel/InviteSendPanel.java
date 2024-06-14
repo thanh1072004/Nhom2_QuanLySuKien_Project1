@@ -19,8 +19,8 @@ public class InviteSendPanel extends JPanel {
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
-    private DefaultComboBoxModel<String> eventModel;
-    private ComboBox<String> event_name;
+    private DefaultComboBoxModel<Event> eventModel;
+    private ComboBox<Event> event_user;
     private JTextField receiver_name;
 
     public InviteSendPanel(User sender) {
@@ -42,15 +42,15 @@ public class InviteSendPanel extends JPanel {
             gbc.gridx = 0;
             gbc.gridy = 0;
             add(nameLabel, gbc);
-            String[] event_names = new String[events.size()];
+            Event[] event0 = new Event[events.size()];
             for (int i = 0; i < events.size(); i++) {
-                event_names[i] = events.get(i).getName();
+                event0[i] = events.get(i);
             }
-            event_name = new ComboBox<>();
-            eventModel = new DefaultComboBoxModel<>(event_names);
-            event_name.setModel(eventModel);
+            event_user = new ComboBox<>();
+            eventModel = new DefaultComboBoxModel<>(event0);
+            event_user.setModel(eventModel);
             gbc.gridx = 1;
-            add(event_name, gbc);
+            add(event_user, gbc);
 
             JLabel usernameLabel = new JLabel("Username:");
             usernameLabel.setFont(font);
@@ -76,22 +76,22 @@ public class InviteSendPanel extends JPanel {
 
             inviteUserButton.addActionListener(e -> {
                 try {
-                    String eventName = event_name.getSelectedItem().toString();
-
+                    Event selectedEvent = (Event) event_user.getSelectedItem();
+                    int event_id = selectedEvent.getId();
                     String receiverName = receiver_name.getText();
                     if (receiverName.isEmpty()) {
                         System.out.println("Please fill out all the fields");
                     } else {
-                        event = serviceEvent.getSelectedEvent(eventName);
+                        Event event = serviceEvent.getSelectedEvent(event_id);
                         receiver = serviceUser.getUser(receiverName);
 
                         if (event.getOrganizer().getUserId() == sender.getUserId()) {
-                            serviceInvite.addInvite(sender, receiver, event);
+                            serviceInvite.addInvite(sender, receiver, this.event);
                         } else {
                             throw new SQLException("Event not found");
                         }
                     }
-                    event_name.setSelectedItem(null);
+                    event_user.setSelectedItem(null);
                     receiver_name.setText("");
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -106,6 +106,6 @@ public class InviteSendPanel extends JPanel {
     }
 
     public void addEvent(Event event) {
-        eventModel.addElement(event.getName());
+        eventModel.addElement(event);
     }
 }

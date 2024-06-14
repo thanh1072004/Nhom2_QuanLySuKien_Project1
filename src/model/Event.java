@@ -9,7 +9,8 @@ public class Event {
     private String description;
     private User organizer;
 
-    public Event(String name, String date, String location, String type, User organizer) {
+    public Event(int id, String name, String date, String location, String type, User organizer) {
+        this.id = id;
         this.name = name;
         this.location = location;
         this.date = date;
@@ -87,4 +88,8 @@ public class Event {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }
