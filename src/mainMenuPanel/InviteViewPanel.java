@@ -11,7 +11,7 @@ import javax.swing.table.*;
 
 import src.MainMenu;
 import src.base.MyColor;
-import src.base.MyTextField;
+import src.base.TextField;
 import src.model.Event;
 import src.model.Invite;
 import src.model.User;
@@ -46,8 +46,7 @@ public class InviteViewPanel extends JPanel{
 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.setBackground(Color.WHITE);
-        MyTextField searchField = new MyTextField();
-        searchField.setHint("Search");
+        TextField searchField = new TextField("Search");
         searchField.setColumns(20);
         searchField.setPreferredSize(new Dimension(2000, 30));
         searchPanel.add(searchField);
@@ -62,7 +61,7 @@ public class InviteViewPanel extends JPanel{
         invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
         invitationListPanel1.add(topPanel, BorderLayout.NORTH);
         
-        String[] columnNames = {"#", "Name", "Date", "Location", "Type", "Organizer", "Actions"};
+        String[] columnNames = {"#", "Event ID", "Name", "Date", "Location", "Type", "Organizer", "Actions"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -93,7 +92,7 @@ public class InviteViewPanel extends JPanel{
         icons.add(deleteIcon);
 
         ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
-        table.getColumnModel().getColumn(6).setCellRenderer(buttonRender);
+        table.getColumnModel().getColumn(7).setCellRenderer(buttonRender);
 
         List<ActionListener> actionListeners = new ArrayList<>();
         actionListeners.add(e -> {
@@ -101,13 +100,21 @@ public class InviteViewPanel extends JPanel{
         });
 
         actionListeners.add(e -> {
-            int row = table.getSelectedRow();
-            removeRow(row);
-            showMessage("Invite deleted successfully.", Color.GREEN);
+            try{
+                int row = table.getSelectedRow();
+                int event_id = (int) tableModel.getValueAt(row, 1);
+                Event event = serviceEvent.getSelectedEvent(event_id);
+                serviceInvite.removeInvite(user, event);
+                removeRow(row);
+                showMessage("Invite deleted successfully.", Color.GREEN);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+
         });
 
         ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
-        table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
+        table.getColumnModel().getColumn(7).setCellEditor(buttonEdit);
 
         table.setRowHeight(48);
 
@@ -124,6 +131,12 @@ public class InviteViewPanel extends JPanel{
         table.getTableHeader().setResizingAllowed(false);
 
         JScrollPane tableScrollPane = new JScrollPane(table);
+
+        TableColumn eventIDColumn = table.getColumnModel().getColumn(1);
+        eventIDColumn.setMinWidth(0);
+        eventIDColumn.setMaxWidth(0);
+        eventIDColumn.setWidth(0);
+        eventIDColumn.setPreferredWidth(0);
         
         messageLabel = new JLabel("", JLabel.CENTER);
         messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
@@ -156,8 +169,8 @@ public class InviteViewPanel extends JPanel{
 
             for (Invite invite : invites) {
                 Event event = invite.getEvent();
-                User sender = invite.getSender();
-                addRowToTable(new Object[]{id++, event.getName(), event.getDate(), event.getLocation(), event.getType(), sender.getUsername(), "Action"});
+                User sender = invite.getOrganizer();
+                addRowToTable(new Object[]{id++, event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), sender.getUsername(), "Action"});
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -170,9 +183,10 @@ public class InviteViewPanel extends JPanel{
             @Override
             protected Event doInBackground() throws Exception {
                 int row = table.getSelectedRow();
-                String event_name = tableModel.getValueAt(row, 1).toString();
-                Event event = serviceEvent.getSelectedEvent(event_name);
+                int event_id = (int) tableModel.getValueAt(row, 1);
+                Event event = serviceEvent.getSelectedEvent(event_id);
                 serviceAttendee.addAttendee(user, event);
+                serviceInvite.removeInvite(user, event);
                 removeRow(row);
                 return event;
             }
@@ -181,7 +195,8 @@ public class InviteViewPanel extends JPanel{
             protected void done() {
                 try{
                     Event event = get();
-                    tablePanel.addRow(event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+                    tablePanel.addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+                    System.out.println(event.getOrganizer() == null);
                     showMessage("Invite accepted successfully.", Color.GREEN);
                 }catch(Exception ex){
                     ex.printStackTrace();

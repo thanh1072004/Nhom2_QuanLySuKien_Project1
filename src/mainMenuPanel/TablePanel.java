@@ -15,7 +15,7 @@ import src.model.Event;
 import src.model.User;
 import src.service.ServiceAttendee;
 import src.service.ServiceEvent;
-import src.base.MyTextField;
+import src.base.TextField;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
@@ -42,8 +42,7 @@ public class TablePanel extends JPanel implements TableListener {
 
             JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             searchPanel.setBackground(Color.WHITE);
-            MyTextField searchField = new MyTextField();
-            searchField.setHint("Search");
+            TextField searchField = new TextField("Search");
             searchField.setColumns(20);
             searchField.setPreferredSize(new Dimension(2000, 30));
             searchPanel.add(searchField);
@@ -104,8 +103,8 @@ public class TablePanel extends JPanel implements TableListener {
                 int row = table.getSelectedRow();
                 int event_id = (int) table.getValueAt(row, 1);
                 try {
-                    serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_id));
-                    serviceEvent.deleteEvent(event_id);
+                    //serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_id));
+                    //serviceEvent.deleteEvent(event_id);
                     System.out.println("delete successfully");
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -127,11 +126,12 @@ public class TablePanel extends JPanel implements TableListener {
             for (int i = 0; i < table.getColumnCount() - 1; i++) {
                 table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
             }
-            /*TableColumn eventIDColumn = table.getColumnModel().getColumn(1);
+
+            TableColumn eventIDColumn = table.getColumnModel().getColumn(1);
             eventIDColumn.setMinWidth(0);
             eventIDColumn.setMaxWidth(0);
             eventIDColumn.setWidth(0);
-            eventIDColumn.setPreferredWidth(0);*/
+            eventIDColumn.setPreferredWidth(0);
 
             JScrollPane tableScrollPane = new JScrollPane(table);
 

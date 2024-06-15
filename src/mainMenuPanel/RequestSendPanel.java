@@ -1,21 +1,16 @@
 package src.mainMenuPanel;
 
 import src.base.MyColor;
-import src.base.MyTextField;
+import src.base.TextField;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
 import src.service.ServiceRequest;
-import src.service.ServiceUser;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.text.JTextComponent;
+import javax.swing.table.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -47,8 +42,7 @@ public class RequestSendPanel extends JPanel {
 
             JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             searchPanel.setBackground(Color.WHITE);
-            MyTextField searchField = new MyTextField();
-            searchField.setHint("Search");
+            TextField searchField = new TextField("Search");
             searchField.setColumns(20);
             searchField.setPreferredSize(new Dimension(2000, 30));
             searchPanel.add(searchField);
@@ -62,7 +56,7 @@ public class RequestSendPanel extends JPanel {
             eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
             eventListPanel1.add(topPanel, BorderLayout.NORTH);
 
-            String[] columnNames = {"Event ID", "Name", "Date", "Location", "Organizer", "Actions"};
+            String[] columnNames = {"#", "Event ID", "Name", "Date", "Location", "Organizer", "Actions"};
             tableModel = new DefaultTableModel(columnNames, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -91,14 +85,15 @@ public class RequestSendPanel extends JPanel {
             icons.add(deleteIcon);
 
             ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
-            table.getColumnModel().getColumn(5).setCellRenderer(buttonRender);
+            table.getColumnModel().getColumn(6).setCellRenderer(buttonRender);
 
             List<ActionListener> actionListeners = new ArrayList<>();
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
-                String name = (String) table.getValueAt(row, 1);
+                int event_id = (int) tableModel.getValueAt(row, 1);
+
                 try{
-                    Event event = serviceEvent.getSelectedEvent(name);
+                    Event event = serviceEvent.getSelectedEvent(event_id);
                     serviceRequest.addRequest(user, event);
                     showMessage("Request successfully.", Color.GREEN);
                 }catch(SQLException ex){
@@ -108,10 +103,11 @@ public class RequestSendPanel extends JPanel {
             });
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
-                String name = (String) table.getValueAt(row, 1);
+                int event_id = (int) tableModel.getValueAt(row, 1);
 
                 try {
-                    Event event = serviceEvent.getSelectedEvent(name);
+                    Event event = serviceEvent.getSelectedEvent(event_id);
+                    serviceRequest.addRequest(user, event);
                     showMessage("Delete successfully.", Color.GREEN);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -120,7 +116,7 @@ public class RequestSendPanel extends JPanel {
             });
 
             ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
-            table.getColumnModel().getColumn(5).setCellEditor(buttonEdit);
+            table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
 
             table.setRowHeight(48);
 
@@ -138,6 +134,12 @@ public class RequestSendPanel extends JPanel {
             table.getTableHeader().setResizingAllowed(false);
 
             JScrollPane tableScrollPane = new JScrollPane(table);
+
+            TableColumn eventIDColumn = table.getColumnModel().getColumn(1);
+            eventIDColumn.setMinWidth(0);
+            eventIDColumn.setMaxWidth(0);
+            eventIDColumn.setWidth(0);
+            eventIDColumn.setPreferredWidth(0);
             
             messageLabel = new JLabel("", JLabel.CENTER);
             messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
@@ -155,8 +157,8 @@ public class RequestSendPanel extends JPanel {
             e.printStackTrace();
         }
     }
-    public void addRow(int id, String name,  String date, String location, User organizer) {
-        tableModel.addRow(new Object[]{id, name, date, location, organizer.getUsername()});
+    public void addRow(int id, int event_id, String name,  String date, String location, User organizer) {
+        tableModel.addRow(new Object[]{id, event_id, name, date, location, organizer.getUsername()});
     }
 
     public void removeRow(int row){
@@ -167,7 +169,7 @@ public class RequestSendPanel extends JPanel {
         int id = 1;
         tableModel.setRowCount(0);
         for (Event event : events) {
-            addRow(id++, event.getName(), event.getDate(), event.getLocation(), event.getOrganizer());
+            addRow(id++, event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getOrganizer());
         }
     }
     

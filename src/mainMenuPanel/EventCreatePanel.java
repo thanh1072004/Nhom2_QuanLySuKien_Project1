@@ -5,6 +5,7 @@ import src.base.ComboBox;
 import src.base.CustomMessage;
 import src.base.DateSelector;
 import src.base.MyColor;
+import src.base.TextField;
 import src.model.User;
 import src.model.Event;
 import src.service.ServiceAttendee;
@@ -18,7 +19,6 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 import java.awt.*;
 import java.time.LocalDate;
-
 
 public class EventCreatePanel extends JPanel{
     private MainMenu mainMenu;
@@ -41,7 +41,7 @@ public class EventCreatePanel extends JPanel{
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(16, 10, 16, 10);
 
-        Font font = new Font("Arial", Font.PLAIN, 16);
+        Font font = new Font("sansserif", Font.PLAIN, 16);
 
         JLabel nameLabel = new JLabel("Name:");
         nameLabel.setFont(font);
@@ -49,7 +49,7 @@ public class EventCreatePanel extends JPanel{
         gbc.gridy = 0;
         add(nameLabel, gbc);
 
-        JTextField name = new JTextField(20);
+        TextField name = new TextField("");
         name.setFont(font);
         gbc.gridx = 1;
         add(name, gbc);
@@ -70,8 +70,7 @@ public class EventCreatePanel extends JPanel{
         gbc.gridy = 2;
         add(locationLabel, gbc);
 
-        JTextField location = new JTextField(20);
-        location.setFont(font);
+        TextField location = new TextField("");
         gbc.gridx = 1;
         add(location, gbc);
 

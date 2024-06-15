@@ -9,8 +9,8 @@ import src.base.MyColor;
 import src.model.Login;
 import src.model.User;
 import net.miginfocom.swing.MigLayout;
-import src.base.MyPasswordField;
-import src.base.MyTextField;
+import src.base.PasswordField;
+import src.base.LoginTextField;
 import src.base.Button;
 
 public class PanelLoginAndRegister extends JLayeredPane {
@@ -40,12 +40,11 @@ public class PanelLoginAndRegister extends JLayeredPane {
         label.setForeground(new Color(7, 164, 121));
         login.add(label, "wrap");
 
-        MyTextField username = new MyTextField();
+        LoginTextField username = new LoginTextField("Username");
         username.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/mail.png"))));
-        username.setHint("Username");
         login.add(username, "w 60%, wrap");
 
-        MyPasswordField password = new MyPasswordField();
+        PasswordField password = new PasswordField();
         password.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/pass.png"))));
         password.setHint("Password");
         login.add(password, " w 60%, wrap");
@@ -80,22 +79,22 @@ public class PanelLoginAndRegister extends JLayeredPane {
 
         JPanel fullName = new JPanel(new MigLayout("fill", "push[right]push"));
         fullName.setBackground(new Color(255, 255, 255));
-        MyTextField firstName = new MyTextField();
+        LoginTextField firstName = new LoginTextField("First Name");
         firstName.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/user.png"))));
-        firstName.setHint("First name");
+
         fullName.add(firstName, "w 45%, left");
-        MyTextField lastName = new MyTextField();
+        LoginTextField lastName = new LoginTextField("Surname");
         lastName.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/user.png"))));
-        lastName.setHint("Surname");
+
         fullName.add(lastName, "w 45%, right");
         register.add(fullName, "w 60%, wrap");
 
-        MyTextField username = new MyTextField();
+        LoginTextField username = new LoginTextField("Username");
         username.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/mail.png"))));
-        username.setHint("Username");
+
         register.add(username, "w 60%, wrap");
 
-        MyPasswordField password = new MyPasswordField();
+        PasswordField password = new PasswordField();
         password.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/pass.png"))));
         password.setHint("Password");
         register.add(password, "w 60%, wrap");

@@ -83,8 +83,8 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-        	//User user = new User(1024, "hoang", "f82e62d7c3ea69cc12b5cdb8d621dab6");
-            User user = new User(2007, "thanh", "202cb962ac59075b964b07152d234b70");
+        	User user = new User(1028, "hoang", "f82e62d7c3ea69cc12b5cdb8d621dab6");
+            //User user = new User(1027, "tung", "bb7d4b236b564cf1ec27aa891331e0af");
             MainMenu frame = new MainMenu(user);
             frame.setVisible(true);
         });

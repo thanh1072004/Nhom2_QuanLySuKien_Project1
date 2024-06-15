@@ -15,8 +15,11 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
     protected JPanel panel;
     private List<JButton> buttons;
     private List<ActionListener> actionListeners;
+    private List<Color> backgroundColors;
+    private boolean isOrganizer;
 
     public ButtonEditor(List<ImageIcon> icons, List<ActionListener> actionListeners, List<Color> backgroundColors) {
+        this.backgroundColors = backgroundColors;
         panel = new JPanel(new GridBagLayout());
         this.actionListeners = actionListeners;
         buttons = new ArrayList<>();
@@ -65,6 +68,11 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
                     break;
                 }
             }
+    }
+    public void setIsOrganizer(boolean isOrganizer) {
+        this.isOrganizer = isOrganizer;
+        // Disable the edit button if not an organizer
+        buttons.get(0).setEnabled(isOrganizer);
     }
 }
 

@@ -1,27 +1,28 @@
 package src.model;
 
 public class Invite {
-    private User sender;
+    private User organizer;
     private User receiver;
     private Event event;
+    private int invite_id;
 
-    public Invite(User sender, Event event, User receiver) {
-        this.sender = sender;
+    public Invite(User organizer, Event event, User receiver) {
+        this.organizer = organizer;
         this.event = event;
         this.receiver = receiver;
     }
 
-    public Invite(User sender, Event event) {
+    public Invite(User organizer, Event event) {
         this.event = event;
-        this.sender = sender;
+        this.organizer = organizer;
     }
 
-    public User getSender() {
-        return sender;
+    public User getOrganizer() {
+        return organizer;
     }
 
-    public void setSender(User sender) {
-        this.sender = sender;
+    public void setOrganizer(User organizer) {
+        this.organizer = organizer;
     }
 
     public Event getEvent() {
@@ -30,6 +31,14 @@ public class Invite {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public int getInvite_id() {
+        return invite_id;
+    }
+
+    public void setInvite_id(int invite_id) {
+        this.invite_id = invite_id;
     }
 
     public User getReceiver() {

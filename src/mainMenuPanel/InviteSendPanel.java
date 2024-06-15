@@ -2,6 +2,7 @@ package src.mainMenuPanel;
 
 import src.base.ComboBox;
 import src.base.CustomMessage;
+import src.base.TextField;
 import src.base.MyColor;
 import src.model.Event;
 import src.model.User;
@@ -10,7 +11,6 @@ import src.service.ServiceInvite;
 import src.service.ServiceUser;
 
 import java.awt.*;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.*;
@@ -21,21 +21,20 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 public class InviteSendPanel extends JPanel {
     private User receiver;
-    private Event event;
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
-    private DefaultComboBoxModel<String> eventModel;
-    private ComboBox<String> event_name;
-    private JTextField receiver_name;
+    private DefaultComboBoxModel<Event> eventModel;
+    private ComboBox<Event> event_name;
+    private TextField receiver_name;
 	private JPanel messagePanel;
 
-    public InviteSendPanel(User sender) {
+    public InviteSendPanel(User organizer) {
         try {
             serviceUser = new ServiceUser();
             serviceEvent = new ServiceEvent();
             serviceInvite = new ServiceInvite();
-            List<Event> events = serviceEvent.getOrganizerEvent(sender);
+            List<Event> events = serviceEvent.getOrganizerEvent(organizer);
 
             setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
@@ -49,9 +48,9 @@ public class InviteSendPanel extends JPanel {
             gbc.gridx = 0;
             gbc.gridy = 0;
             add(nameLabel, gbc);
-            String[] event_names = new String[events.size()];
+            Event[] event_names = new Event[events.size()];
             for (int i = 0; i < events.size(); i++) {
-                event_names[i] = events.get(i).getName();
+                event_names[i] = events.get(i);
             }
             event_name = new ComboBox<>();
             eventModel = new DefaultComboBoxModel<>(event_names);
@@ -65,14 +64,15 @@ public class InviteSendPanel extends JPanel {
             gbc.gridy = 1;
             add(usernameLabel, gbc);
 
-            receiver_name = new JTextField(20);
+            receiver_name = new TextField("");
             receiver_name.setFont(font);
+            receiver_name.setPreferredSize(new Dimension(200, 28));
             gbc.gridx = 1;
             add(receiver_name, gbc);
 
             gbc.gridx = 0;
             gbc.gridy = 2;
-            gbc.gridwidth = 2;
+            gbc.gridwidth = 6;
             gbc.fill = GridBagConstraints.CENTER;
 
             JPanel buttonPanel = new JPanel();
@@ -85,20 +85,21 @@ public class InviteSendPanel extends JPanel {
 
             inviteUserButton.addActionListener(e -> {
                 try {
-                    String eventName = event_name.getSelectedItem().toString();
+                    Event event = (Event) event_name.getSelectedItem();
 
                     String receiverName = receiver_name.getText();
                     if (receiverName.isEmpty()) {
                     	showMessage(CustomMessage.MessageType.WARNING, "Please fill out all the fields");
                     } else {
-                        event = serviceEvent.getSelectedEvent(eventName);
                         receiver = serviceUser.getUser(receiverName);
-
-                        if (event.getOrganizer().getUserId() == sender.getUserId()) {
-                        	showMessage(CustomMessage.MessageType.INFO, "Event invited successfully");
-                            serviceInvite.addInvite(sender, receiver, event);
+                        if(receiver == null) {
+                            showMessage(CustomMessage.MessageType.ERROR, "User not found");
+                        }
+                        else if (serviceInvite.checkInvite(organizer, receiver, event)    ) {
+                            showMessage(CustomMessage.MessageType.ERROR, "Invitation already sent to this user for the selected event");
                         } else {
-                            throw new SQLException("Event not found");
+                            showMessage(CustomMessage.MessageType.INFO, "Event invited successfully");
+                            serviceInvite.addInvite(organizer, receiver, event);
                         }
                     }
                     event_name.setSelectedItem(null);
@@ -123,7 +124,7 @@ public class InviteSendPanel extends JPanel {
     }
 
     public void addEvent(Event event) {
-        eventModel.addElement(event.getName());
+        eventModel.addElement(event);
     }
     
     private void showMessage(CustomMessage.MessageType messageType, String message) {

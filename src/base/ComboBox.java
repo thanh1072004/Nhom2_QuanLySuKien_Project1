@@ -154,11 +154,11 @@ public class ComboBox<E> extends JComboBox<E> {
             BasicComboPopup pop = new BasicComboPopup(comboBox) {
                 @Override
                 protected JScrollPane createScroller() {
-                    list.setFixedCellHeight(30);
+                    list.setFixedCellHeight(28);
                     JScrollPane scroll = new JScrollPane(list);
                     scroll.setBackground(Color.WHITE);
                     ScrollBarCustom sb = new ScrollBarCustom();
-                    sb.setUnitIncrement(30);
+                    sb.setUnitIncrement(28);
                     sb.setForeground(new Color(180, 180, 180));
                     scroll.setVerticalScrollBar(sb);
                     return scroll;

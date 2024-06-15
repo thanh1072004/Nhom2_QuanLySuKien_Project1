@@ -112,6 +112,7 @@ public class ServiceEvent {
 
     public Event getSelectedEvent(int event_id) throws SQLException {
         Event event = null;
+        serviceUser = new ServiceUser();
         PreparedStatement ps = connection.prepareStatement("select * from event where event_id = ?");
         ps.setInt(1, event_id);
         ResultSet rs = ps.executeQuery();
@@ -122,7 +123,7 @@ public class ServiceEvent {
             String type = rs.getString("type");
             String description = rs.getString("description");
             int organizer_id = rs.getInt("organizer_id");
-            User organizer = new User(organizer_id);
+            User organizer = serviceUser.getUser(organizer_id);
             event = new Event(event_id, name, date, location, type, description, organizer);
         }
         rs.close();

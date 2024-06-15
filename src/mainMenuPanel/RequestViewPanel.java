@@ -8,10 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.*;
-import javax.swing.text.JTextComponent;
 
 import src.base.MyColor;
-import src.base.MyTextField;
+import src.base.TextField;
 import src.model.Event;
 import src.model.Request;
 import src.model.User;
@@ -48,8 +47,7 @@ public class RequestViewPanel extends JPanel{
 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.setBackground(Color.WHITE);
-        MyTextField searchField = new MyTextField();
-        searchField.setHint("Search");
+        TextField searchField = new TextField("Search");
         searchField.setColumns(20);
         searchField.setPreferredSize(new Dimension(2000, 30));
         searchPanel.add(searchField);
@@ -64,7 +62,7 @@ public class RequestViewPanel extends JPanel{
         invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
         invitationListPanel1.add(topPanel, BorderLayout.NORTH);
         
-        String[] columnNames = {"#", "Name", "Date", "Location",  "Sender", "Actions"};
+        String[] columnNames = {"#", "Event Id", "Name", "Date", "Location",  "Sender", "Actions"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -95,16 +93,17 @@ public class RequestViewPanel extends JPanel{
         icons.add(deleteIcon);
 
         ButtonRenderer buttonRender = new ButtonRenderer(icons, backgroundColor);
-        table.getColumnModel().getColumn(5).setCellRenderer(buttonRender);
+        table.getColumnModel().getColumn(6).setCellRenderer(buttonRender);
 
         List<ActionListener> actionListeners = new ArrayList<>();
         actionListeners.add(e -> {
             try {
                 int row = table.getSelectedRow();
-                String event_name = tableModel.getValueAt(row, 1).toString();
-                String username = tableModel.getValueAt(row, 4).toString();
-                Event event = serviceEvent.getSelectedEvent(event_name);
+                int event_id = (int) tableModel.getValueAt(row, 1);
+                String username = tableModel.getValueAt(row, 5).toString();
+                Event event = serviceEvent.getSelectedEvent(event_id);
                 User sender = serviceUser.getUser(username);
+                serviceRequest.removeRequest(sender, event);
                 serviceAttendee.addAttendee(sender, event);
                 showMessage("Accept successfully.", Color.GREEN);
 
@@ -115,13 +114,22 @@ public class RequestViewPanel extends JPanel{
         });
 
         actionListeners.add(e -> {
-            int row = table.getSelectedRow();
-            removeRow(row);
-            showMessage("Delete successfully.", Color.GREEN);
+            try{
+                int row = table.getSelectedRow();
+                int event_id = (int) tableModel.getValueAt(row, 1);
+                String username = tableModel.getValueAt(row, 5).toString();
+                Event event = serviceEvent.getSelectedEvent(event_id);
+                User sender = serviceUser.getUser(username);
+                serviceRequest.removeRequest(sender, event);
+                removeRow(row);
+                showMessage("Delete successfully.", Color.GREEN);
+            }catch(Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
-        table.getColumnModel().getColumn(5).setCellEditor(buttonEdit);
+        table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
 
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setDefaultRenderer(new HeaderRenderer(tableHeader.getDefaultRenderer()));
@@ -138,6 +146,12 @@ public class RequestViewPanel extends JPanel{
         table.setRowHeight(48);
 
         JScrollPane tableScrollPane = new JScrollPane(table);
+
+        TableColumn eventIDColumn = table.getColumnModel().getColumn(1);
+        eventIDColumn.setMinWidth(0);
+        eventIDColumn.setMaxWidth(0);
+        eventIDColumn.setWidth(0);
+        eventIDColumn.setPreferredWidth(0);
         
         messageLabel = new JLabel("", JLabel.CENTER);
         messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
@@ -171,7 +185,7 @@ public class RequestViewPanel extends JPanel{
             for (Request request : requests) {
                 Event event = request.getEvent();
                 User sender = request.getSender();
-                addRowToTable(new Object[]{id++, event.getName(), event.getDate(), event.getLocation(), sender.getUsername(), "Action"});
+                addRowToTable(new Object[]{id++, event.getId(), event.getName(), event.getDate(), event.getLocation(), sender.getUsername(), "Action"});
             }
         } catch (SQLException e) {
             e.printStackTrace();
