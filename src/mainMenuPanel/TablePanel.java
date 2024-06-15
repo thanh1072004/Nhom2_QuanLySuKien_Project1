@@ -156,10 +156,10 @@ public class TablePanel extends JPanel implements TableListener {
 
     @Override
     public void updateRow(int row, String name, String date, String location,  String type) {
-        tableModel.setValueAt(name, row, 1);
-        tableModel.setValueAt(date, row, 2);
-        tableModel.setValueAt(location, row, 3);
-        tableModel.setValueAt(type, row, 4);
+        tableModel.setValueAt(name, row, 2);
+        tableModel.setValueAt(date, row, 3);
+        tableModel.setValueAt(location, row, 4);
+        tableModel.setValueAt(type, row, 5);
     }
     @Override
     public void removeRow(int row){

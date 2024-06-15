@@ -2,6 +2,7 @@ package src.mainMenuPanel;
 
 import src.MainMenu;
 import src.base.DateSelector;
+import src.base.MyColor;
 import src.model.User;
 import src.model.Event;
 import src.service.ServiceEvent;
@@ -106,27 +107,29 @@ public class EventUpdatePanel extends JPanel{
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton updateEventButton = new JButton("Update Event");
+        updateEventButton.setBackground(MyColor.CYAN);
+        updateEventButton.setForeground(Color.WHITE);
         updateEventButton.setFont(font);
         updateEventButton.setFocusPainted(false);
         updateEventButton.addActionListener(e -> {
-            try{
+            try {
                 String eventName = name.getText().trim();
                 String eventDate = dateSelector.getSelectedDate().trim();
                 String eventLocation = location.getText().trim();
                 String eventType = typeList.getSelectedItem().toString().trim();
                 String eventDescription = description.getText().trim();
-                if(eventName.isEmpty() && eventType.isEmpty()){
-                    System.out.println("Event name or event date or event location is empty");;
-                }else if(getDate(eventDate).isBefore(LocalDate.now())){
+                if (eventName.isEmpty() || eventDate.isEmpty() || eventLocation.isEmpty()) {
+                    System.out.println("Event name or event date or event location is empty");
+                } else if (getDate(eventDate).isBefore(LocalDate.now())) {
                     System.out.println("Event date not valid");
-                }else{
+                } else {
                     int row = tableListener.getRow();
                     tableListener.updateRow(row, eventName, eventDate, eventLocation, eventType);
-                    Event updatedEvent = new Event(event.getId() ,eventName, eventDate, eventLocation, eventType, eventDescription, user);
+                    Event updatedEvent = new Event(event.getId(), eventName, eventDate, eventLocation, eventType, eventDescription, user);
                     serviceEvent.updateEvent(updatedEvent, event.getId());
                     mainMenu.showPanel("tablePanel");
                 }
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
