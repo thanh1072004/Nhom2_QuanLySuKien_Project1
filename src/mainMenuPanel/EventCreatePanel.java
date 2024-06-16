@@ -4,7 +4,7 @@ import raven.toast.Notifications;
 import src.MainMenu;
 import src.base.ComboBox;
 import src.base.DateSelector;
-import src.base.MyColor;
+import src.base.Config;
 import src.base.TextField;
 import src.model.User;
 import src.model.Event;
@@ -37,21 +37,18 @@ public class EventCreatePanel extends JPanel{
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(16, 10, 16, 10);
 
-        Font font = new Font("sansserif", Font.PLAIN, 16);
-
         JLabel nameLabel = new JLabel("Name:");
-        nameLabel.setFont(font);
+        nameLabel.setFont(Config.FONT);
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(nameLabel, gbc);
 
         TextField name = new TextField("");
-        name.setFont(font);
         gbc.gridx = 1;
         add(name, gbc);
 
         JLabel dateLabel = new JLabel("Date:");
-        dateLabel.setFont(font);
+        dateLabel.setFont(Config.FONT);
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(dateLabel, gbc);
@@ -61,7 +58,7 @@ public class EventCreatePanel extends JPanel{
         add(dateSelector, gbc);
 
         JLabel locationLabel = new JLabel("Location:");
-        locationLabel.setFont(font);
+        locationLabel.setFont(Config.FONT);
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(locationLabel, gbc);
@@ -72,7 +69,7 @@ public class EventCreatePanel extends JPanel{
 
         String[] type = { "Public", "Private" };
         JLabel typeLabel = new JLabel("Type:");
-        typeLabel.setFont(font);
+        typeLabel.setFont(Config.FONT);
         gbc.gridx = 0;
         gbc.gridy = 3;
         add(typeLabel, gbc);
@@ -84,13 +81,13 @@ public class EventCreatePanel extends JPanel{
         add(typeList, gbc);
 
         JLabel descriptionLabel = new JLabel("Description:");
-        descriptionLabel.setFont(font);
+        descriptionLabel.setFont(Config.FONT);
         gbc.gridx = 0;
         gbc.gridy = 4;
         add(descriptionLabel, gbc);
 
         JTextArea description = new JTextArea(5, 20);
-        description.setFont(font);
+        description.setFont(Config.FONT);
         description.setLineWrap(true);
         description.setWrapStyleWord(true);
         JScrollPane descriptionScrollPane = new JScrollPane(description);
@@ -105,8 +102,8 @@ public class EventCreatePanel extends JPanel{
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton createEventButton = new JButton("Create Event");
-        createEventButton.setFont(font);
-        createEventButton.setBackground(MyColor.CYAN);
+        createEventButton.setFont(Config.FONT);
+        createEventButton.setBackground(Config.CYAN);
         createEventButton.setForeground(Color.WHITE);
         createEventButton.setFocusPainted(false);
         createEventButton.addActionListener(e -> {
@@ -121,7 +118,7 @@ public class EventCreatePanel extends JPanel{
                 }else if(getDate(eventDate).isBefore(LocalDate.now())){
                     mainMenu.showMessage(Notifications.Type.ERROR, "Event date not valid");
                 }else{
-                    //createEvent(eventName, eventDate, eventLocation, eventType, eventDescription, user);
+                    createEvent(eventName, eventDate, eventLocation, eventType, eventDescription, user);
                     mainMenu.showMessage(Notifications.Type.SUCCESS, "Event created successfully.");
                     mainMenu.showPanel("tablePanel");
                 }

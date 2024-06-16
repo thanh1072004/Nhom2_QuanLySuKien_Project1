@@ -1,7 +1,5 @@
 package src.loginPanel;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import javax.swing.*;
 
-import src.base.MyColor;
+import src.base.Config;
 import net.miginfocom.swing.MigLayout;
 import src.base.ButtonOutline;
 
@@ -35,21 +33,21 @@ public class CoverPanel extends javax.swing.JPanel {
 
     private void init(){
         title = new JLabel("Event planner");
-        title.setFont(new Font("sanserif", Font.BOLD, 30));
-        title.setForeground(MyColor.TEXT_LOGIN);
+        title.setFont(Config.FONT_LOGIN);
+        title.setForeground(Config.TEXT_LOGIN);
         add(title);
 
         description = new JLabel("Life is an event");
-        description.setForeground(MyColor.TEXT_LOGIN);
+        description.setForeground(Config.TEXT_LOGIN);
         add(description);
 
         description1 = new JLabel("Make it memorable");
-        description1.setForeground(MyColor.TEXT_LOGIN);
+        description1.setForeground(Config.TEXT_LOGIN);
         add(description1);
 
         button = new ButtonOutline();
-        button.setBackground(MyColor.WHITE);
-        button.setForeground(MyColor.WHITE);
+        button.setBackground(Config.WHITE);
+        button.setForeground(Config.WHITE);
         button.setText("SIGN UP");
         button.addActionListener(evt -> {
             event.actionPerformed(evt);
@@ -69,7 +67,7 @@ public class CoverPanel extends javax.swing.JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        GradientPaint gp = new GradientPaint(0, 0, new Color(35, 116, 97), 0, getHeight(), new Color(22, 116, 66));
+        GradientPaint gp = new GradientPaint(0, 0, Config.DARKER_GREEN, 0, getHeight(), Config.DARK_GREEN);
         g2d.setPaint(gp);
         g2d.fillRect(0, 0, getWidth(), getHeight());
         super.paintComponent(g);

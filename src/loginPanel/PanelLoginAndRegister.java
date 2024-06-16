@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.Objects;
 import javax.swing.*;
 
-import src.base.MyColor;
+import src.base.Config;
 import src.model.Login;
 import src.model.User;
 import net.miginfocom.swing.MigLayout;
@@ -34,10 +34,10 @@ public class PanelLoginAndRegister extends JLayeredPane {
     }
 
     private void initLogin(ActionListener eventLogin){
-        login.setLayout(new MigLayout("", "push[center]push", "push[]25[]10[]10[]25[]push"));
+        login.setLayout(new MigLayout("", "push[center]push", "push[]25[]15[]15[]25[]push"));
         JLabel label = new JLabel("Sign In");
-        label.setFont(new Font("sanserif", Font.BOLD, 30));
-        label.setForeground(new Color(7, 164, 121));
+        label.setFont(Config.FONT_LOGIN);
+        label.setForeground(Config.GREEN);
         login.add(label, "wrap");
 
         LoginTextField username = new LoginTextField("Username");
@@ -49,16 +49,8 @@ public class PanelLoginAndRegister extends JLayeredPane {
         password.setHint("Password");
         login.add(password, " w 60%, wrap");
 
-        JButton cmdForget = new JButton("Forget your password ?");
-        cmdForget.setForeground(new Color(100, 100, 100));
-        cmdForget.setFont(new Font("sanserif", Font.BOLD, 12));
-        cmdForget.setContentAreaFilled(false);
-        cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        cmdForget.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-        login.add(cmdForget, "wrap");
-
         Button cmd = new Button();
-        cmd.setBackground(MyColor.BACKGROUND_LABEL);
+        cmd.setBackground(Config.GREEN);
         cmd.setForeground(new Color(250, 250, 250));
         cmd.setText("SIGN IN");
         cmd.addActionListener(eventLogin);
@@ -73,12 +65,12 @@ public class PanelLoginAndRegister extends JLayeredPane {
     private void initRegister(ActionListener eventRegister){
         register.setLayout(new MigLayout("", "push[center]push", "push[]10[]10[]10[]push"));
         JLabel label = new JLabel("Create Account");
-        label.setFont(new Font("sanserif", Font.BOLD, 30));
-        label.setForeground(MyColor.BACKGROUND_LABEL);
+        label.setFont(Config.FONT_LOGIN);
+        label.setForeground(Config.GREEN);
         register.add(label, "wrap");
 
         JPanel fullName = new JPanel(new MigLayout("fill", "push[right]push"));
-        fullName.setBackground(new Color(255, 255, 255));
+        fullName.setBackground(Config.WHITE);
         LoginTextField firstName = new LoginTextField("First Name");
         firstName.setPrefixIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/src/icon/user.png"))));
 
@@ -100,8 +92,8 @@ public class PanelLoginAndRegister extends JLayeredPane {
         register.add(password, "w 60%, wrap");
 
         Button cmd = new Button();
-        cmd.setBackground(MyColor.BACKGROUND_LABEL);
-        cmd.setForeground(MyColor.COLOR_TEXT);
+        cmd.setBackground(Config.GREEN);
+        cmd.setForeground(Config.COLOR_TEXT);
         cmd.setText("SIGN UP");
         cmd.addActionListener(eventRegister);
         register.add(cmd, "w 40%, h 40, wrap");
@@ -132,7 +124,7 @@ public class PanelLoginAndRegister extends JLayeredPane {
 
         setLayout(new CardLayout());
 
-        login.setBackground(MyColor.WHITE);
+        login.setBackground(Config.WHITE);
 
         GroupLayout loginLayout = new GroupLayout(login);
         login.setLayout(loginLayout);
@@ -147,7 +139,7 @@ public class PanelLoginAndRegister extends JLayeredPane {
 
         add(login, "card3");
 
-        register.setBackground(MyColor.WHITE);
+        register.setBackground(Config.WHITE);
 
         GroupLayout registerLayout = new GroupLayout(register);
         register.setLayout(registerLayout);

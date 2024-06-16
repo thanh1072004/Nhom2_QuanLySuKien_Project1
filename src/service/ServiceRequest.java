@@ -74,8 +74,10 @@ public class ServiceRequest {
                                                             "from event e " +
                                                             "join request r on e.event_id = r.event_id " +
                                                             "left join finished_request f on r.request_id = f.request_id " +
+                                                            "left join attendee a on e.event_id = a.event_id and a.user_id = ? " +
                                                             "where r.organizer_id = ? and f.request_id is null");
         ps.setInt(1, user.getUserId());
+        ps.setInt(2, user.getUserId());
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {

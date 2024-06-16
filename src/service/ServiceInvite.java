@@ -27,7 +27,7 @@ public class ServiceInvite {
             throw new SQLException("Failed to connect to database");
         }
 
-        PreparedStatement ps = connection.prepareStatement("INSERT INTO invite (organizer_id, receiver_id, event_id) VALUES (? ,?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        PreparedStatement ps = connection.prepareStatement("insert into invite (organizer_id, receiver_id, event_id) VALUES (? ,?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
         ps.setInt(1, organizer.getUserId());
         ps.setInt(2, receiver.getUserId());
         ps.setInt(3, event.getId());
@@ -77,6 +77,7 @@ public class ServiceInvite {
         }
         return false;
     }
+
     public List<Invite> getInvites(User receiver) throws SQLException {
         List<Invite> invites = new ArrayList<>();
         serviceEvent = new ServiceEvent();

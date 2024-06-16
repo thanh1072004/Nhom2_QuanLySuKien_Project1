@@ -7,13 +7,11 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import javax.swing.table.*;
 
 import raven.toast.Notifications;
 import src.MainMenu;
-import src.base.MyColor;
-import src.base.TextField;
+import src.base.Config;
 import src.model.Event;
 import src.model.Request;
 import src.model.User;
@@ -46,7 +44,7 @@ public class RequestViewPanel extends JPanel{
         setBackground(Color.WHITE);
 
         JLabel tableNameLabel = new JLabel("Participation Requests", JLabel.CENTER);
-        tableNameLabel.setFont(new Font("Serif", Font.BOLD, 38));
+        tableNameLabel.setFont(new Font("Serif", Font.BOLD, 36));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         startBlinking(tableNameLabel);
         
@@ -74,8 +72,8 @@ public class RequestViewPanel extends JPanel{
         ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
 
         java.util.List<Color> backgroundColor = new ArrayList<>();
-        backgroundColor.add(MyColor.CYAN);
-        backgroundColor.add(MyColor.RED);
+        backgroundColor.add(Config.CYAN);
+        backgroundColor.add(Config.RED);
         java.util.List<ImageIcon> icons = new ArrayList<>();
         icons.add(editIcon);
         icons.add(deleteIcon);
@@ -91,8 +89,10 @@ public class RequestViewPanel extends JPanel{
                 String username = tableModel.getValueAt(row, 5).toString();
                 Event event = serviceEvent.getSelectedEvent(event_id);
                 User sender = serviceUser.getUser(username);
+                if(!serviceAttendee.checkAttendee(sender, event)){
+                    serviceAttendee.addAttendee(sender, event);
+                }
                 serviceRequest.removeRequest(sender, event);
-                serviceAttendee.addAttendee(sender, event);
                 mainMenu.showMessage(Notifications.Type.SUCCESS,"Request accepted");
 
                 removeRow(row);

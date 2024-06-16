@@ -1,8 +1,9 @@
 package src;
 
-import src.base.MyColor;
+import src.base.Config;
 import src.loginPanel.Message;
 
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
@@ -19,7 +20,7 @@ import src.service.ServiceUser;
 
 import javax.swing.*;
 
-public class Main extends javax.swing.JFrame {
+public class Main extends JFrame {
 
     private MigLayout layout;
     private CoverPanel cover;
@@ -37,6 +38,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void init(){
+
         layout = new MigLayout("fill, insets 0");
         cover = new CoverPanel();
         service = new ServiceUser();
@@ -179,34 +181,34 @@ public class Main extends javax.swing.JFrame {
     }
     private void initComponents() {
 
-        bg = new javax.swing.JLayeredPane();
+        bg = new JLayeredPane();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1200, 800);
         setLocationRelativeTo(null);
-        setSize(1000, 650);
 
-        bg.setBackground(MyColor.WHITE);
+        bg.setBackground(Config.WHITE);
         bg.setOpaque(true);
 
-        javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
+        GroupLayout bgLayout = new GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
-                bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 1000, Short.MAX_VALUE)
+                bgLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                        .addGap(0, 1200, Short.MAX_VALUE)
         );
         bgLayout.setVerticalGroup(
-                bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 650, Short.MAX_VALUE)
+                bgLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                        .addGap(0, 800, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                         .addComponent(bg)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                         .addComponent(bg)
         );
 
@@ -219,7 +221,7 @@ public class Main extends javax.swing.JFrame {
         }catch(Exception e){
             e.printStackTrace();
         }
-        java.awt.EventQueue.invokeLater(() -> new Main().setVisible(true));
+        EventQueue.invokeLater(() -> new Main().setVisible(true));
     }
 
     private javax.swing.JLayeredPane bg;

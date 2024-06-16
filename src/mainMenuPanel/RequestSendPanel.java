@@ -2,8 +2,7 @@ package src.mainMenuPanel;
 
 import raven.toast.Notifications;
 import src.MainMenu;
-import src.base.MyColor;
-import src.base.TextField;
+import src.base.Config;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
@@ -39,7 +38,7 @@ public class RequestSendPanel extends JPanel {
             setBackground(Color.WHITE);
 
             JLabel tableNameLabel = new JLabel("Public Event", JLabel.CENTER);
-            tableNameLabel.setFont(new Font("Serif", Font.BOLD, 38));
+            tableNameLabel.setFont(new Font("Serif", Font.BOLD, 36));
             tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
             startBlinking(tableNameLabel);
 
@@ -65,8 +64,8 @@ public class RequestSendPanel extends JPanel {
             ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
 
             List<Color> backgroundColor = new ArrayList<>();
-            backgroundColor.add(MyColor.CYAN);
-            backgroundColor.add(MyColor.RED);
+            backgroundColor.add(Config.CYAN);
+            backgroundColor.add(Config.RED);
             List<ImageIcon> icons = new ArrayList<>();
             icons.add(sendIcon);
             icons.add(deleteIcon);
@@ -81,12 +80,12 @@ public class RequestSendPanel extends JPanel {
 
                 try{
                     Event event = serviceEvent.getSelectedEvent(event_id);
-                    //serviceRequest.addRequest(user, event);
+                    serviceRequest.addRequest(user, event);
                     mainMenu.showMessage(Notifications.Type.SUCCESS, "Request sent");
                 }catch(SQLException ex){
                     ex.printStackTrace();
                 }
-                //removeRow(row);
+                removeRow(row);
             });
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();

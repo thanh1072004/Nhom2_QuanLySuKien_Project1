@@ -29,7 +29,7 @@ public class TextField extends JTextField {
 
     public TextField(String hint) {
         setHint(hint);
-        setFont(new Font("sanserif", Font.PLAIN, 13));
+        setFont(new Font("sanserif", Font.PLAIN, 16));
         setBorder(new EmptyBorder(6, 6, 6, 6));
         setSelectionColor(new Color(76, 204, 255));
         addMouseListener(new MouseAdapter() {

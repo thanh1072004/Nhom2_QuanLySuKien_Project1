@@ -29,7 +29,7 @@ public class MainMenu extends JFrame {
         this.user = user;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 650);
+        setSize(1200, 800);
         setTitle("Event Management System");
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -54,7 +54,7 @@ public class MainMenu extends JFrame {
         mainPanel.add(requestViewPanel, "requestViewPanel");
         mainPanel.add(requestSendPanel, "requestSendPanel");
 
-        SideBar sideBar = new SideBar(this, user);
+        SideBar sideBar = new SideBar(new Main(), this, user);
         add(sideBar, BorderLayout.WEST);
         add(mainPanel, BorderLayout.CENTER);
     }
@@ -91,7 +91,7 @@ public class MainMenu extends JFrame {
         }
         SwingUtilities.invokeLater(() -> {
         	User user = new User(1028, "hoang", "f82e62d7c3ea69cc12b5cdb8d621dab6");
-            //User user = new User(1027, "tung", "bb7d4b236b564cf1ec27aa891331e0af");
+        //    User user = new User(1027, "tung", "bb7d4b236b564cf1ec27aa891331e0af");
             MainMenu frame = new MainMenu(user);
             frame.setVisible(true);
         });

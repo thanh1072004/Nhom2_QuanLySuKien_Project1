@@ -2,19 +2,21 @@ package src.mainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import src.Main;
 import src.MainMenu;
-import src.base.MyColor;
+import src.base.Config;
 import src.model.User;
 
 public class SideBar extends JPanel {
 
-    public SideBar(MainMenu mainMenu, User user){
+    public SideBar(Main main, MainMenu mainMenu, User user){
         setPreferredSize(new Dimension(200, getHeight()));
         setLayout(new GridBagLayout());
-        setBackground(MyColor.BACKGROUND_MENU_ITEM);
+        setBackground(Config.TEAL);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1.0;
         gbc.weighty = 0.0;
@@ -62,11 +64,11 @@ public class SideBar extends JPanel {
                     // Add event items to the event list panel
                     eventListPanel.add(view);
                     eventListPanel.add(create);
-                    eventsMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM2);
+                    eventsMenu.setBackground(Config.GRAY);
                 } else {
                     // Remove all event items
                     eventListPanel.removeAll();
-                    eventsMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM);
+                    eventsMenu.setBackground(Config.TEAL);
                 }
                 eventsVisible = !eventsVisible;
 
@@ -100,11 +102,11 @@ public class SideBar extends JPanel {
                     // Add event items to the event list panel
                     invitationListPanel.add(viewInvitations);
                     invitationListPanel.add(sendInvitations);
-                    invitationsMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM2);
+                    invitationsMenu.setBackground(Config.GRAY);
                 } else {
                     // Remove all event items
                     invitationListPanel.removeAll();
-                    invitationsMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM);
+                    invitationsMenu.setBackground(Config.TEAL);
 
                 }
                 // Toggle visibility
@@ -139,10 +141,10 @@ public class SideBar extends JPanel {
                 if (!eventsVisible) {
                     requestPanel.add(viewRequest);
                     requestPanel.add(sendRequest);
-                    requestMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM2);
+                    requestMenu.setBackground(Config.GRAY);
                 } else {
                     requestPanel.removeAll();
-                    requestMenu.setBackground(MyColor.BACKGROUND_MENU_ITEM);
+                    requestMenu.setBackground(Config.TEAL);
 
                 }
                 eventsVisible = !eventsVisible;
@@ -153,6 +155,7 @@ public class SideBar extends JPanel {
         });
         viewRequest.addActionListener(e -> mainMenu.showPanel("requestViewPanel"));
         sendRequest.addActionListener(e -> mainMenu.showPanel("requestSendPanel"));
+
         add(usernameLabel, gbc);
 
         gbc.gridy++;
@@ -180,8 +183,39 @@ public class SideBar extends JPanel {
         add(requestPanel,gbc);
 
         gbc.gridy++;
-        gbc.weighty = 1.0; // Give the last row a positive weight
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
         add(Box.createVerticalGlue(), gbc);
+
+        JButton signOutButton = new JButton("Sign Out");
+        signOutButton.setFont(new Font("sansserif", Font.PLAIN, 18));
+        signOutButton.setForeground(Color.WHITE);
+        signOutButton.setBackground(new Color(52, 58, 64));
+        signOutButton.setPreferredSize(new Dimension(200, 50));
+        signOutButton.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        signOutButton.setFocusPainted(false);
+        signOutButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                signOutButton.setBackground(Config.GRAY);
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                signOutButton.setBackground(new Color(52, 58, 64));
+                setCursor(Cursor.getDefaultCursor());
+            }
+        });
+        signOutButton.addActionListener(e -> {
+            mainMenu.dispose();
+            main.setVisible(true);
+        });
+
+        gbc.gridy++;
+        gbc.weightx = 0.0;
+        gbc.weighty = 0.0;
+        add(signOutButton, gbc);
 
     }
     private JMenu createMenu(String text, Color foreground) {
@@ -213,12 +247,12 @@ public class SideBar extends JPanel {
         menuItem.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                menuItem.setBackground(MyColor.BACKGROUND_MENU_ITEM2);
+                menuItem.setBackground(Config.GRAY);
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                menuItem.setBackground(MyColor.BACKGROUND_MENU_ITEM);
+                menuItem.setBackground(Config.TEAL);
                 setCursor(Cursor.getDefaultCursor());
             }
         });

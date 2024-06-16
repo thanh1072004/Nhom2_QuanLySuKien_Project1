@@ -11,8 +11,7 @@ import javax.swing.table.*;
 
 import raven.toast.Notifications;
 import src.MainMenu;
-import src.base.MyColor;
-import src.base.TextField;
+import src.base.Config;
 import src.model.Event;
 import src.model.Invite;
 import src.model.User;
@@ -42,7 +41,7 @@ public class InviteViewPanel extends JPanel{
         setBackground(Color.WHITE);
 
         JLabel tableNameLabel = new JLabel("INVITATION", JLabel.CENTER);
-        tableNameLabel.setFont(new Font("Serif", Font.BOLD, 38));
+        tableNameLabel.setFont(new Font("Serif", Font.BOLD, 36));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         startBlinking(tableNameLabel);
 
@@ -70,8 +69,8 @@ public class InviteViewPanel extends JPanel{
         ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
 
         List<Color> backgroundColor = new ArrayList<>();
-        backgroundColor.add(MyColor.CYAN);
-        backgroundColor.add(MyColor.RED);
+        backgroundColor.add(Config.CYAN);
+        backgroundColor.add(Config.RED);
         List<ImageIcon> icons = new ArrayList<>();
         icons.add(editIcon);
         icons.add(deleteIcon);
@@ -138,10 +137,8 @@ public class InviteViewPanel extends JPanel{
     private void getInvite() {
         int id = 1;
         tableModel.setRowCount(0);
-
         try {
             List<Invite> invites = serviceInvite.getInvites(user);
-
             for (Invite invite : invites) {
                 Event event = invite.getEvent();
                 User sender = invite.getOrganizer();
@@ -160,19 +157,26 @@ public class InviteViewPanel extends JPanel{
                 int row = table.getSelectedRow();
                 int event_id = (int) tableModel.getValueAt(row, 1);
                 Event event = serviceEvent.getSelectedEvent(event_id);
-                //serviceAttendee.addAttendee(user, event);
-                //serviceInvite.removeInvite(user, event);
-                //removeRow(row);
-                return event;
+                if(!serviceAttendee.checkAttendee(user, event)){
+                    serviceAttendee.addAttendee(user, event);
+                    serviceInvite.removeInvite(user, event);
+                    removeRow(row);
+                    return event;
+                }
+                removeRow(row);
+                return null;
             }
 
             @Override
             protected void done() {
                 try{
                     Event event = get();
-                    tablePanel.addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
-                    System.out.println(event.getOrganizer() == null);
-                    mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation accepted");
+                    if(event != null){
+                        tablePanel.addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+                        mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation accepted");
+                    }else {
+                        mainMenu.showMessage(Notifications.Type.SUCCESS, "You have already been in the event");
+                    }
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
@@ -194,7 +198,7 @@ public class InviteViewPanel extends JPanel{
             if (c instanceof JLabel) {
                 JLabel label = (JLabel) c;
                 label.setFont(label.getFont().deriveFont(Font.BOLD));
-                label.setHorizontalAlignment(JLabel.CENTER); // Optional: Center align the header text
+                label.setHorizontalAlignment(JLabel.CENTER);
             }
             return c;
         }

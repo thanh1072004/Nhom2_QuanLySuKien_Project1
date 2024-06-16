@@ -10,12 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import src.MainMenu;
-import src.base.MyColor;
+import src.base.Config;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceAttendee;
 import src.service.ServiceEvent;
-import src.base.TextField;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
@@ -62,8 +61,8 @@ public class TablePanel extends JPanel implements TableListener {
             ImageIcon deleteIcon = new ImageIcon(scaledImage_bin);;
 
             List<Color> backgroundColor = new ArrayList<>();
-            backgroundColor.add(MyColor.CYAN);
-            backgroundColor.add(MyColor.RED);
+            backgroundColor.add(Config.CYAN);
+            backgroundColor.add(Config.RED);
             List<ImageIcon> icons = new ArrayList<>();
             icons.add(editIcon);
             icons.add(deleteIcon);
@@ -76,13 +75,9 @@ public class TablePanel extends JPanel implements TableListener {
                 row = table.getSelectedRow();
                 int event_id = (int) table.getValueAt(row, 1);
                 try{
-                    if(table.getValueAt(row, 6).toString().equals(user.getUsername())){
-                        Event event = serviceEvent.getSelectedEvent(event_id);
-                        mainMenu.setEvent(event);
-                        mainMenu.showPanel("eventUpdatePanel");
-                    }else{
-                        System.out.println("Hello");
-                    }
+                    Event event = serviceEvent.getSelectedEvent(event_id);
+                    mainMenu.setEvent(event);
+                    mainMenu.showPanel("eventUpdatePanel");
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }

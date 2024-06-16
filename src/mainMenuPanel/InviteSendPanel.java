@@ -4,7 +4,7 @@ import raven.toast.Notifications;
 import src.MainMenu;
 import src.base.ComboBox;
 import src.base.TextField;
-import src.base.MyColor;
+import src.base.Config;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
@@ -41,7 +41,7 @@ public class InviteSendPanel extends JPanel {
             Font font = new Font("Arial", Font.PLAIN, 16);
 
             JLabel nameLabel = new JLabel("Name Event:");
-            nameLabel.setFont(font);
+            nameLabel.setFont(Config.FONT);
             gbc.gridx = 0;
             gbc.gridy = 0;
             add(nameLabel, gbc);
@@ -56,13 +56,13 @@ public class InviteSendPanel extends JPanel {
             add(event_name, gbc);
 
             JLabel usernameLabel = new JLabel("Username:");
-            usernameLabel.setFont(font);
+            usernameLabel.setFont(Config.FONT);
             gbc.gridx = 0;
             gbc.gridy = 1;
             add(usernameLabel, gbc);
 
             receiver_name = new TextField("");
-            receiver_name.setFont(font);
+            receiver_name.setFont(Config.FONT);
             receiver_name.setPreferredSize(new Dimension(200, 28));
             gbc.gridx = 1;
             add(receiver_name, gbc);
@@ -76,7 +76,7 @@ public class InviteSendPanel extends JPanel {
             buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
             JButton inviteUserButton = new JButton("Invite User");
             inviteUserButton.setFont(font);
-            inviteUserButton.setBackground(MyColor.CYAN);
+            inviteUserButton.setBackground(Config.CYAN);
             inviteUserButton.setForeground(Color.WHITE);
             inviteUserButton.setFocusPainted(false);
 

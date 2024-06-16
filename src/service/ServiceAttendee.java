@@ -4,9 +4,7 @@ import src.database.DatabaseConnection;
 import src.model.Event;
 import src.model.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ServiceAttendee {
     private Connection connection;
@@ -30,5 +28,18 @@ public class ServiceAttendee {
         ps.setInt(1, event.getId());
         ps.setInt(2, user.getUserId());
         ps.executeUpdate();
+    }
+    public boolean checkAttendee(User user, Event event) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("select count(*) from attendee where event_id = ? and user_id = ?");
+        ps.setInt(1, event.getId());
+        ps.setInt(2, user.getUserId());
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            int count = rs.getInt(1);
+            return count > 0;
+        }
+
+        return false;
     }
 }

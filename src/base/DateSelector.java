@@ -90,4 +90,10 @@ public class DateSelector extends JPanel {
         monthComboBox.setSelectedIndex(currentDate.get(Calendar.MONTH));
         yearComboBox.setSelectedItem(currentDate.get(Calendar.YEAR));
     }
+
+    public void setEditable(boolean editable) {
+        dayComboBox.setEnabled(editable);
+        monthComboBox.setEnabled(editable);
+        yearComboBox.setEnabled(editable);
+    }
 }
