@@ -30,11 +30,7 @@ public class ButtonRenderer extends JPanel implements TableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        if (isSelected) {
-            setBackground(Color.WHITE);
-        } else {
-            setBackground(Color.WHITE);
-        }
+
         return this;
     }
 }

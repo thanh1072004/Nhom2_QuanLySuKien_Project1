@@ -1,8 +1,8 @@
 package src.mainMenuPanel;
 
+import raven.toast.Notifications;
 import src.MainMenu;
 import src.base.ComboBox;
-import src.base.CustomMessage;
 import src.base.DateSelector;
 import src.base.MyColor;
 import src.base.TextField;
@@ -12,10 +12,6 @@ import src.service.ServiceAttendee;
 import src.service.ServiceEvent;
 
 import javax.swing.*;
-
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTarget;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 import java.awt.*;
 import java.time.LocalDate;
@@ -121,20 +117,13 @@ public class EventCreatePanel extends JPanel{
                 String eventType = typeList.getSelectedItem().toString().trim();
                 String eventDescription = description.getText().trim();
                 if(eventName.isEmpty() || eventType.isEmpty() || eventLocation.isEmpty()){
-                	showMessage(CustomMessage.MessageType.WARNING, "Event details cannot be empty");
+                	mainMenu.showMessage(Notifications.Type.WARNING, "Event details cannot be empty");
                 }else if(getDate(eventDate).isBefore(LocalDate.now())){
-                	showMessage(CustomMessage.MessageType.ERROR, "Event date not valid");
+                    mainMenu.showMessage(Notifications.Type.ERROR, "Event date not valid");
                 }else{
-                    createEvent(eventName, eventDate, eventLocation, eventType, eventDescription, user);
-                    showMessage(CustomMessage.MessageType.INFO, "Event created successfully.");
-                    new Thread(() -> {
-                        try {
-                            Thread.sleep(2000); 
-                            SwingUtilities.invokeLater(() -> mainMenu.showPanel("tablePanel"));
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                        }
-                    }).start();
+                    //createEvent(eventName, eventDate, eventLocation, eventType, eventDescription, user);
+                    mainMenu.showMessage(Notifications.Type.SUCCESS, "Event created successfully.");
+                    mainMenu.showPanel("tablePanel");
                 }
                 name.setText("");
                 location.setText("");
@@ -150,8 +139,7 @@ public class EventCreatePanel extends JPanel{
         buttonPanel.add(createEventButton);
 
         add(buttonPanel, gbc);
-        
-     // Add a panel for messages
+
         messagePanel = new JPanel();
         messagePanel.setLayout(new BorderLayout());
         gbc.gridy = 6;
@@ -185,61 +173,6 @@ public class EventCreatePanel extends JPanel{
 
     public LocalDate getDate(String date){
         return LocalDate.parse(date);
-    }
-    
-    private void showMessage(CustomMessage.MessageType messageType, String message) {
-        CustomMessage msg = new CustomMessage();
-        msg.showMessage(messageType, message);
-
-        TimingTarget target = new TimingTargetAdapter() {
-            @Override
-            public void begin() {
-                if (!msg.isShow()) {
-                    messagePanel.add(msg, BorderLayout.CENTER);
-                    msg.setVisible(true);
-                    messagePanel.repaint();
-                }
-            }
-
-            @Override
-            public void timingEvent(float fraction) {
-                float f;
-                if (msg.isShow()) {
-                    f = 40 * (1f - fraction);
-                } else {
-                    f = 40 * fraction;
-                }
-                msg.setLocation(msg.getX(), (int) (f - 30));
-                messagePanel.repaint();
-                messagePanel.revalidate();
-            }
-
-            @Override
-            public void end() {
-                if (msg.isShow()) {
-                    messagePanel.remove(msg);
-                    messagePanel.repaint();
-                    messagePanel.revalidate();
-                } else {
-                    msg.setShow(true);
-                }
-            }
-        };
-
-        Animator animator = new Animator(300, target);
-        animator.setAcceleration(0.5f);
-        animator.setDeceleration(0.5f);
-        animator.setResolution(0);
-        animator.start();
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-                animator.start();
-            } catch (InterruptedException e) {
-                System.err.println(e);
-            }
-        }).start();
     }
 
 }

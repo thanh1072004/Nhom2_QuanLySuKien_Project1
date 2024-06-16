@@ -1,7 +1,8 @@
 package src.mainMenuPanel;
 
+import raven.toast.Notifications;
+import src.MainMenu;
 import src.base.ComboBox;
-import src.base.CustomMessage;
 import src.base.TextField;
 import src.base.MyColor;
 import src.model.Event;
@@ -12,12 +13,7 @@ import src.service.ServiceUser;
 
 import java.awt.*;
 import java.util.List;
-
 import javax.swing.*;
-
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTarget;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 public class InviteSendPanel extends JPanel {
     private User receiver;
@@ -27,9 +23,10 @@ public class InviteSendPanel extends JPanel {
     private DefaultComboBoxModel<Event> eventModel;
     private ComboBox<Event> event_name;
     private TextField receiver_name;
-	private JPanel messagePanel;
+	private MainMenu mainMenu;
 
-    public InviteSendPanel(User organizer) {
+    public InviteSendPanel(User organizer, MainMenu mainMenu) {
+        this.mainMenu = mainMenu;
         try {
             serviceUser = new ServiceUser();
             serviceEvent = new ServiceEvent();
@@ -89,16 +86,16 @@ public class InviteSendPanel extends JPanel {
 
                     String receiverName = receiver_name.getText();
                     if (receiverName.isEmpty()) {
-                    	showMessage(CustomMessage.MessageType.WARNING, "Please fill out all the fields");
+                        mainMenu.showMessage(Notifications.Type.WARNING, "Please fill out all the fields");
                     } else {
                         receiver = serviceUser.getUser(receiverName);
                         if(receiver == null) {
-                            showMessage(CustomMessage.MessageType.ERROR, "User not found");
+                            mainMenu.showMessage(Notifications.Type.ERROR, "User not found");
                         }
                         else if (serviceInvite.checkInvite(organizer, receiver, event)    ) {
-                            showMessage(CustomMessage.MessageType.ERROR, "Invitation already sent to this user for the selected event");
+                            mainMenu.showMessage(Notifications.Type.ERROR, "Invitation already sent to this user for the selected event");
                         } else {
-                            showMessage(CustomMessage.MessageType.INFO, "Event invited successfully");
+                            mainMenu.showMessage(Notifications.Type.INFO, "Event invited successfully");
                             serviceInvite.addInvite(organizer, receiver, event);
                         }
                     }
@@ -112,12 +109,6 @@ public class InviteSendPanel extends JPanel {
             buttonPanel.add(inviteUserButton);
             add(buttonPanel, gbc);
             
-         // Add a panel for messages
-            messagePanel = new JPanel();
-            messagePanel.setLayout(new BorderLayout());
-            gbc.gridy = 3;
-            add(messagePanel, gbc);
-            
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -125,60 +116,5 @@ public class InviteSendPanel extends JPanel {
 
     public void addEvent(Event event) {
         eventModel.addElement(event);
-    }
-    
-    private void showMessage(CustomMessage.MessageType messageType, String message) {
-        CustomMessage msg = new CustomMessage();
-        msg.showMessage(messageType, message);
-
-        TimingTarget target = new TimingTargetAdapter() {
-            @Override
-            public void begin() {
-                if (!msg.isShow()) {
-                    messagePanel.add(msg, BorderLayout.CENTER);
-                    msg.setVisible(true);
-                    messagePanel.repaint();
-                }
-            }
-
-            @Override
-            public void timingEvent(float fraction) {
-                float f;
-                if (msg.isShow()) {
-                    f = 40 * (1f - fraction);
-                } else {
-                    f = 40 * fraction;
-                }
-                msg.setLocation(msg.getX(), (int) (f - 30));
-                messagePanel.repaint();
-                messagePanel.revalidate();
-            }
-
-            @Override
-            public void end() {
-                if (msg.isShow()) {
-                    messagePanel.remove(msg);
-                    messagePanel.repaint();
-                    messagePanel.revalidate();
-                } else {
-                    msg.setShow(true);
-                }
-            }
-        };
-
-        Animator animator = new Animator(300, target);
-        animator.setAcceleration(0.5f);
-        animator.setDeceleration(0.5f);
-        animator.setResolution(0);
-        animator.start();
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-                animator.start();
-            } catch (InterruptedException e) {
-                System.err.println(e);
-            }
-        }).start();
     }
 }

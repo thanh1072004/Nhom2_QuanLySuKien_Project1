@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.*;
 
+import raven.toast.Notifications;
 import src.MainMenu;
 import src.base.MyColor;
 import src.base.TextField;
@@ -20,6 +21,7 @@ import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
 public class InviteViewPanel extends JPanel{
+    private MainMenu mainMenu;
     private TablePanel tablePanel;
     private JTable table;
     private DefaultTableModel tableModel;
@@ -27,40 +29,23 @@ public class InviteViewPanel extends JPanel{
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
     private ServiceAttendee serviceAttendee;
-	private JLabel messageLabel;
-
 
     public InviteViewPanel(User user, MainMenu mainMenu) {
         this.user = user;
+        this.mainMenu = mainMenu;
         tablePanel = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
         serviceInvite = new ServiceInvite();
         serviceAttendee = new ServiceAttendee();
 
-    	setLayout(new BorderLayout());
-        JPanel invitationListPanel1 = new JPanel(new BorderLayout());
-        invitationListPanel1.setBackground(Color.WHITE);
+    	setLayout(new BorderLayout(0,20));
+        setBackground(Color.WHITE);
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(Color.WHITE);
-
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        searchPanel.setBackground(Color.WHITE);
-        TextField searchField = new TextField("Search");
-        searchField.setColumns(20);
-        searchField.setPreferredSize(new Dimension(2000, 30));
-        searchPanel.add(searchField);
-        topPanel.add(searchPanel, BorderLayout.NORTH);
-
-        // Tạo tên bảng
         JLabel tableNameLabel = new JLabel("INVITATION", JLabel.CENTER);
         tableNameLabel.setFont(new Font("Serif", Font.BOLD, 38));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         startBlinking(tableNameLabel);
 
-        invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
-        invitationListPanel1.add(topPanel, BorderLayout.NORTH);
-        
         String[] columnNames = {"#", "Event ID", "Name", "Date", "Location", "Type", "Organizer", "Actions"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
@@ -71,7 +56,7 @@ public class InviteViewPanel extends JPanel{
         };
         
         table = new JTable(tableModel);
-
+        table.setRowHeight(48);
         table.setDefaultEditor(Object.class, null);
         table.setRowSelectionAllowed(false);
         table.setFocusable(false);
@@ -106,7 +91,7 @@ public class InviteViewPanel extends JPanel{
                 Event event = serviceEvent.getSelectedEvent(event_id);
                 serviceInvite.removeInvite(user, event);
                 removeRow(row);
-                showMessage("Invite deleted successfully.", Color.GREEN);
+                mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation deleted");
             }catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -115,8 +100,6 @@ public class InviteViewPanel extends JPanel{
 
         ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
         table.getColumnModel().getColumn(7).setCellEditor(buttonEdit);
-
-        table.setRowHeight(48);
 
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setDefaultRenderer(new HeaderRenderer(tableHeader.getDefaultRenderer()));
@@ -137,17 +120,9 @@ public class InviteViewPanel extends JPanel{
         eventIDColumn.setMaxWidth(0);
         eventIDColumn.setWidth(0);
         eventIDColumn.setPreferredWidth(0);
-        
-        messageLabel = new JLabel("", JLabel.CENTER);
-        messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        messageLabel.setForeground(Color.GREEN); // Màu của thông báo thành công
 
-        JPanel messagePanel = new JPanel(new BorderLayout());
-        messagePanel.add(messageLabel, BorderLayout.CENTER);
-        add(messagePanel, BorderLayout.SOUTH);
-        
-        invitationListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
-        add(invitationListPanel1, BorderLayout.CENTER);
+        add(tableNameLabel, BorderLayout.NORTH);
+        add(tableScrollPane, BorderLayout.CENTER);
 
         getInvite();
     }
@@ -185,9 +160,9 @@ public class InviteViewPanel extends JPanel{
                 int row = table.getSelectedRow();
                 int event_id = (int) tableModel.getValueAt(row, 1);
                 Event event = serviceEvent.getSelectedEvent(event_id);
-                serviceAttendee.addAttendee(user, event);
-                serviceInvite.removeInvite(user, event);
-                removeRow(row);
+                //serviceAttendee.addAttendee(user, event);
+                //serviceInvite.removeInvite(user, event);
+                //removeRow(row);
                 return event;
             }
 
@@ -197,7 +172,7 @@ public class InviteViewPanel extends JPanel{
                     Event event = get();
                     tablePanel.addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
                     System.out.println(event.getOrganizer() == null);
-                    showMessage("Invite accepted successfully.", Color.GREEN);
+                    mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation accepted");
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
@@ -239,20 +214,6 @@ public class InviteViewPanel extends JPanel{
                 isBlue = !isBlue;
             }
         });
-        timer.start();
-    }
-    
-    private void showMessage(String message, Color color) {
-        messageLabel.setText(message);
-        messageLabel.setForeground(color);
-
-        Timer timer = new Timer(2000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                messageLabel.setText("");
-            }
-        });
-        timer.setRepeats(false);
         timer.start();
     }
 }

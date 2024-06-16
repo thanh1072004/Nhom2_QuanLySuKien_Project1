@@ -7,8 +7,11 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import javax.swing.table.*;
 
+import raven.toast.Notifications;
+import src.MainMenu;
 import src.base.MyColor;
 import src.base.TextField;
 import src.model.Event;
@@ -22,6 +25,7 @@ import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
 public class RequestViewPanel extends JPanel{
+    private MainMenu mainMenu;
     private JTable table;
     private DefaultTableModel tableModel;
     private ServiceRequest serviceRequest;
@@ -29,38 +33,22 @@ public class RequestViewPanel extends JPanel{
     private ServiceEvent serviceEvent;
     private ServiceUser serviceUser;
     private User user;
-	private JLabel messageLabel;
 
-    public RequestViewPanel(User user) {
+    public RequestViewPanel(User user, MainMenu mainMenu) {
+        this.mainMenu = mainMenu;
         this.user = user;
         serviceRequest = new ServiceRequest();
         serviceAttendee = new ServiceAttendee();
         serviceEvent = new ServiceEvent();
         serviceUser = new ServiceUser();
 
-    	setLayout(new BorderLayout());
-        JPanel invitationListPanel1 = new JPanel(new BorderLayout());
-        invitationListPanel1.setBackground(Color.WHITE);
+    	setLayout(new BorderLayout(0, 20));
+        setBackground(Color.WHITE);
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(Color.WHITE);
-
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        searchPanel.setBackground(Color.WHITE);
-        TextField searchField = new TextField("Search");
-        searchField.setColumns(20);
-        searchField.setPreferredSize(new Dimension(2000, 30));
-        searchPanel.add(searchField);
-        topPanel.add(searchPanel, BorderLayout.NORTH);
-
-        // Tạo tên bảng
         JLabel tableNameLabel = new JLabel("Participation Requests", JLabel.CENTER);
         tableNameLabel.setFont(new Font("Serif", Font.BOLD, 38));
         tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         startBlinking(tableNameLabel);
-
-        invitationListPanel1.add(tableNameLabel, BorderLayout.CENTER);
-        invitationListPanel1.add(topPanel, BorderLayout.NORTH);
         
         String[] columnNames = {"#", "Event Id", "Name", "Date", "Location",  "Sender", "Actions"};
         
@@ -105,7 +93,7 @@ public class RequestViewPanel extends JPanel{
                 User sender = serviceUser.getUser(username);
                 serviceRequest.removeRequest(sender, event);
                 serviceAttendee.addAttendee(sender, event);
-                showMessage("Accept successfully.", Color.GREEN);
+                mainMenu.showMessage(Notifications.Type.SUCCESS,"Request accepted");
 
                 removeRow(row);
             }catch(Exception ex) {
@@ -122,7 +110,7 @@ public class RequestViewPanel extends JPanel{
                 User sender = serviceUser.getUser(username);
                 serviceRequest.removeRequest(sender, event);
                 removeRow(row);
-                showMessage("Delete successfully.", Color.GREEN);
+                mainMenu.showMessage(Notifications.Type.SUCCESS,"Request removed");
             }catch(Exception ex) {
                 ex.printStackTrace();
             }
@@ -152,17 +140,9 @@ public class RequestViewPanel extends JPanel{
         eventIDColumn.setMaxWidth(0);
         eventIDColumn.setWidth(0);
         eventIDColumn.setPreferredWidth(0);
-        
-        messageLabel = new JLabel("", JLabel.CENTER);
-        messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        messageLabel.setForeground(Color.GREEN); // Màu của thông báo thành công
 
-        JPanel messagePanel = new JPanel(new BorderLayout());
-        messagePanel.add(messageLabel, BorderLayout.CENTER);
-        add(messagePanel, BorderLayout.SOUTH);
-        
-        invitationListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
-        add(invitationListPanel1, BorderLayout.CENTER);
+        add(tableNameLabel, BorderLayout.NORTH);
+        add(tableScrollPane, BorderLayout.CENTER);
         
         getRequest();
     }
@@ -225,20 +205,6 @@ public class RequestViewPanel extends JPanel{
                 isBlue = !isBlue;
             }
         });
-        timer.start();
-    }
-    
-    private void showMessage(String message, Color color) {
-        messageLabel.setText(message);
-        messageLabel.setForeground(color);
-
-        Timer timer = new Timer(2000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                messageLabel.setText("");
-            }
-        });
-        timer.setRepeats(false);
         timer.start();
     }
 }

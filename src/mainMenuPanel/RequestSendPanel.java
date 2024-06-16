@@ -1,5 +1,7 @@
 package src.mainMenuPanel;
 
+import raven.toast.Notifications;
+import src.MainMenu;
 import src.base.MyColor;
 import src.base.TextField;
 import src.model.Event;
@@ -20,41 +22,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestSendPanel extends JPanel {
+    private MainMenu mainMenu;
     private JTable table;
     private DefaultTableModel tableModel;
     private ServiceEvent serviceEvent;
     private ServiceRequest serviceRequest;
-	private JLabel messageLabel;
 
-
-    public RequestSendPanel(User user) {
+    public RequestSendPanel(User user, MainMenu mainMenu) {
+        this.mainMenu = mainMenu;
         try {
             serviceEvent = new ServiceEvent();
             serviceRequest = new ServiceRequest();
             List<Event> events = serviceEvent.getPublicEvents(user);
 
-            setLayout(new BorderLayout());
-            JPanel eventListPanel1 = new JPanel(new BorderLayout());
-            eventListPanel1.setBackground(Color.WHITE);
-
-            JPanel topPanel = new JPanel(new BorderLayout());
-            topPanel.setBackground(Color.WHITE);
-
-            JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            searchPanel.setBackground(Color.WHITE);
-            TextField searchField = new TextField("Search");
-            searchField.setColumns(20);
-            searchField.setPreferredSize(new Dimension(2000, 30));
-            searchPanel.add(searchField);
-            topPanel.add(searchPanel, BorderLayout.NORTH);
+            setLayout(new BorderLayout(0, 20));
+            setBackground(Color.WHITE);
 
             JLabel tableNameLabel = new JLabel("Public Event", JLabel.CENTER);
             tableNameLabel.setFont(new Font("Serif", Font.BOLD, 38));
             tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
             startBlinking(tableNameLabel);
-
-            eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
-            eventListPanel1.add(topPanel, BorderLayout.NORTH);
 
             String[] columnNames = {"#", "Event ID", "Name", "Date", "Location", "Organizer", "Actions"};
             tableModel = new DefaultTableModel(columnNames, 0) {
@@ -64,7 +51,7 @@ public class RequestSendPanel extends JPanel {
                 }
             };
             table = new JTable(tableModel);
-
+            table.setRowHeight(48);
             table.setDefaultEditor(Object.class, null);
             table.setRowSelectionAllowed(false);
             table.setFocusable(false);
@@ -94,12 +81,12 @@ public class RequestSendPanel extends JPanel {
 
                 try{
                     Event event = serviceEvent.getSelectedEvent(event_id);
-                    serviceRequest.addRequest(user, event);
-                    showMessage("Request successfully.", Color.GREEN);
+                    //serviceRequest.addRequest(user, event);
+                    mainMenu.showMessage(Notifications.Type.SUCCESS, "Request sent");
                 }catch(SQLException ex){
                     ex.printStackTrace();
                 }
-                removeRow(row);
+                //removeRow(row);
             });
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
@@ -108,7 +95,6 @@ public class RequestSendPanel extends JPanel {
                 try {
                     Event event = serviceEvent.getSelectedEvent(event_id);
                     serviceRequest.addRequest(user, event);
-                    showMessage("Delete successfully.", Color.GREEN);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -117,8 +103,6 @@ public class RequestSendPanel extends JPanel {
 
             ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
             table.getColumnModel().getColumn(6).setCellEditor(buttonEdit);
-
-            table.setRowHeight(48);
 
             JTableHeader tableHeader = table.getTableHeader();
             tableHeader.setDefaultRenderer(new HeaderRenderer(tableHeader.getDefaultRenderer()));
@@ -140,23 +124,16 @@ public class RequestSendPanel extends JPanel {
             eventIDColumn.setMaxWidth(0);
             eventIDColumn.setWidth(0);
             eventIDColumn.setPreferredWidth(0);
-            
-            messageLabel = new JLabel("", JLabel.CENTER);
-            messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
-            messageLabel.setForeground(Color.GREEN); 
 
-            JPanel messagePanel = new JPanel(new BorderLayout());
-            messagePanel.add(messageLabel, BorderLayout.CENTER);
-            add(messagePanel, BorderLayout.SOUTH);
-
-            eventListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
-            add(eventListPanel1, BorderLayout.CENTER);
+            add(tableNameLabel, BorderLayout.NORTH);
+            add(tableScrollPane, BorderLayout.CENTER);
 
             loadPublicEvents(events);
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+
     public void addRow(int id, int event_id, String name,  String date, String location, User organizer) {
         tableModel.addRow(new Object[]{id, event_id, name, date, location, organizer.getUsername()});
     }
@@ -206,20 +183,6 @@ public class RequestSendPanel extends JPanel {
                 isBlue = !isBlue;
             }
         });
-        timer.start();
-    }
-    
-    private void showMessage(String message, Color color) {
-        messageLabel.setText(message);
-        messageLabel.setForeground(color);
-
-        Timer timer = new Timer(2000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                messageLabel.setText("");
-            }
-        });
-        timer.setRepeats(false);
         timer.start();
     }
 }

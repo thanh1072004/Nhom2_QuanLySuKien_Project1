@@ -17,6 +17,7 @@ import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import src.service.ServiceUser;
 
+import javax.swing.*;
 
 public class Main extends javax.swing.JFrame {
 
@@ -167,15 +168,12 @@ public class Main extends javax.swing.JFrame {
         animator.setDeceleration(0.5f);
         animator.setResolution(0);
         animator.start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    Thread.sleep(2000);
-                    animator.start();
-                }catch(InterruptedException e){
-                    System.err.println(e);
-                }
+        new Thread(() -> {
+            try{
+                Thread.sleep(2000);
+                animator.start();
+            }catch(InterruptedException e){
+                System.err.println(e);
             }
         });
     }
@@ -183,7 +181,9 @@ public class Main extends javax.swing.JFrame {
 
         bg = new javax.swing.JLayeredPane();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setSize(1000, 650);
 
         bg.setBackground(MyColor.WHITE);
         bg.setOpaque(true);
@@ -192,11 +192,11 @@ public class Main extends javax.swing.JFrame {
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
                 bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 588, Short.MAX_VALUE)
+                        .addGap(0, 1000, Short.MAX_VALUE)
         );
         bgLayout.setVerticalGroup(
                 bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 496, Short.MAX_VALUE)
+                        .addGap(0, 650, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

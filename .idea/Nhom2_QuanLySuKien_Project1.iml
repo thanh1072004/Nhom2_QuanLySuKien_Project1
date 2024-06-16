@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="library" level="application" />
+    <orderEntry type="library" exported="" name="flatlaf-3.4.1" level="project" />
+    <orderEntry type="library" exported="" name="swing-toast-notifications-1.0.3" level="project" />
   </component>
 </module>

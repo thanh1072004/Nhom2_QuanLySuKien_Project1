@@ -33,28 +33,12 @@ public class TablePanel extends JPanel implements TableListener {
             serviceAttendee = new ServiceAttendee();
             List<Event> events = serviceEvent.getUserEvent(user);
 
-            setLayout(new BorderLayout());
-            JPanel eventListPanel1 = new JPanel(new BorderLayout());
-            eventListPanel1.setBackground(Color.WHITE);
-
-            JPanel topPanel = new JPanel(new BorderLayout());
-            topPanel.setBackground(Color.WHITE);
-
-            JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            searchPanel.setBackground(Color.WHITE);
-            TextField searchField = new TextField("Search");
-            searchField.setColumns(20);
-            searchField.setPreferredSize(new Dimension(2000, 30));
-            searchPanel.add(searchField);
-            topPanel.add(searchPanel, BorderLayout.NORTH);
-
+            setLayout(new BorderLayout(0,20));
+            setBackground(Color.WHITE);
             JLabel tableNameLabel = new JLabel("YOUR EVENT TABLE", JLabel.CENTER);
             tableNameLabel.setFont(new Font("Serif", Font.BOLD, 36));
             tableNameLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
             startBlinking(tableNameLabel);
-
-            eventListPanel1.add(tableNameLabel, BorderLayout.CENTER);
-            eventListPanel1.add(topPanel, BorderLayout.NORTH);
 
             String[] columnNames = {"#", "Event ID",  "Name", "Date", "Location", "Type", "Organizer", "Actions"};
             tableModel = new DefaultTableModel(columnNames, 0) {
@@ -64,7 +48,7 @@ public class TablePanel extends JPanel implements TableListener {
                 }
             };
             table = new JTable(tableModel);
-
+            table.setRowHeight(48);
             table.setDefaultEditor(Object.class, null);
             table.setRowSelectionAllowed(false);
             table.setFocusable(false);
@@ -89,12 +73,16 @@ public class TablePanel extends JPanel implements TableListener {
 
             List<ActionListener> actionListeners = new ArrayList<>();
             actionListeners.add(e -> {
+                row = table.getSelectedRow();
+                int event_id = (int) table.getValueAt(row, 1);
                 try{
-                    row = table.getSelectedRow();
-                    int event_id = (int) table.getValueAt(row, 1);
-                    Event event = serviceEvent.getSelectedEvent(event_id);
-                    mainMenu.setEvent(event);
-                    mainMenu.showPanel("eventUpdatePanel");
+                    if(table.getValueAt(row, 6).toString().equals(user.getUsername())){
+                        Event event = serviceEvent.getSelectedEvent(event_id);
+                        mainMenu.setEvent(event);
+                        mainMenu.showPanel("eventUpdatePanel");
+                    }else{
+                        System.out.println("Hello");
+                    }
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
@@ -103,8 +91,12 @@ public class TablePanel extends JPanel implements TableListener {
                 int row = table.getSelectedRow();
                 int event_id = (int) table.getValueAt(row, 1);
                 try {
-                    //serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_id));
-                    //serviceEvent.deleteEvent(event_id);
+                    if(table.getValueAt(row, 6).toString().equals(user.getUsername())){
+                        serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_id));
+                        serviceEvent.deleteEvent(event_id);
+                    }else{
+                        serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_id));
+                    }
                     System.out.println("delete successfully");
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -115,8 +107,6 @@ public class TablePanel extends JPanel implements TableListener {
             ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
             table.getColumnModel().getColumn(7).setCellEditor(buttonEdit);
 
-            table.setRowHeight(48);
-            
             JTableHeader tableHeader = table.getTableHeader();
             tableHeader.setDefaultRenderer(new HeaderRenderer(tableHeader.getDefaultRenderer()));
             tableHeader.setFont(new Font("Calibri", Font.BOLD, 15));
@@ -135,8 +125,8 @@ public class TablePanel extends JPanel implements TableListener {
 
             JScrollPane tableScrollPane = new JScrollPane(table);
 
-            eventListPanel1.add(tableScrollPane, BorderLayout.SOUTH);
-            add(eventListPanel1, BorderLayout.CENTER);
+            add(tableNameLabel, BorderLayout.NORTH);
+            add(tableScrollPane, BorderLayout.CENTER);
 
             loadUserEvents(events);
         }catch(Exception e){

@@ -1,5 +1,6 @@
 package src.mainMenuPanel;
 
+import raven.toast.Notifications;
 import src.MainMenu;
 import src.base.DateSelector;
 import src.base.MyColor;
@@ -105,7 +106,17 @@ public class EventUpdatePanel extends JPanel{
             e.printStackTrace();
         }
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 60, 10));
+
+        JButton bacKButton = new JButton("Back");
+        bacKButton.setBackground(MyColor.CYAN);
+        bacKButton.setForeground(Color.WHITE);
+        bacKButton.setFont(font);
+        bacKButton.setFocusPainted(false);
+        bacKButton.addActionListener(e -> {
+            mainMenu.showPanel("tablePanel");
+        });
+
         JButton updateEventButton = new JButton("Update Event");
         updateEventButton.setBackground(MyColor.CYAN);
         updateEventButton.setForeground(Color.WHITE);
@@ -127,12 +138,14 @@ public class EventUpdatePanel extends JPanel{
                     tableListener.updateRow(row, eventName, eventDate, eventLocation, eventType);
                     Event updatedEvent = new Event(event.getId(), eventName, eventDate, eventLocation, eventType, eventDescription, user);
                     serviceEvent.updateEvent(updatedEvent, event.getId());
+                    mainMenu.showMessage(Notifications.Type.SUCCESS, "Event updated");
                     mainMenu.showPanel("tablePanel");
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
+        buttonPanel.add(bacKButton);
         buttonPanel.add(updateEventButton);
 
         add(buttonPanel, gbc);

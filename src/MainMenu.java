@@ -9,6 +9,9 @@ import src.model.Event;
 import src.model.User;
 import src.mainMenuPanel.TablePanel;
 
+import raven.toast.Notifications;
+
+
 public class MainMenu extends JFrame {
     private JPanel mainPanel;
     private CardLayout cardLayout;
@@ -31,6 +34,7 @@ public class MainMenu extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
+        Notifications.getInstance().setJFrame(this);
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         mainPanel.setBackground(Color.WHITE);
@@ -38,9 +42,9 @@ public class MainMenu extends JFrame {
 
         tablePanel = new TablePanel(user, this);
         inviteViewPanel = new InviteViewPanel(user, this);
-        inviteSendPanel = new InviteSendPanel(user);
-        requestViewPanel = new RequestViewPanel(user);
-        requestSendPanel = new RequestSendPanel(user);
+        inviteSendPanel = new InviteSendPanel(user,this);
+        requestViewPanel = new RequestViewPanel(user, this);
+        requestSendPanel = new RequestSendPanel(user, this);
         eventCreatePanel = new EventCreatePanel(user, this);
 
         mainPanel.add(tablePanel, "tablePanel");
@@ -49,7 +53,6 @@ public class MainMenu extends JFrame {
         mainPanel.add(eventCreatePanel, "eventCreatePanel");
         mainPanel.add(requestViewPanel, "requestViewPanel");
         mainPanel.add(requestSendPanel, "requestSendPanel");
-
 
         SideBar sideBar = new SideBar(this, user);
         add(sideBar, BorderLayout.WEST);
@@ -76,6 +79,10 @@ public class MainMenu extends JFrame {
         return inviteSendPanel;
     }
 
+    public void showMessage(Notifications.Type messageType, String message) {
+        Notifications.getInstance().show(messageType, message);
+    }
+
     public static void main(String[] args) {
         try{
             DatabaseConnection.getInstance().connectToDatabase();
@@ -83,7 +90,7 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-        	User user = new User(2007, "thanh", "202cb962ac59075b964b07152d234b70");
+        	User user = new User(1028, "hoang", "f82e62d7c3ea69cc12b5cdb8d621dab6");
             //User user = new User(1027, "tung", "bb7d4b236b564cf1ec27aa891331e0af");
             MainMenu frame = new MainMenu(user);
             frame.setVisible(true);
