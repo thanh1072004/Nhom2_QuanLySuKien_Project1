@@ -32,17 +32,17 @@ public class DatabaseConnection {
 
     public void connectToDatabase() throws SQLException {
         if (connection == null) {
-        	String serverName = "DESKTOP-APP81J1\\SQLEXPRESS";
-            String dbName = "Event Management";
-            String username = "sa";
-            String password = "tyl1312";
-            String url = "jdbc:sqlserver://" + serverName + ":1433;DatabaseName=" + dbName + ";encrypt=true;trustServerCertificate=true";
+        	String serverName = "sql12.freesqldatabase.com";
+            String dbName = "sql12714426";
+            String username = "sql12714426";
+            String password = "LBqcSrnSdP";
+            String url = String.format("jdbc:mysql://%s:%d/%s", serverName, 3306, dbName);
             try {
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                Class.forName("com.mysql.cj.jdbc.Driver");
                 connection = DriverManager.getConnection(url, username, password);
                 System.out.println("Connection established");
             } catch (ClassNotFoundException | SQLException e) {
-
+                e.printStackTrace();
                 throw new SQLException("Failed to connect to the database", e);
             }
         }
