@@ -88,17 +88,17 @@ public class InviteViewPanel extends JPanel{
                 Event event = serviceEvent.getSelectedEvent(event_id);
                 if(!serviceAttendee.checkAttendee(user, event)){
                     serviceAttendee.addAttendee(user, event);
-                    serviceInvite.removeInvite(user, event);
+
+                    tablePanel.addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+                    mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation accepted");
+
+                    User organizer = event.getOrganizer();
+                    message = user.getUsername() + " has accepted your invitation to event " + event.getName();
+                    serviceNotification.addNotification(organizer, message);
                 }else{
                     mainMenu.showMessage(Notifications.Type.SUCCESS, "You have already been in the event");
                 }
-                tablePanel.addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
-                mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation accepted");
-
-                User organizer = event.getOrganizer();
-                message = user.getUsername() + "has accepted your invitation to event" + event.getName();
-                serviceNotification.addNotification(organizer, message);
-
+                serviceInvite.removeInvite(user, event);
                 removeRow(row);
             }catch(Exception ex){
                 ex.printStackTrace();
@@ -109,13 +109,13 @@ public class InviteViewPanel extends JPanel{
                 int row = table.getSelectedRow();
                 int event_id = (int) tableModel.getValueAt(row, 1);
                 Event event = serviceEvent.getSelectedEvent(event_id);
-                serviceInvite.removeInvite(user, event);
-                mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation deleted");
 
                 User organizer = event.getOrganizer();
-                message = user.getUsername() + "has rejected your invitation to event" + event.getName();
+                message = user.getUsername() + " has rejected your invitation to event " + event.getName();
                 serviceNotification.addNotification(organizer, message);
 
+                serviceInvite.removeInvite(user, event);
+                mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation deleted");
                 removeRow(row);
             }catch(Exception ex){
                 ex.printStackTrace();

@@ -92,12 +92,13 @@ public class RequestViewPanel extends JPanel{
                 if(!serviceAttendee.checkAttendee(sender, event)){
                     mainMenu.showMessage(Notifications.Type.SUCCESS,"Request accepted");
                     serviceAttendee.addAttendee(sender, event);
+                    message = user.getUsername() + " has accepted your request to join event " + event.getName();
+                    serviceNotification.addNotification(sender, message);
                 }
                 serviceRequest.removeRequest(sender, event);
 
                 removeRow(row);
-                message = user.getUsername() + " has accepted your request to join event " + event.getName();
-                serviceNotification.addNotification(sender, message);
+
             }catch(Exception ex) {
                 ex.printStackTrace();
             }
@@ -111,12 +112,13 @@ public class RequestViewPanel extends JPanel{
                 Event event = serviceEvent.getSelectedEvent(event_id);
                 User sender = serviceUser.getUser(username);
 
-                serviceRequest.removeRequest(sender, event);
-                mainMenu.showMessage(Notifications.Type.SUCCESS,"Request removed");
-
                 message = user.getUsername() + " has rejected your request to join event " + event.getName();
                 serviceNotification.addNotification(sender, message);
+
+                serviceRequest.removeRequest(sender, event);
+                mainMenu.showMessage(Notifications.Type.SUCCESS,"Request removed");
                 removeRow(row);
+
             }catch(Exception ex){
                 ex.printStackTrace();
             }

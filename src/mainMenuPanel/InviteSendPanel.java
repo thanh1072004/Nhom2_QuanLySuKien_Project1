@@ -6,10 +6,7 @@ import src.base.TextField;
 import src.base.Config;
 import src.model.Event;
 import src.model.User;
-import src.service.ServiceEvent;
-import src.service.ServiceInvite;
-import src.service.ServiceNotification;
-import src.service.ServiceUser;
+import src.service.*;
 
 import java.awt.*;
 import java.util.List;
@@ -20,6 +17,7 @@ public class InviteSendPanel extends JPanel {
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
+    private ServiceAttendee serviceAttendee;
     private ServiceNotification serviceNotification;
     private DefaultComboBoxModel<Event> eventModel;
     private ComboBox<Event> event_name;
@@ -33,6 +31,7 @@ public class InviteSendPanel extends JPanel {
             serviceUser = new ServiceUser();
             serviceEvent = new ServiceEvent();
             serviceInvite = new ServiceInvite();
+            serviceAttendee = new ServiceAttendee();
             serviceNotification = new ServiceNotification();
             List<Event> events = serviceEvent.getOrganizerEvent(organizer);
 
@@ -94,19 +93,21 @@ public class InviteSendPanel extends JPanel {
                         receiver = serviceUser.getUser(receiverName);
                         if(receiver == null) {
                             mainMenu.showMessage(Notifications.Type.ERROR, "User not found");
-                        }
-                        else if (serviceInvite.checkInvite(organizer, receiver, event)    ) {
-                            mainMenu.showMessage(Notifications.Type.ERROR, "Invitation already sent to this user for the selected event");
-                        } else {
-                            mainMenu.showMessage(Notifications.Type.INFO, "Event invited successfully");
+                        }else if(serviceAttendee.checkAttendee(receiver, event)){
+                            mainMenu.showMessage(Notifications.Type.INFO, "User already attendee of this event");
+                        }else if (serviceInvite.checkInvite(organizer, receiver, event)    ) {
+                            mainMenu.showMessage(Notifications.Type.INFO, "Invitation already sent to this user for the selected event");
+                        }else {
+                            mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation has been sent");
                             serviceInvite.addInvite(organizer, receiver, event);
+                            message = "You has been invited by " + organizer.getUsername() + " to event " + event.getName();
+                            serviceNotification.addNotification(receiver, message);
                         }
                     }
                     event_name.setSelectedItem(null);
                     receiver_name.setText("");
 
-                    message = "You has been invited by " + organizer.getUsername() + " to event " + event.getName();
-                    serviceNotification.addNotification(receiver, message);
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
