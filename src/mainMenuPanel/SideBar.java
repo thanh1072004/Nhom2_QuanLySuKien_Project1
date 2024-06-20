@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import src.Main;
-import src.MainMenu;
 import src.base.Config;
 import src.model.User;
 

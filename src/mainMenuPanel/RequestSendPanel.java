@@ -1,7 +1,6 @@
 package src.mainMenuPanel;
 
 import raven.toast.Notifications;
-import src.MainMenu;
 import src.base.Config;
 import src.model.Event;
 import src.model.User;

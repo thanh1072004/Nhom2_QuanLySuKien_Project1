@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import src.MainMenu;
 import src.base.Config;
 import src.base.ScrollBarCustom;
 import src.model.Event;

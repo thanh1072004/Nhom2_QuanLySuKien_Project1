@@ -1,7 +1,6 @@
 package src.mainMenuPanel;
 
 import raven.toast.Notifications;
-import src.MainMenu;
 import src.base.ComboBox;
 import src.base.TextField;
 import src.base.Config;

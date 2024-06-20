@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import src.database.DatabaseConnection;
 import src.loginPanel.CoverPanel;
 import src.loginPanel.PanelLoginAndRegister;
+import src.mainMenuPanel.MainMenu;
 import src.model.User;
 import src.model.Login;
 import net.miginfocom.swing.MigLayout;

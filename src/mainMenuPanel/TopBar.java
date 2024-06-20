@@ -1,6 +1,5 @@
 package src.mainMenuPanel;
 
-import src.MainMenu;
 import src.model.User;
 import src.service.ServiceNotification;
 
@@ -35,7 +34,8 @@ public class TopBar extends JPanel {
         home.setFocusPainted(false);
         home.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         home.addActionListener(e -> {
-            System.out.println("Hello");
+            mainMenu.repaint();
+            mainMenu.revalidate();
         });
 
         JButton notiLabel = new JButton();

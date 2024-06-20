@@ -10,7 +10,6 @@ import java.util.List;
 import javax.swing.table.*;
 
 import raven.toast.Notifications;
-import src.MainMenu;
 import src.base.Config;
 import src.model.Event;
 import src.model.Invite;
