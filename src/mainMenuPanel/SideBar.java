@@ -14,7 +14,7 @@ import src.model.User;
 public class SideBar extends JPanel {
 
     public SideBar(Main main, MainMenu mainMenu, User user){
-        setPreferredSize(new Dimension(200, getHeight()));
+        setPreferredSize(new Dimension(200, 0));
         setLayout(new GridBagLayout());
         setBackground(Config.TEAL);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -40,7 +40,8 @@ public class SideBar extends JPanel {
         usernameLabel.setPreferredSize(new Dimension(200, 50));
 
         JSeparator separator = new JSeparator();
-        separator.setPreferredSize(new Dimension(160, 10));
+        separator.setPreferredSize(new Dimension(getWidth(), 10));
+        separator.setForeground(new Color(0,0,0,0));
 
         JMenu eventsMenu = createMenu("Events", Color.WHITE);
         eventsMenu.setPreferredSize(new Dimension(200, 50));

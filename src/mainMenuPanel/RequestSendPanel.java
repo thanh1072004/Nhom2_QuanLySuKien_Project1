@@ -6,6 +6,7 @@ import src.base.Config;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
+import src.service.ServiceNotification;
 import src.service.ServiceRequest;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
@@ -26,12 +27,15 @@ public class RequestSendPanel extends JPanel {
     private DefaultTableModel tableModel;
     private ServiceEvent serviceEvent;
     private ServiceRequest serviceRequest;
+    private ServiceNotification serviceNotification;
+    private String message;
 
     public RequestSendPanel(User user, MainMenu mainMenu) {
         this.mainMenu = mainMenu;
         try {
             serviceEvent = new ServiceEvent();
             serviceRequest = new ServiceRequest();
+            serviceNotification = new ServiceNotification();
             List<Event> events = serviceEvent.getPublicEvents(user);
 
             setLayout(new BorderLayout(0, 20));
@@ -75,17 +79,20 @@ public class RequestSendPanel extends JPanel {
 
             List<ActionListener> actionListeners = new ArrayList<>();
             actionListeners.add(e -> {
-                int row = table.getSelectedRow();
-                int event_id = (int) tableModel.getValueAt(row, 1);
-
                 try{
+                    int row = table.getSelectedRow();
+                    int event_id = (int) tableModel.getValueAt(row, 1);
                     Event event = serviceEvent.getSelectedEvent(event_id);
                     serviceRequest.addRequest(user, event);
                     mainMenu.showMessage(Notifications.Type.SUCCESS, "Request sent");
-                }catch(SQLException ex){
+                    removeRow(row);
+
+                    User organizer = event.getOrganizer();
+                    message = user.getUsername() + " has requested to join event " + event.getName();
+                    serviceNotification.addNotification(organizer, message);
+                }catch(Exception ex){
                     ex.printStackTrace();
                 }
-                removeRow(row);
             });
             actionListeners.add(e -> {
                 int row = table.getSelectedRow();
@@ -94,6 +101,7 @@ public class RequestSendPanel extends JPanel {
                 try {
                     Event event = serviceEvent.getSelectedEvent(event_id);
                     serviceRequest.addRequest(user, event);
+                    serviceRequest.removeRequest(user, event);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -148,7 +156,7 @@ public class RequestSendPanel extends JPanel {
             addRow(id++, event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getOrganizer());
         }
     }
-    
+
     private static class HeaderRenderer implements TableCellRenderer {
         private final TableCellRenderer delegate;
 

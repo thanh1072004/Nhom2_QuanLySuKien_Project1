@@ -15,10 +15,7 @@ import src.base.Config;
 import src.model.Event;
 import src.model.Request;
 import src.model.User;
-import src.service.ServiceAttendee;
-import src.service.ServiceEvent;
-import src.service.ServiceRequest;
-import src.service.ServiceUser;
+import src.service.*;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
@@ -30,15 +27,18 @@ public class RequestViewPanel extends JPanel{
     private ServiceAttendee serviceAttendee;
     private ServiceEvent serviceEvent;
     private ServiceUser serviceUser;
+    private ServiceNotification serviceNotification;
     private User user;
+    private String message;
 
     public RequestViewPanel(User user, MainMenu mainMenu) {
         this.mainMenu = mainMenu;
         this.user = user;
+        serviceUser = new ServiceUser();
+        serviceEvent = new ServiceEvent();
         serviceRequest = new ServiceRequest();
         serviceAttendee = new ServiceAttendee();
-        serviceEvent = new ServiceEvent();
-        serviceUser = new ServiceUser();
+        serviceNotification = new ServiceNotification();
 
     	setLayout(new BorderLayout(0, 20));
         setBackground(Color.WHITE);
@@ -89,13 +89,16 @@ public class RequestViewPanel extends JPanel{
                 String username = tableModel.getValueAt(row, 5).toString();
                 Event event = serviceEvent.getSelectedEvent(event_id);
                 User sender = serviceUser.getUser(username);
+
                 if(!serviceAttendee.checkAttendee(sender, event)){
+                    mainMenu.showMessage(Notifications.Type.SUCCESS,"Request accepted");
                     serviceAttendee.addAttendee(sender, event);
                 }
                 serviceRequest.removeRequest(sender, event);
-                mainMenu.showMessage(Notifications.Type.SUCCESS,"Request accepted");
 
                 removeRow(row);
+                message = user.getUsername() + " has accepted your request to join event " + event.getName();
+                serviceNotification.addNotification(sender, message);
             }catch(Exception ex) {
                 ex.printStackTrace();
             }
@@ -108,10 +111,14 @@ public class RequestViewPanel extends JPanel{
                 String username = tableModel.getValueAt(row, 5).toString();
                 Event event = serviceEvent.getSelectedEvent(event_id);
                 User sender = serviceUser.getUser(username);
+
                 serviceRequest.removeRequest(sender, event);
-                removeRow(row);
                 mainMenu.showMessage(Notifications.Type.SUCCESS,"Request removed");
-            }catch(Exception ex) {
+
+                message = user.getUsername() + " has rejected your request to join event " + event.getName();
+                serviceNotification.addNotification(sender, message);
+                removeRow(row);
+            }catch(Exception ex){
                 ex.printStackTrace();
             }
         });

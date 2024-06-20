@@ -28,6 +28,8 @@ public class InviteViewPanel extends JPanel{
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
     private ServiceAttendee serviceAttendee;
+    private ServiceNotification serviceNotification;
+    private String message;
 
     public InviteViewPanel(User user, MainMenu mainMenu) {
         this.user = user;
@@ -36,6 +38,7 @@ public class InviteViewPanel extends JPanel{
         serviceEvent = new ServiceEvent();
         serviceInvite = new ServiceInvite();
         serviceAttendee = new ServiceAttendee();
+        serviceNotification = new ServiceNotification();
 
     	setLayout(new BorderLayout(0,20));
         setBackground(Color.WHITE);
@@ -80,21 +83,44 @@ public class InviteViewPanel extends JPanel{
 
         List<ActionListener> actionListeners = new ArrayList<>();
         actionListeners.add(e -> {
-            acceptInvite();
-        });
+            try{
+                int row = table.getSelectedRow();
+                int event_id = (int) tableModel.getValueAt(row, 1);
+                Event event = serviceEvent.getSelectedEvent(event_id);
+                if(!serviceAttendee.checkAttendee(user, event)){
+                    serviceAttendee.addAttendee(user, event);
+                    serviceInvite.removeInvite(user, event);
+                }else{
+                    mainMenu.showMessage(Notifications.Type.SUCCESS, "You have already been in the event");
+                }
+                tablePanel.addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
+                mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation accepted");
 
+                User organizer = event.getOrganizer();
+                message = user.getUsername() + "has accepted your invitation to event" + event.getName();
+                serviceNotification.addNotification(organizer, message);
+
+                removeRow(row);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+        });
         actionListeners.add(e -> {
             try{
                 int row = table.getSelectedRow();
                 int event_id = (int) tableModel.getValueAt(row, 1);
                 Event event = serviceEvent.getSelectedEvent(event_id);
                 serviceInvite.removeInvite(user, event);
-                removeRow(row);
                 mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation deleted");
+
+                User organizer = event.getOrganizer();
+                message = user.getUsername() + "has rejected your invitation to event" + event.getName();
+                serviceNotification.addNotification(organizer, message);
+
+                removeRow(row);
             }catch(Exception ex){
                 ex.printStackTrace();
             }
-
         });
 
         ButtonEditor buttonEdit = new ButtonEditor(icons, actionListeners, backgroundColor);
@@ -147,42 +173,6 @@ public class InviteViewPanel extends JPanel{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public void acceptInvite(){
-        SwingWorker<Event, Void> worker = new SwingWorker<>() {
-
-            @Override
-            protected Event doInBackground() throws Exception {
-                int row = table.getSelectedRow();
-                int event_id = (int) tableModel.getValueAt(row, 1);
-                Event event = serviceEvent.getSelectedEvent(event_id);
-                if(!serviceAttendee.checkAttendee(user, event)){
-                    serviceAttendee.addAttendee(user, event);
-                    serviceInvite.removeInvite(user, event);
-                    removeRow(row);
-                    return event;
-                }
-                removeRow(row);
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                try{
-                    Event event = get();
-                    if(event != null){
-                        tablePanel.addRow(event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), event.getOrganizer());
-                        mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation accepted");
-                    }else {
-                        mainMenu.showMessage(Notifications.Type.SUCCESS, "You have already been in the event");
-                    }
-                }catch(Exception ex){
-                    ex.printStackTrace();
-                }
-            }
-        };
-        worker.execute();
     }
     
     private static class HeaderRenderer implements TableCellRenderer {

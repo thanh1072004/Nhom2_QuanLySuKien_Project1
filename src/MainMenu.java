@@ -2,6 +2,7 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 import src.mainMenuPanel.*;
 import src.database.DatabaseConnection;
@@ -10,7 +11,6 @@ import src.model.User;
 import src.mainMenuPanel.TablePanel;
 
 import raven.toast.Notifications;
-
 
 public class MainMenu extends JFrame {
     private JPanel mainPanel;
@@ -22,6 +22,8 @@ public class MainMenu extends JFrame {
     private InviteSendPanel inviteSendPanel;
     private RequestViewPanel requestViewPanel;
     private RequestSendPanel requestSendPanel;
+    private JLayeredPane layeredPane;
+    private NotificationPanel notificationPanel;
     private User user;
     private Event event;
 
@@ -38,7 +40,8 @@ public class MainMenu extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         mainPanel.setBackground(Color.WHITE);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 10));
+
 
         tablePanel = new TablePanel(user, this);
         inviteViewPanel = new InviteViewPanel(user, this);
@@ -54,9 +57,32 @@ public class MainMenu extends JFrame {
         mainPanel.add(requestViewPanel, "requestViewPanel");
         mainPanel.add(requestSendPanel, "requestSendPanel");
 
+        notificationPanel = new NotificationPanel(user);
+        TopBar topBar = new TopBar(this, user);
         SideBar sideBar = new SideBar(new Main(), this, user);
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setLayout(null);
+        layeredPane.add(topBar, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(notificationPanel, JLayeredPane.POPUP_LAYER);
+
         add(sideBar, BorderLayout.WEST);
-        add(mainPanel, BorderLayout.CENTER);
+        add(layeredPane, BorderLayout.CENTER);
+
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent evt) {
+                int width = getWidth() - 200;
+                int height = getHeight();
+
+                layeredPane.setBounds(0, 0, width, height);
+                mainPanel.setBounds(0, 68, width, height - 68);
+                topBar.setBounds(0, 0, width - 12, 68);
+                notificationPanel.setBounds(width - 364, 68, 360, height - 68);
+                layeredPane.revalidate();
+                layeredPane.repaint();
+            }
+        });
     }
 
     public void showPanel(String constraints){
@@ -79,6 +105,10 @@ public class MainMenu extends JFrame {
         return inviteSendPanel;
     }
 
+    public NotificationPanel getNotificationPanel(){
+        return notificationPanel;
+    }
+
     public void showMessage(Notifications.Type messageType, String message) {
         Notifications.getInstance().show(messageType, message);
     }
@@ -90,8 +120,8 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-        	User user = new User(1028, "hoang", "f82e62d7c3ea69cc12b5cdb8d621dab6");
-        //    User user = new User(1027, "tung", "bb7d4b236b564cf1ec27aa891331e0af");
+        	User user = new User(1032, "hoang", "f82e62d7c3ea69cc12b5cdb8d621dab6");
+            //User user = new User(1031, "tung", "bb7d4b236b564cf1ec27aa891331e0af");
             MainMenu frame = new MainMenu(user);
             frame.setVisible(true);
         });

@@ -9,6 +9,7 @@ import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
 import src.service.ServiceInvite;
+import src.service.ServiceNotification;
 import src.service.ServiceUser;
 
 import java.awt.*;
@@ -20,9 +21,11 @@ public class InviteSendPanel extends JPanel {
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
+    private ServiceNotification serviceNotification;
     private DefaultComboBoxModel<Event> eventModel;
     private ComboBox<Event> event_name;
     private TextField receiver_name;
+    private String message;
 	private MainMenu mainMenu;
 
     public InviteSendPanel(User organizer, MainMenu mainMenu) {
@@ -31,6 +34,7 @@ public class InviteSendPanel extends JPanel {
             serviceUser = new ServiceUser();
             serviceEvent = new ServiceEvent();
             serviceInvite = new ServiceInvite();
+            serviceNotification = new ServiceNotification();
             List<Event> events = serviceEvent.getOrganizerEvent(organizer);
 
             setLayout(new GridBagLayout());
@@ -63,7 +67,7 @@ public class InviteSendPanel extends JPanel {
 
             receiver_name = new TextField("");
             receiver_name.setFont(Config.FONT);
-            receiver_name.setPreferredSize(new Dimension(200, 28));
+            receiver_name.setPreferredSize(new Dimension(200, 40));
             gbc.gridx = 1;
             add(receiver_name, gbc);
 
@@ -80,7 +84,7 @@ public class InviteSendPanel extends JPanel {
             inviteUserButton.setForeground(Color.WHITE);
             inviteUserButton.setFocusPainted(false);
 
-            inviteUserButton.addActionListener(e -> {
+            inviteUserButton.addActionListener(e ->{
                 try {
                     Event event = (Event) event_name.getSelectedItem();
 
@@ -101,6 +105,9 @@ public class InviteSendPanel extends JPanel {
                     }
                     event_name.setSelectedItem(null);
                     receiver_name.setText("");
+
+                    message = "You has been invited by " + organizer.getUsername() + " to event " + event.getName();
+                    serviceNotification.addNotification(receiver, message);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -117,4 +124,6 @@ public class InviteSendPanel extends JPanel {
     public void addEvent(Event event) {
         eventModel.addElement(event);
     }
+
+
 }

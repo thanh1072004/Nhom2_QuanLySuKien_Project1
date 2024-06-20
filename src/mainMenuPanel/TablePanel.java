@@ -11,6 +11,7 @@ import java.util.List;
 
 import src.MainMenu;
 import src.base.Config;
+import src.base.ScrollBarCustom;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceAttendee;
@@ -119,6 +120,12 @@ public class TablePanel extends JPanel implements TableListener {
             eventIDColumn.setPreferredWidth(0);
 
             JScrollPane tableScrollPane = new JScrollPane(table);
+            tableScrollPane.setPreferredSize(new Dimension(800, 100));
+            tableScrollPane.setBackground(Color.WHITE);
+            ScrollBarCustom sb = new ScrollBarCustom();
+            sb.setUnitIncrement(28);
+            sb.setForeground(new Color(180, 180, 180));
+            tableScrollPane.setVerticalScrollBar(sb);
 
             add(tableNameLabel, BorderLayout.NORTH);
             add(tableScrollPane, BorderLayout.CENTER);
@@ -137,6 +144,8 @@ public class TablePanel extends JPanel implements TableListener {
     @Override
     public void addRow(int event_id, String name, String date, String location, String type, User organizer) {
         tableModel.addRow(new Object[]{id++, event_id, name, date, location, type, organizer.getUsername()});
+        table.repaint();
+        table.revalidate();
     }
 
     @Override
@@ -145,10 +154,14 @@ public class TablePanel extends JPanel implements TableListener {
         tableModel.setValueAt(date, row, 3);
         tableModel.setValueAt(location, row, 4);
         tableModel.setValueAt(type, row, 5);
+        table.repaint();
+        table.revalidate();
     }
     @Override
     public void removeRow(int row){
         tableModel.removeRow(row);
+        table.repaint();
+        table.revalidate();
     }
 
     public void loadUserEvents(List<Event> events) {

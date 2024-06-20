@@ -39,7 +39,6 @@ public class ServiceAttendee {
             int count = rs.getInt(1);
             return count > 0;
         }
-
         return false;
     }
 }

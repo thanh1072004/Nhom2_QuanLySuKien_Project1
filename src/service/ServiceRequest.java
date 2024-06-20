@@ -16,7 +16,6 @@ public class ServiceRequest {
     private final Connection connection;
     private ServiceUser serviceUser;
     private ServiceEvent serviceEvent;
-    private Request request;
 
     public ServiceRequest() {
         connection = DatabaseConnection.getInstance().getConnection();

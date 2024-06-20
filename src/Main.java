@@ -224,6 +224,6 @@ public class Main extends JFrame {
         EventQueue.invokeLater(() -> new Main().setVisible(true));
     }
 
-    private javax.swing.JLayeredPane bg;
+    private JLayeredPane bg;
 
 }
