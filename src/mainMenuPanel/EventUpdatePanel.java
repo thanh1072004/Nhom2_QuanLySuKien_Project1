@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class EventUpdatePanel extends JPanel{
+    private MainMenu mainMenu;
+    private InviteSendPanel inviteSendPanel;
     private Event event;
     private JTextField name, location;
     private DateSelector dateSelector;
@@ -26,8 +28,10 @@ public class EventUpdatePanel extends JPanel{
 
     public EventUpdatePanel(User user, Event event, MainMenu mainMenu) {
         this.event = event;
+        this.mainMenu = mainMenu;
         tableListener = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
+        inviteSendPanel = mainMenu.getInviteSendPanel();
         boolean isOrganizer = Objects.equals(user.getUsername(), event.getOrganizer().getUsername());
 
         setLayout(new GridBagLayout());
@@ -117,7 +121,7 @@ public class EventUpdatePanel extends JPanel{
 
         JButton updateEventButton = new JButton("Update Event");
         updateEventButton.setBackground(Config.CYAN);
-        updateEventButton.setForeground(Color.WHITE);
+        updateEventButton.setForeground(Config.WHITE);
         updateEventButton.setFont(Config.FONT);
         updateEventButton.setFocusPainted(false);
         updateEventButton.addActionListener(e -> {
@@ -128,16 +132,12 @@ public class EventUpdatePanel extends JPanel{
                 String eventType = typeList.getSelectedItem().toString().trim();
                 String eventDescription = description.getText().trim();
                 if (eventName.isEmpty() || eventDate.isEmpty() || eventLocation.isEmpty()) {
-                    System.out.println("Event name or event date or event location is empty");
+                    mainMenu.showMessage(Notifications.Type.WARNING, "Please fill all the fields");
                 } else if (getDate(eventDate).isBefore(LocalDate.now())) {
-                    System.out.println("Event date not valid");
+                    mainMenu.showMessage(Notifications.Type.ERROR, "Event date not valid");
                 } else {
                     int row = tableListener.getRow();
-                    tableListener.updateRow(row, eventName, eventDate, eventLocation, eventType);
-                    Event updatedEvent = new Event(event.getId(), eventName, eventDate, eventLocation, eventType, eventDescription, user);
-                    serviceEvent.updateEvent(updatedEvent, event.getId());
-                    mainMenu.showMessage(Notifications.Type.SUCCESS, "Event updated");
-                    mainMenu.showPanel("tablePanel");
+                    updateEvent(row, eventName, eventDate, eventLocation, eventType, eventDescription, user);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -159,6 +159,32 @@ public class EventUpdatePanel extends JPanel{
         add(buttonPanel, gbc);
     }
 
+    public void updateEvent(int row, String eventName, String eventDate, String eventLocation, String eventType, String eventDescription, User user){
+        SwingWorker<Event, Void> worker = new SwingWorker<>() {
+
+            @Override
+            protected Event doInBackground() throws Exception {
+                Event updatedEvent = new Event(event.getId(), eventName, eventDate, eventLocation, eventType, eventDescription, user);
+                serviceEvent.updateEvent(updatedEvent, event.getId());
+                mainMenu.showMessage(Notifications.Type.SUCCESS, "Event updated");
+                mainMenu.showPanel("tablePanel");
+                return updatedEvent;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    Event updatedEvent = get();
+                    tableListener.updateRow(row, eventName, eventDate, eventLocation, eventType);
+                    inviteSendPanel.updateEvent(updatedEvent);
+                }catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        };
+        worker.execute();
+    }
     public LocalDate getDate(String date){
         return LocalDate.parse(date);
     }

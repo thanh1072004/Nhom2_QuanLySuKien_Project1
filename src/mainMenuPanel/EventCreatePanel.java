@@ -118,8 +118,6 @@ public class EventCreatePanel extends JPanel{
                     mainMenu.showMessage(Notifications.Type.ERROR, "Event date not valid");
                 }else{
                     createEvent(eventName, eventDate, eventLocation, eventType, eventDescription, user);
-                    mainMenu.showMessage(Notifications.Type.SUCCESS, "Event created successfully.");
-                    mainMenu.showPanel("tablePanel");
                 }
                 name.setText("");
                 location.setText("");
@@ -143,23 +141,24 @@ public class EventCreatePanel extends JPanel{
     }
 
     public void createEvent(String name, String date, String location, String type, String description, User organizer){
-        SwingWorker<Event, Void> worker = new SwingWorker<Event, Void>() {
+        SwingWorker<Event, Void> worker = new SwingWorker<>() {
             @Override
             protected Event doInBackground() throws Exception {
-                Event event = new Event(0 ,name, date, location, type, description, organizer);
+                Event event = new Event(0, name, date, location, type, description, organizer);
                 serviceEvent.addEvent(organizer, event);
                 serviceAttendee.addAttendee(organizer, event);
+                mainMenu.showMessage(Notifications.Type.SUCCESS, "Event created successfully.");
                 mainMenu.showPanel("tablePanel");
                 return event;
             }
 
             @Override
             protected void done() {
-                try{
+                try {
                     Event event = get();
                     tableListener.addRow(event.getId(), name, date, location, type, organizer);
                     inviteSendPanel.addEvent(event);
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

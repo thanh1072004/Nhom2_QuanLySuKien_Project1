@@ -151,8 +151,6 @@ public class RequestViewPanel extends JPanel{
 
         add(tableNameLabel, BorderLayout.NORTH);
         add(tableScrollPane, BorderLayout.CENTER);
-        
-        getRequest();
     }
 
     public void removeRow(int row){
@@ -163,7 +161,7 @@ public class RequestViewPanel extends JPanel{
         tableModel.addRow(rowData);
     }
 
-    private void getRequest() {
+    public void getRequest() {
         int id = 1;
         tableModel.setRowCount(0);
 

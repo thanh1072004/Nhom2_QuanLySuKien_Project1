@@ -23,10 +23,8 @@ public class InviteSendPanel extends JPanel {
     private ComboBox<Event> event_name;
     private TextField receiver_name;
     private String message;
-	private MainMenu mainMenu;
 
     public InviteSendPanel(User organizer, MainMenu mainMenu) {
-        this.mainMenu = mainMenu;
         try {
             serviceUser = new ServiceUser();
             serviceEvent = new ServiceEvent();
@@ -125,5 +123,14 @@ public class InviteSendPanel extends JPanel {
         eventModel.addElement(event);
     }
 
-
+    public void updateEvent(Event event){
+        for (int i = 0; i < eventModel.getSize(); i++) {
+            Event currentEvent = eventModel.getElementAt(i);
+            if (currentEvent.getId() == event.getId()) {
+                eventModel.removeElementAt(i);
+                eventModel.insertElementAt(event, i);
+                break;
+            }
+        }
+    }
 }

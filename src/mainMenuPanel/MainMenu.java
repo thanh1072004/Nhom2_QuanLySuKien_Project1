@@ -21,8 +21,7 @@ public class MainMenu extends JFrame {
     private InviteSendPanel inviteSendPanel;
     private RequestViewPanel requestViewPanel;
     private RequestSendPanel requestSendPanel;
-    private JLayeredPane layeredPane;
-    private NotificationPanel notificationPanel;
+
     private User user;
     private Event event;
 
@@ -41,7 +40,6 @@ public class MainMenu extends JFrame {
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 10));
 
-
         tablePanel = new TablePanel(user, this);
         inviteViewPanel = new InviteViewPanel(user, this);
         inviteSendPanel = new InviteSendPanel(user,this);
@@ -56,32 +54,9 @@ public class MainMenu extends JFrame {
         mainPanel.add(requestViewPanel, "requestViewPanel");
         mainPanel.add(requestSendPanel, "requestSendPanel");
 
-        notificationPanel = new NotificationPanel(user);
-        TopBar topBar = new TopBar(this, user);
         SideBar sideBar = new SideBar(new Main(), this, user);
-
-        layeredPane = new JLayeredPane();
-        layeredPane.setLayout(null);
-        layeredPane.add(topBar, JLayeredPane.DEFAULT_LAYER);
-        layeredPane.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
-        layeredPane.add(notificationPanel, JLayeredPane.POPUP_LAYER);
-
         add(sideBar, BorderLayout.WEST);
-        add(layeredPane, BorderLayout.CENTER);
-
-        addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent evt) {
-                int width = getWidth() - 200;
-                int height = getHeight();
-
-                layeredPane.setBounds(0, 0, width, height);
-                mainPanel.setBounds(0, 68, width, height - 68);
-                topBar.setBounds(0, 0, width - 12, 68);
-                notificationPanel.setBounds(width - 364, 68, 360, height - 68);
-                layeredPane.revalidate();
-                layeredPane.repaint();
-            }
-        });
+        add(mainPanel, BorderLayout.CENTER);
     }
 
     public void showPanel(String constraints){
@@ -100,6 +75,10 @@ public class MainMenu extends JFrame {
         return tablePanel;
     }
 
+    public EventUpdatePanel getEventUpdatePanel() {
+        return eventUpdatePanel;
+    }
+
     public InviteSendPanel getInviteSendPanel() {
         return inviteSendPanel;
     }
@@ -108,9 +87,13 @@ public class MainMenu extends JFrame {
         return inviteViewPanel;
     }
 
-    public NotificationPanel getNotificationPanel(){
-        return notificationPanel;
+    public RequestSendPanel getRequestSendPanel() {
+        return requestSendPanel;
     }
+    public RequestViewPanel getRequestViewPanel() {
+        return requestViewPanel;
+    }
+
 
     public void showMessage(Notifications.Type messageType, String message) {
         Notifications.getInstance().show(messageType, message);

@@ -12,8 +12,13 @@ import src.model.User;
 
 public class SideBar extends JPanel {
     private InviteViewPanel inviteViewPanel;
+    private RequestSendPanel requestSendPanel;
+    private RequestViewPanel requestViewPanel;
+
     public SideBar(Main main, MainMenu mainMenu, User user){
         inviteViewPanel = mainMenu.getInviteViewPanel();
+        requestSendPanel = mainMenu.getRequestSendPanel();
+        requestViewPanel = mainMenu.getRequestViewPanel();
 
         setPreferredSize(new Dimension(200, 0));
         setLayout(new GridBagLayout());
@@ -158,8 +163,14 @@ public class SideBar extends JPanel {
                 repaint();
             }
         });
-        viewRequest.addActionListener(e -> mainMenu.showPanel("requestViewPanel"));
-        sendRequest.addActionListener(e -> mainMenu.showPanel("requestSendPanel"));
+        viewRequest.addActionListener(e -> {
+            mainMenu.showPanel("requestViewPanel");
+            requestViewPanel.getRequest();
+        });
+        sendRequest.addActionListener(e -> {
+            mainMenu.showPanel("requestSendPanel");
+            requestSendPanel.loadPublicEvents();
+        });
 
         add(usernameLabel, gbc);
 

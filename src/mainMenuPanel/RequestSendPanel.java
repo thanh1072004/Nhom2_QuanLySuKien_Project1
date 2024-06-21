@@ -28,14 +28,15 @@ public class RequestSendPanel extends JPanel {
     private ServiceRequest serviceRequest;
     private ServiceNotification serviceNotification;
     private String message;
+    private User user;
 
     public RequestSendPanel(User user, MainMenu mainMenu) {
         this.mainMenu = mainMenu;
+        this.user = user;
         try {
             serviceEvent = new ServiceEvent();
             serviceRequest = new ServiceRequest();
             serviceNotification = new ServiceNotification();
-            List<Event> events = serviceEvent.getPublicEvents(user);
 
             setLayout(new BorderLayout(0, 20));
             setBackground(Color.WHITE);
@@ -133,8 +134,6 @@ public class RequestSendPanel extends JPanel {
 
             add(tableNameLabel, BorderLayout.NORTH);
             add(tableScrollPane, BorderLayout.CENTER);
-
-            loadPublicEvents(events);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -148,11 +147,16 @@ public class RequestSendPanel extends JPanel {
         tableModel.removeRow(row);
     }
 
-    public void loadPublicEvents(List<Event> events) {
+    public void loadPublicEvents() {
         int id = 1;
         tableModel.setRowCount(0);
-        for (Event event : events) {
-            addRow(id++, event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getOrganizer());
+        try{
+            List<Event> events = serviceEvent.getPublicEvents(user);
+            for (Event event : events) {
+                addRow(id++, event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getOrganizer());
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

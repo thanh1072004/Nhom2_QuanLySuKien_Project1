@@ -147,8 +147,6 @@ public class InviteViewPanel extends JPanel{
 
         add(tableNameLabel, BorderLayout.NORTH);
         add(tableScrollPane, BorderLayout.CENTER);
-
-        getInvite();
     }
     
     public void removeRow(int row){
