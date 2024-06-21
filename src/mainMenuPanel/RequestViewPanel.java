@@ -19,25 +19,20 @@ import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
 
 public class RequestViewPanel extends JPanel{
-    private MainMenu mainMenu;
     private JTable table;
     private DefaultTableModel tableModel;
     private ServiceRequest serviceRequest;
     private ServiceAttendee serviceAttendee;
     private ServiceEvent serviceEvent;
     private ServiceUser serviceUser;
-    private ServiceNotification serviceNotification;
     private User user;
-    private String message;
 
     public RequestViewPanel(User user, MainMenu mainMenu) {
-        this.mainMenu = mainMenu;
         this.user = user;
         serviceUser = new ServiceUser();
         serviceEvent = new ServiceEvent();
         serviceRequest = new ServiceRequest();
         serviceAttendee = new ServiceAttendee();
-        serviceNotification = new ServiceNotification();
 
     	setLayout(new BorderLayout(0, 20));
         setBackground(Color.WHITE);
@@ -92,8 +87,7 @@ public class RequestViewPanel extends JPanel{
                 if(!serviceAttendee.checkAttendee(sender, event)){
                     mainMenu.showMessage(Notifications.Type.SUCCESS,"Request accepted");
                     serviceAttendee.addAttendee(sender, event);
-                    message = user.getUsername() + " has accepted your request to join event " + event.getName();
-                    serviceNotification.addNotification(sender, message);
+
                 }
                 serviceRequest.removeRequest(sender, event);
 
@@ -111,9 +105,6 @@ public class RequestViewPanel extends JPanel{
                 String username = tableModel.getValueAt(row, 5).toString();
                 Event event = serviceEvent.getSelectedEvent(event_id);
                 User sender = serviceUser.getUser(username);
-
-                message = user.getUsername() + " has rejected your request to join event " + event.getName();
-                serviceNotification.addNotification(sender, message);
 
                 serviceRequest.removeRequest(sender, event);
                 mainMenu.showMessage(Notifications.Type.SUCCESS,"Request removed");

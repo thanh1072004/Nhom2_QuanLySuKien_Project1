@@ -18,11 +18,9 @@ public class InviteSendPanel extends JPanel {
     private ServiceEvent serviceEvent;
     private ServiceInvite serviceInvite;
     private ServiceAttendee serviceAttendee;
-    private ServiceNotification serviceNotification;
     private DefaultComboBoxModel<Event> eventModel;
     private ComboBox<Event> event_name;
     private TextField receiver_name;
-    private String message;
 
     public InviteSendPanel(User organizer, MainMenu mainMenu) {
         try {
@@ -30,7 +28,6 @@ public class InviteSendPanel extends JPanel {
             serviceEvent = new ServiceEvent();
             serviceInvite = new ServiceInvite();
             serviceAttendee = new ServiceAttendee();
-            serviceNotification = new ServiceNotification();
             List<Event> events = serviceEvent.getOrganizerEvent(organizer);
 
             setLayout(new GridBagLayout());
@@ -98,8 +95,6 @@ public class InviteSendPanel extends JPanel {
                         }else {
                             mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation has been sent");
                             serviceInvite.addInvite(organizer, receiver, event);
-                            message = "You has been invited by " + organizer.getUsername() + " to event " + event.getName();
-                            serviceNotification.addNotification(receiver, message);
                         }
                     }
                     event_name.setSelectedItem(null);

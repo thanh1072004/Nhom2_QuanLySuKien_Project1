@@ -5,7 +5,6 @@ import src.base.Config;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
-import src.service.ServiceNotification;
 import src.service.ServiceRequest;
 import src.view.ButtonEditor;
 import src.view.ButtonRenderer;
@@ -21,22 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestSendPanel extends JPanel {
-    private MainMenu mainMenu;
     private JTable table;
     private DefaultTableModel tableModel;
     private ServiceEvent serviceEvent;
     private ServiceRequest serviceRequest;
-    private ServiceNotification serviceNotification;
-    private String message;
     private User user;
 
     public RequestSendPanel(User user, MainMenu mainMenu) {
-        this.mainMenu = mainMenu;
         this.user = user;
         try {
             serviceEvent = new ServiceEvent();
             serviceRequest = new ServiceRequest();
-            serviceNotification = new ServiceNotification();
 
             setLayout(new BorderLayout(0, 20));
             setBackground(Color.WHITE);
@@ -87,9 +81,6 @@ public class RequestSendPanel extends JPanel {
                     mainMenu.showMessage(Notifications.Type.SUCCESS, "Request sent");
                     removeRow(row);
 
-                    User organizer = event.getOrganizer();
-                    message = user.getUsername() + " has requested to join event " + event.getName();
-                    serviceNotification.addNotification(organizer, message);
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
