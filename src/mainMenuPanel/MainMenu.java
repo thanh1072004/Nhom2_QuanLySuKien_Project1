@@ -104,6 +104,10 @@ public class MainMenu extends JFrame {
         return inviteSendPanel;
     }
 
+    public InviteViewPanel getInviteViewPanel() {
+        return inviteViewPanel;
+    }
+
     public NotificationPanel getNotificationPanel(){
         return notificationPanel;
     }

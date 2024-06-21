@@ -11,8 +11,10 @@ import src.base.Config;
 import src.model.User;
 
 public class SideBar extends JPanel {
-
+    private InviteViewPanel inviteViewPanel;
     public SideBar(Main main, MainMenu mainMenu, User user){
+        inviteViewPanel = mainMenu.getInviteViewPanel();
+
         setPreferredSize(new Dimension(200, 0));
         setLayout(new GridBagLayout());
         setBackground(Config.TEAL);
@@ -116,7 +118,10 @@ public class SideBar extends JPanel {
                 repaint();
             }
         });
-        viewInvitations.addActionListener(e -> mainMenu.showPanel("inviteViewPanel"));
+        viewInvitations.addActionListener(e -> {
+            mainMenu.showPanel("inviteViewPanel");
+            inviteViewPanel.getInvite();
+        });
         sendInvitations.addActionListener(e -> mainMenu.showPanel("inviteSendPanel"));
 
         JMenu requestMenu = createMenu("Request", Color.WHITE);

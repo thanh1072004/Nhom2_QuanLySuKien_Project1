@@ -159,7 +159,7 @@ public class InviteViewPanel extends JPanel{
         tableModel.addRow(rowData);
     }
 
-    private void getInvite() {
+    public void getInvite() {
         int id = 1;
         tableModel.setRowCount(0);
         try {
