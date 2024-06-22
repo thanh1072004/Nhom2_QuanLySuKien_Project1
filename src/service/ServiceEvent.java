@@ -134,13 +134,13 @@ public class ServiceEvent {
     public List<Event> getPublicEvents(User user) throws SQLException {
         serviceUser = new ServiceUser();
         List<Event> events = new ArrayList<>();
-        PreparedStatement ps = connection.prepareStatement("SELECT e.event_id, e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
-                                                            "FROM event e " +
-                                                            "LEFT JOIN request r ON e.event_id = r.event_id AND r.sender_id = ? " +
-                                                            "LEFT JOIN attendee a ON e.event_id = a.event_id AND a.user_id = ? " +
-                                                            "WHERE e.type = 'Public' AND e.organizer_id != ? " +
-                                                            "AND r.request_id IS NULL " +
-                                                            "AND a.event_id IS NULL"
+        PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, e.type, e.organizer_id " +
+                                                            "from event e " +
+                                                            "left join request on e.event_id = r.event_id and r.sender_id = ? " +
+                                                            "left join attendee a on e.event_id = a.event_id and a.user_id = ? " +
+                                                            "where e.type = 'Public' and e.organizer_id != ? " +
+                                                            "and r.request_id is null " +
+                                                            "and a.event_id is null"
                                                             );
 
         ps.setInt(1, user.getUserId());
