@@ -1,6 +1,6 @@
 node{
   stage('SCM') { 
-    git branch: 'hoangviettung', credentialsId: 'thanh1072004-github', url: 'https://github.com/thanh1072004/Nhom2_QuanLySuKien_Project1.git' 
+    git branch: 'main', credentialsId: 'thanh1072004-github', url: 'https://github.com/thanh1072004/Nhom2_QuanLySuKien_Project1.git' 
   } 
   stage('SonarQube Analysis') { 
    def scannerHome = tool 'SonarQube Scanner'; 
