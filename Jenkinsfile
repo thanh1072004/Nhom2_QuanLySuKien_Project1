@@ -5,7 +5,7 @@ node{
   stage('SonarQube Analysis') { 
    def scannerHome = tool 'SonarQube Scanner'; 
     withSonarQubeEnv() { 
-      sh "${scannerHome}/bin/sonar-scanner -Dsonar.java.binaries=.  -Dsonar.projectKey=Nhom2_QuanLySuKien_Project -Dsonar.login=sqa_4ad5551de163639ddc91cb9077891a377c55b989" 
+      sh "${scannerHome}/bin/sonar-scanner -Dsonar.java.binaries=.  -Dsonar.projectKey=Nhom2_QuanLySuKien_Project -Dsonar.login=sqa_5decdb34eaab4423dd256861409e13dc89b0a535" 
     } 
   } 
 }
