@@ -22,10 +22,10 @@ public class InviteViewPanel extends JPanel{
     private TablePanel tablePanel;
     private JTable table;
     private DefaultTableModel tableModel;
-    private User user;
-    private ServiceEvent serviceEvent;
-    private ServiceInvite serviceInvite;
-    private ServiceAttendee serviceAttendee;
+    private transient User user;
+    private transient ServiceEvent serviceEvent;
+    private transient ServiceInvite serviceInvite;
+    private transient ServiceAttendee serviceAttendee;
 
     public InviteViewPanel(User user, MainMenu mainMenu) {
         this.user = user;

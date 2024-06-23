@@ -17,13 +17,13 @@ import java.util.Objects;
 public class EventUpdatePanel extends JPanel{
     private MainMenu mainMenu;
     private InviteSendPanel inviteSendPanel;
-    private Event event;
+    private transient Event event;
     private JTextField name, location;
     private DateSelector dateSelector;
     private JComboBox<String> typeList;
     private JTextArea description;
-    private ServiceEvent serviceEvent;
-    private TableListener tableListener;
+    private transient ServiceEvent serviceEvent;
+    private transient TableListener tableListener;
 
 
     public EventUpdatePanel(User user, Event event, MainMenu mainMenu) {
@@ -177,6 +177,8 @@ public class EventUpdatePanel extends JPanel{
                     Event updatedEvent = get();
                     tableListener.updateRow(row, eventName, eventDate, eventLocation, eventType);
                     inviteSendPanel.updateEvent(updatedEvent);
+                }catch(InterruptedException e){
+                    Thread.currentThread().interrupt();
                 }catch (Exception e) {
                     throw new RuntimeException(e);
                 }

@@ -13,11 +13,11 @@ import java.util.List;
 import javax.swing.*;
 
 public class InviteSendPanel extends JPanel {
-    private User receiver;
-    private ServiceUser serviceUser;
-    private ServiceEvent serviceEvent;
-    private ServiceInvite serviceInvite;
-    private ServiceAttendee serviceAttendee;
+    private transient User receiver;
+    private transient ServiceUser serviceUser;
+    private transient ServiceEvent serviceEvent;
+    private transient ServiceInvite serviceInvite;
+    private transient ServiceAttendee serviceAttendee;
     private DefaultComboBoxModel<Event> eventModel;
     private ComboBox<Event> event_name;
     private TextField receiver_name;

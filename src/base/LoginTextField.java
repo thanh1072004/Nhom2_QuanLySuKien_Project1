@@ -31,8 +31,8 @@ public class LoginTextField extends JTextField {
         initBorder();
     }
 
-    private Icon prefixIcon;
-    private Icon suffixIcon;
+    private transient Icon prefixIcon;
+    private transient Icon suffixIcon;
     private String hint = "";
 
     public LoginTextField(String hint) {

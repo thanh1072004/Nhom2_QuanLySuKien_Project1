@@ -14,7 +14,7 @@ import src.base.ButtonOutline;
 public class CoverPanel extends javax.swing.JPanel {
 
     private final DecimalFormat df= new DecimalFormat("##0.###");
-    private ActionListener event;
+    private transient ActionListener event;
     private MigLayout layout;
     private JLabel title;
     private JLabel description;

@@ -2,7 +2,6 @@ package src.mainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 import src.Main;
 import src.database.DatabaseConnection;
@@ -22,13 +21,13 @@ public class MainMenu extends JFrame {
     private RequestViewPanel requestViewPanel;
     private RequestSendPanel requestSendPanel;
 
-    private User user;
-    private Event event;
+    private transient User user;
+    private transient Event event;
 
     public MainMenu(User user) {
         this.user = user;
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1200, 800);
         setTitle("Event Management System");
         setLocationRelativeTo(null);

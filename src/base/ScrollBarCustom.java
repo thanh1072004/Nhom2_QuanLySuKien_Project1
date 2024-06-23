@@ -37,10 +37,6 @@ public class ScrollBarCustom extends JScrollBar {
         }
 
         @Override
-        protected void paintTrack(Graphics grphcs, JComponent jc, Rectangle rctngl) {
-        }
-
-        @Override
         protected void paintThumb(Graphics grphcs, JComponent jc, Rectangle rctngl) {
             Graphics2D g2 = (Graphics2D) grphcs;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -60,13 +56,8 @@ public class ScrollBarCustom extends JScrollBar {
         }
 
         private class ScrollBarButton extends JButton {
-
             public ScrollBarButton() {
                 setBorder(BorderFactory.createEmptyBorder());
-            }
-
-            @Override
-            public void paint(Graphics grphcs) {
             }
         }
     }
