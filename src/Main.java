@@ -30,7 +30,7 @@ public class Main extends JFrame {
     private final double coverSize = 40;
     private final double loginSize = 60;
     private final DecimalFormat df = new DecimalFormat("##0.###");
-    private ServiceUser service;
+    private transient ServiceUser service;
     private MainMenu mainMenu;
 
     public Main() {
@@ -176,6 +176,7 @@ public class Main extends JFrame {
                 Thread.sleep(2000);
                 animator.start();
             }catch(InterruptedException e){
+                Thread.currentThread().interrupt();
                 System.err.println(e);
             }
         });

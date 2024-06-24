@@ -140,11 +140,6 @@ public class ComboBox<E> extends JComboBox<E> {
         }
 
         @Override
-        public void paintCurrentValueBackground(Graphics grphcs, Rectangle rctngl, boolean bln) {
-
-        }
-
-        @Override
         protected JButton createArrowButton() {
             return new ArrowButton();
         }

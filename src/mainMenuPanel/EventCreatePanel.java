@@ -17,9 +17,9 @@ import java.time.LocalDate;
 
 public class EventCreatePanel extends JPanel{
     private MainMenu mainMenu;
-    private ServiceEvent serviceEvent;
-    private ServiceAttendee serviceAttendee;
-    private TableListener tableListener;
+    private transient ServiceEvent serviceEvent;
+    private transient ServiceAttendee serviceAttendee;
+    private transient TableListener tableListener;
     private InviteSendPanel inviteSendPanel;
     private JPanel messagePanel;
 
@@ -158,6 +158,8 @@ public class EventCreatePanel extends JPanel{
                     Event event = get();
                     tableListener.addRow(event.getId(), name, date, location, type, organizer);
                     inviteSendPanel.addEvent(event);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

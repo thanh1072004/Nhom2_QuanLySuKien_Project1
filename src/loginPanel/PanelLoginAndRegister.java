@@ -14,8 +14,8 @@ import src.base.LoginTextField;
 import src.base.Button;
 
 public class PanelLoginAndRegister extends JLayeredPane {
-    private User user;
-    private Login dataLogin;
+    private transient User user;
+    private transient Login dataLogin;
 
     public User getUser() {
         return user;

@@ -14,30 +14,26 @@ import java.util.List;
 
 public class ServiceRequest {
     private final Connection connection;
-    private ServiceUser serviceUser;
-    private ServiceEvent serviceEvent;
 
     public ServiceRequest() {
         connection = DatabaseConnection.getInstance().getConnection();
     }
 
     public void addRequest(User user, Event event) throws SQLException {
-        if(connection == null) {
-            throw new SQLException("Failed to connect to database");
+
+        try(PreparedStatement ps = connection.prepareStatement("insert into request(sender_id, event_id, organizer_id) values(?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)){
+            ps.setInt(1, user.getUserId());
+            ps.setInt(2, event.getId());
+            ps.setInt(3, event.getOrganizer().getUserId());
+            ps.execute();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    Request request = new Request(user, event);
+                    int request_id = rs.getInt(1);
+                    request.setRequest_id(request_id);
+                }
+            }
         }
-        PreparedStatement ps = connection.prepareStatement("insert into request(sender_id, event_id, organizer_id) values(?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
-        ps.setInt(1, user.getUserId());
-        ps.setInt(2, event.getId());
-        ps.setInt(3, event.getOrganizer().getUserId());
-        ps.execute();
-        ResultSet rs = ps.getGeneratedKeys();
-        if (rs.next()) {
-            Request request = new Request(user, event);
-            int request_id = rs.getInt(1);
-            request.setRequest_id(request_id);
-        }
-        rs.close();
-        ps.close();
     }
 
     public void removeRequest(User user, Event event) throws SQLException {
@@ -65,32 +61,30 @@ public class ServiceRequest {
     }
 
     public List<Request> getRequests(User user) throws SQLException {
-        serviceEvent = new ServiceEvent();
-        serviceUser = new ServiceUser();
+        ServiceEvent serviceEvent = new ServiceEvent();
+        ServiceUser serviceUser = new ServiceUser();
         List<Request> requests = new ArrayList<>();
 
-        PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, r.sender_id " +
+        try(PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, r.sender_id " +
                                                             "from event e " +
                                                             "join request r on e.event_id = r.event_id " +
                                                             "left join finished_request f on r.request_id = f.request_id " +
                                                             "left join attendee a on e.event_id = a.event_id and a.user_id = ? " +
-                                                            "where r.organizer_id = ? and f.request_id is null");
-        ps.setInt(1, user.getUserId());
-        ps.setInt(2, user.getUserId());
-        ResultSet rs = ps.executeQuery();
+                                                            "where r.organizer_id = ? and f.request_id is null")){
+            ps.setInt(1, user.getUserId());
+            ps.setInt(2, user.getUserId());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int event_id = rs.getInt("event_id");
+                    int sender_id = rs.getInt("sender_id");
 
-        while (rs.next()) {
-            int event_id = rs.getInt("event_id");
-            int sender_id = rs.getInt("sender_id");
+                    Event event = serviceEvent.getSelectedEvent(event_id);
+                    User sender = serviceUser.getUser(sender_id);
 
-            Event event = serviceEvent.getSelectedEvent(event_id);
-            User sender = serviceUser.getUser(sender_id);
-
-            requests.add(new Request(sender, event));
+                    requests.add(new Request(sender, event));
+                }
+            }
         }
-        rs.close();
-        ps.close();
-
         return requests;
     }
 }

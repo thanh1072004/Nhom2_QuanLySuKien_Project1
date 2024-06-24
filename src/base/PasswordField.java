@@ -39,8 +39,8 @@ public class PasswordField extends JPasswordField {
         initBorder();
     }
 
-    private Icon prefixIcon;
-    private Icon suffixIcon;
+    private transient Icon prefixIcon;
+    private transient Icon suffixIcon;
     private String hint = "";
 
     public PasswordField() {

@@ -22,9 +22,9 @@ import java.util.List;
 public class RequestSendPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
-    private ServiceEvent serviceEvent;
-    private ServiceRequest serviceRequest;
-    private User user;
+    private transient ServiceEvent serviceEvent;
+    private transient ServiceRequest serviceRequest;
+    private transient User user;
 
     public RequestSendPanel(User user, MainMenu mainMenu) {
         this.user = user;
