@@ -51,7 +51,7 @@ public class ServiceUser {
 
     public boolean checkDuplicateUser(String username) throws SQLException {
         boolean duplicate = false;
-        try(PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) FROM Users WHERE username = ?")){
+        try(PreparedStatement p = connection.prepareStatement("select count(*) from Users where username = ?")){
             p.setString(1, username);
             try(ResultSet rs = p.executeQuery()){
                 if (rs.next() && rs.getInt(1) > 0) {

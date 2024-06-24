@@ -74,7 +74,7 @@ public class EventCreatePanel extends JPanel{
         add(typeLabel, gbc);
 
         ComboBox<String> typeList = new ComboBox<>();
-        typeList.setModel(new DefaultComboBoxModel(type));
+        typeList.setModel(new DefaultComboBoxModel<>(type));
         typeList.setSelectedIndex(0);
         gbc.gridx = 1;
         add(typeList, gbc);
@@ -126,7 +126,7 @@ public class EventCreatePanel extends JPanel{
                 description.setText("");
 
             }catch(Exception ex){
-                ex.printStackTrace();
+                mainMenu.showMessage(Notifications.Type.ERROR, "Failed to create event! Please try again later");
             }
         });
         
@@ -161,7 +161,7 @@ public class EventCreatePanel extends JPanel{
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    mainMenu.showMessage(Notifications.Type.ERROR, "Failed to create event! Please try again later");
                 }
             }
         };

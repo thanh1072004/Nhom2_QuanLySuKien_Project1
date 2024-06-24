@@ -36,12 +36,13 @@ public class ServiceEvent {
 
 
     public void updateEvent(Event event, int event_id) throws SQLException {
-        try(PreparedStatement ps = connection.prepareStatement("Update event SET name = ?, location = ?, date = ?, description = ?, type = ? WHERE event_id = " + event_id)){
+        try(PreparedStatement ps = connection.prepareStatement("update event set name = ?, location = ?, date = ?, description = ?, type = ? where event_id = ?")){
             ps.setString(1, event.getName());
             ps.setString(2, event.getLocation());
             ps.setString(3, event.getDate());
             ps.setString(4, event.getDescription());
             ps.setString(5, event.getType());
+            ps.setInt(6, event_id);
 
             ps.executeUpdate();
         }
@@ -57,7 +58,7 @@ public class ServiceEvent {
     public List<Event> getUserEvent(User user) throws SQLException {
         serviceUser = new ServiceUser();
         List<Event> events = new ArrayList<>();
-        try(PreparedStatement ps = connection.prepareStatement("SELECT e.event_id, e.name, e.location, e.date, e.type, e.organizer_id AS organizer_id " +
+        try(PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, e.type, e.organizer_id " +
                                                             "from event e " +
                                                             "join attendee a on e.event_id = a.event_id " +
                                                             "join Users u on u.user_id = a.user_id " +
@@ -83,7 +84,7 @@ public class ServiceEvent {
     public List<Event> getOrganizerEvent(User user) throws SQLException {
         serviceUser = new ServiceUser();
         List<Event> events = new ArrayList<>();
-        try(PreparedStatement ps = connection.prepareStatement("SELECT e.event_id, e.name, e.location, e.date, e.type, u.user_id AS organizer_id " +
+        try(PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, e.type, u.user_id AS " +
                                                             "from event e " +
                                                             "join Users u on e.organizer_id = u.user_id " +
                                                             "where u.user_id = ?")){

@@ -3,20 +3,20 @@ package src.mainMenuPanel;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.*;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import raven.toast.Notifications;
 import src.base.Config;
 import src.base.ScrollBarCustom;
 import src.model.Event;
 import src.model.User;
 import src.service.ServiceAttendee;
 import src.service.ServiceEvent;
-import src.view.ButtonEditor;
-import src.view.ButtonRenderer;
+import src.base.ButtonEditor;
+import src.base.ButtonRenderer;
 
 public class TablePanel extends JPanel implements TableListener {
     private JTable table;
@@ -79,7 +79,7 @@ public class TablePanel extends JPanel implements TableListener {
                     mainMenu.setEvent(event);
                     mainMenu.showPanel("eventUpdatePanel");
                 }catch(Exception ex){
-                    ex.printStackTrace();
+                    mainMenu.showMessage(Notifications.Type.ERROR, "Failed to update event! Please try again later");
                 }
             });
             actionListeners.add(e -> {
@@ -94,7 +94,7 @@ public class TablePanel extends JPanel implements TableListener {
                     }
                     System.out.println("delete successfully");
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    mainMenu.showMessage(Notifications.Type.ERROR, "Failed to delete event! Please try again later");
                 }
                 removeRow(row);
             });
@@ -131,7 +131,7 @@ public class TablePanel extends JPanel implements TableListener {
 
             loadUserEvents(events);
         }catch(Exception e){
-            e.printStackTrace();
+            mainMenu.showMessage(Notifications.Type.ERROR, "Failed to get user's events! Please try again later");
         }
     }
 
@@ -180,10 +180,9 @@ public class TablePanel extends JPanel implements TableListener {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (c instanceof JLabel) {
-                JLabel label = (JLabel) c;
+            if (c instanceof JLabel label) {
                 label.setFont(label.getFont().deriveFont(Font.BOLD));
-                label.setHorizontalAlignment(JLabel.CENTER); // Optional: Center align the header text
+                label.setHorizontalAlignment(JLabel.CENTER);
             }
             return c;
         }

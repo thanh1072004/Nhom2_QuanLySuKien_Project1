@@ -108,7 +108,7 @@ public class TextField extends JTextField {
 
     private void createLineStyle(Graphics2D g2) {
         if (isFocusOwner()) {
-            double width = getWidth() - 4;
+            double width = (double) getWidth() - 4;
             int height = getHeight();
             g2.setColor(lineColor);
             double size;

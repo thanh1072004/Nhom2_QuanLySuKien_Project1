@@ -108,7 +108,6 @@ public class Main extends JFrame {
             }
         }catch(Exception e){
             showMessage(Message.MessageType.ERROR, "Register failed");
-            e.printStackTrace();
         }
     }
 
@@ -177,7 +176,6 @@ public class Main extends JFrame {
                 animator.start();
             }catch(InterruptedException e){
                 Thread.currentThread().interrupt();
-                System.err.println(e);
             }
         });
     }

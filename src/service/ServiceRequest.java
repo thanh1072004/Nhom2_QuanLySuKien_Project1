@@ -40,20 +40,20 @@ public class ServiceRequest {
         try{
             connection.setAutoCommit(false);
 
-            PreparedStatement psSelect = connection.prepareStatement("select request_id from request where sender_id = ? and event_id = ? and organizer_id = ?");
-            psSelect.setInt(1, user.getUserId());
-            psSelect.setInt(2, event.getId());
-            psSelect.setInt(3, event.getOrganizer().getUserId());
-            ResultSet rs = psSelect.executeQuery();
-            int request_id = -1;
-            if(rs.next()) {
-                request_id = rs.getInt("request_id");
+            try(PreparedStatement psSelect = connection.prepareStatement("select request_id from request where sender_id = ? and event_id = ? and organizer_id = ?")){
+                psSelect.setInt(1, user.getUserId());
+                psSelect.setInt(2, event.getId());
+                psSelect.setInt(3, event.getOrganizer().getUserId());
+                ResultSet rs = psSelect.executeQuery();
+                int request_id = -1;
+                if(rs.next()) {
+                    request_id = rs.getInt("request_id");
+                }
+                try(PreparedStatement psInsert = connection.prepareStatement("insert into finished_request (request_id) values (?)")){
+                    psInsert.setInt(1, request_id);
+                    psInsert.executeUpdate();
+                }
             }
-
-            PreparedStatement psInsert = connection.prepareStatement("insert into finished_request (request_id) values (?)");
-            psInsert.setInt(1, request_id);
-            psInsert.executeUpdate();
-
             connection.commit();
         }catch(Exception e){
             connection.rollback();

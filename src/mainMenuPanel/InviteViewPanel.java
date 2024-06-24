@@ -15,10 +15,11 @@ import src.model.Event;
 import src.model.Invite;
 import src.model.User;
 import src.service.*;
-import src.view.ButtonEditor;
-import src.view.ButtonRenderer;
+import src.base.ButtonEditor;
+import src.base.ButtonRenderer;
 
 public class InviteViewPanel extends JPanel{
+    private MainMenu mainMenu;
     private TablePanel tablePanel;
     private JTable table;
     private DefaultTableModel tableModel;
@@ -28,6 +29,7 @@ public class InviteViewPanel extends JPanel{
     private transient ServiceAttendee serviceAttendee;
 
     public InviteViewPanel(User user, MainMenu mainMenu) {
+        this.mainMenu = mainMenu;
         this.user = user;
         tablePanel = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
@@ -93,7 +95,7 @@ public class InviteViewPanel extends JPanel{
                 serviceInvite.removeInvite(user, event);
                 removeRow(row);
             }catch(Exception ex){
-                ex.printStackTrace();
+                mainMenu.showMessage(Notifications.Type.ERROR, "Failed to accept invitation! Please try again later");
             }
         });
         actionListeners.add(e -> {
@@ -106,7 +108,7 @@ public class InviteViewPanel extends JPanel{
                 mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation deleted");
                 removeRow(row);
             }catch(Exception ex){
-                ex.printStackTrace();
+                mainMenu.showMessage(Notifications.Type.ERROR, "Failed to reject invitation! Please try again later");
             }
         });
 
@@ -156,7 +158,7 @@ public class InviteViewPanel extends JPanel{
                 addRowToTable(new Object[]{id++, event.getId(), event.getName(), event.getDate(), event.getLocation(), event.getType(), sender.getUsername(), "Action"});
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            mainMenu.showMessage(Notifications.Type.ERROR, "Failed to get invitation! Please try again later");
         }
     }
     

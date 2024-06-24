@@ -2,7 +2,6 @@ package src.mainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -49,7 +48,7 @@ public class SideBar extends JPanel {
         separator.setPreferredSize(new Dimension(getWidth(), 10));
         separator.setForeground(new Color(0,0,0,0));
 
-        JMenu eventsMenu = createMenu("Events", Color.WHITE);
+        JMenu eventsMenu = createMenu("Events");
         eventsMenu.setPreferredSize(new Dimension(200, 50));
         eventsMenu.setFont(new Font("sanserif", Font.PLAIN, 16));
         ImageIcon originalIcon_event = new ImageIcon(Toolkit.getDefaultToolkit().createImage(SideBar.class.getResource("/src/icon/event.png")));
@@ -68,17 +67,14 @@ public class SideBar extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (!eventsVisible) {
-                    // Add event items to the event list panel
                     eventListPanel.add(view);
                     eventListPanel.add(create);
                     eventsMenu.setBackground(Config.GRAY);
                 } else {
-                    // Remove all event items
                     eventListPanel.removeAll();
                     eventsMenu.setBackground(Config.TEAL);
                 }
                 eventsVisible = !eventsVisible;
-
                 revalidate();
                 repaint();
             }
@@ -86,7 +82,7 @@ public class SideBar extends JPanel {
         create.addActionListener(e -> mainMenu.showPanel("eventCreatePanel"));
         view.addActionListener(e -> mainMenu.showPanel("tablePanel"));
 
-        JMenu invitationsMenu = createMenu("Invitations", Color.WHITE);
+        JMenu invitationsMenu = createMenu("Invitations");
         invitationsMenu.setPreferredSize(new Dimension(200, 50));
         invitationsMenu.setFont(new Font("sanserif", Font.PLAIN, 16));
         ImageIcon originalIcon_invite = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
@@ -111,14 +107,11 @@ public class SideBar extends JPanel {
                     invitationListPanel.add(sendInvitations);
                     invitationsMenu.setBackground(Config.GRAY);
                 } else {
-                    // Remove all event items
                     invitationListPanel.removeAll();
                     invitationsMenu.setBackground(Config.TEAL);
 
                 }
-                // Toggle visibility
                 eventsVisible = !eventsVisible;
-                // Revalidate and repaint to update the layout
                 revalidate();
                 repaint();
             }
@@ -129,7 +122,7 @@ public class SideBar extends JPanel {
         });
         sendInvitations.addActionListener(e -> mainMenu.showPanel("inviteSendPanel"));
 
-        JMenu requestMenu = createMenu("Request", Color.WHITE);
+        JMenu requestMenu = createMenu("Request");
         requestMenu.setPreferredSize(new Dimension(200, 50));
         requestMenu.setFont(new Font("sanserif", Font.PLAIN, 16));
         ImageIcon originalIcon_request = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
@@ -155,10 +148,8 @@ public class SideBar extends JPanel {
                 } else {
                     requestPanel.removeAll();
                     requestMenu.setBackground(Config.TEAL);
-
                 }
                 eventsVisible = !eventsVisible;
-
                 revalidate();
                 repaint();
             }
@@ -234,9 +225,9 @@ public class SideBar extends JPanel {
         add(signOutButton, gbc);
 
     }
-    private JMenu createMenu(String text, Color foreground) {
+    private JMenu createMenu(String text) {
         JMenu menu = new JMenu(text);
-        menu.setForeground(foreground);
+        menu.setForeground(Color.WHITE);
         menu.setBackground(new Color(52, 58, 64));
         menu.setOpaque(true);
         menu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

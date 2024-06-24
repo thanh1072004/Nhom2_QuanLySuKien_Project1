@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class DatabaseConnection {
-    private static DatabaseConnection instance;
     private Connection connection;
     private Properties properties;
 
@@ -19,15 +18,12 @@ public class DatabaseConnection {
         }
     }
 
+    private static final class InstanceHolder {
+        private static final DatabaseConnection instance = new DatabaseConnection();
+    }
+
     public static DatabaseConnection getInstance() {
-        if (instance == null) {
-            synchronized (DatabaseConnection.class) {
-                if (instance == null) {
-                    instance = new DatabaseConnection();
-                }
-            }
-        }
-        return instance;
+        return InstanceHolder.instance;
     }
 
     public Connection getConnection() {
@@ -54,7 +50,6 @@ public class DatabaseConnection {
                 connection = DriverManager.getConnection(url, username, password);
                 System.out.println("Connection established");
             } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
                 throw new SQLException("Failed to connect to the database", e);
             }
         }

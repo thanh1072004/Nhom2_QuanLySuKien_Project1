@@ -23,7 +23,7 @@ public class InviteSendPanel extends JPanel {
     private TextField receiver_name;
 
     public InviteSendPanel(User organizer, MainMenu mainMenu) {
-        try {
+        try{
             serviceUser = new ServiceUser();
             serviceEvent = new ServiceEvent();
             serviceInvite = new ServiceInvite();
@@ -99,10 +99,8 @@ public class InviteSendPanel extends JPanel {
                     }
                     event_name.setSelectedItem(null);
                     receiver_name.setText("");
-
-
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    mainMenu.showMessage(Notifications.Type.ERROR, "Send invitation failed! Please try again later");
                 }
             });
 
@@ -110,7 +108,7 @@ public class InviteSendPanel extends JPanel {
             add(buttonPanel, gbc);
             
         }catch(Exception ex){
-            ex.printStackTrace();
+            mainMenu.showMessage(Notifications.Type.ERROR, "Failed to get event! Please try again later");
         }
     }
 

@@ -140,7 +140,7 @@ public class EventUpdatePanel extends JPanel{
                     updateEvent(row, eventName, eventDate, eventLocation, eventType, eventDescription, user);
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                mainMenu.showMessage(Notifications.Type.ERROR, "Failed to update event! Please try again later");
             }
         });
 
@@ -180,7 +180,7 @@ public class EventUpdatePanel extends JPanel{
                 }catch(InterruptedException e){
                     Thread.currentThread().interrupt();
                 }catch (Exception e) {
-                    throw new RuntimeException(e);
+                    mainMenu.showMessage(Notifications.Type.ERROR, "Failed to update event! Please try again later");
                 }
 
             }
