@@ -146,7 +146,6 @@ public class EventCreatePanel extends JPanel{
             protected Event doInBackground() throws Exception {
                 Event event = new Event(0, name, date, location, type, description, organizer);
                 serviceEvent.addEvent(organizer, event);
-                serviceAttendee.addAttendee(organizer, event);
                 mainMenu.showMessage(Notifications.Type.SUCCESS, "Event created successfully.");
                 mainMenu.showPanel("tablePanel");
                 return event;
@@ -156,6 +155,7 @@ public class EventCreatePanel extends JPanel{
             protected void done() {
                 try {
                     Event event = get();
+                    serviceAttendee.addAttendee(organizer, event);
                     tableListener.addRow(event.getId(), name, date, location, type, organizer);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
