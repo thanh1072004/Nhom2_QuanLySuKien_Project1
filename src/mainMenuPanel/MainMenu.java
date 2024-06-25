@@ -94,17 +94,4 @@ public class MainMenu extends JFrame {
         Notifications.getInstance().show(messageType, message);
     }
 
-    public static void main(String[] args) {
-        try{
-            DatabaseConnection.getInstance().connectToDatabase();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        SwingUtilities.invokeLater(() -> {
-        	//User user = new User(1032, "hoang", "f82e62d7c3ea69cc12b5cdb8d621dab6");
-            User user = new User(1, "tung", "bb7d4b236b564cf1ec27aa891331e0af");
-            MainMenu frame = new MainMenu(user);
-            frame.setVisible(true);
-        });
-    }
 }

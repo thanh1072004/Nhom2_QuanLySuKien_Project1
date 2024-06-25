@@ -5,6 +5,13 @@ import src.model.Login;
 import src.model.User;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.util.Base64;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.sql.*;
 
 public class ServiceUser {
@@ -16,17 +23,18 @@ public class ServiceUser {
 
     public User authorizeLogin(Login dataLogin) throws SQLException {
         User data = null;
-        try(PreparedStatement ps = connection.prepareStatement("select user_id, username, password from Users where username = ? and password = ?",
+        try(PreparedStatement ps = connection.prepareStatement("select user_id, username, password from Users where username = ? ",
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY)){
             ps.setString(1, dataLogin.getUsername());
-            ps.setString(2, md5(dataLogin.getPassword()));
             try(ResultSet rs = ps.executeQuery()){
                 if(rs.first()){
                     int userId = rs.getInt("user_id");
                     String username = rs.getString("username");
-                    String password = rs.getString("password");
-                    data = new User(userId, username, password);
+                    String storedHash = rs.getString("password");
+                    if (verifyPassword(dataLogin.getPassword(), storedHash)) {
+                        data = new User(userId, username, storedHash);
+                    }
                 }
             }
         }
@@ -39,7 +47,7 @@ public class ServiceUser {
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
             ps.setString(3, user.getUsername());
-            ps.setString(4, md5(user.getPassword()));
+            ps.setString(4, hashPassword(user.getPassword()));
             ps.execute();
             try(ResultSet rs = ps.getGeneratedKeys()){
                 if (rs.next()) {
@@ -60,24 +68,6 @@ public class ServiceUser {
             }
         }
         return duplicate;
-    }
-
-
-
-    public static String md5(String msg) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(msg.getBytes());
-            byte byteData[] = md.digest();
-            //convert the byte to hex format method 1
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < byteData.length; i++) {
-                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            return  sb.toString();
-        } catch (Exception ex) {
-            return "";
-        }
     }
 
     public User getUser(int user_id) throws SQLException {
@@ -121,5 +111,50 @@ public class ServiceUser {
             }
         }
         return username;
+    }
+
+    private static final int ITERATIONS = 10000;
+    private static final int KEY_LENGTH = 256;
+    private static final int SALT_LENGTH = 16; // 16 bytes
+
+    public static String hashPassword(String password) {
+        try {
+            byte[] salt = generateSalt(SALT_LENGTH);
+
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATIONS, KEY_LENGTH);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+            String encodedSalt = Base64.getEncoder().encodeToString(salt);
+            String encodedHash = Base64.getEncoder().encodeToString(hash);
+
+            return encodedSalt + ":" + encodedHash;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            ex.printStackTrace();
+            return "";
+        }
+    }
+
+    private static byte[] generateSalt(int length) {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[length];
+        random.nextBytes(salt);
+        return salt;
+    }
+
+    public static boolean verifyPassword(String password, String storedHash) {
+        try {
+            String[] parts = storedHash.split(":");
+            byte[] salt = Base64.getDecoder().decode(parts[0]);
+            byte[] hash = Base64.getDecoder().decode(parts[1]);
+
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, ITERATIONS, KEY_LENGTH);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            byte[] testHash = factory.generateSecret(spec).getEncoded();
+
+            return MessageDigest.isEqual(hash, testHash);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
 }

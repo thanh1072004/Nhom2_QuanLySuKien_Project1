@@ -125,6 +125,7 @@ public class Main extends JFrame {
             }
         }catch(Exception e){
             showMessage(Message.MessageType.ERROR,"Login failed");
+            e.printStackTrace();
         }
     }
 
