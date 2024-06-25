@@ -15,8 +15,8 @@ import src.model.Event;
 import src.model.Request;
 import src.model.User;
 import src.service.*;
-import src.view.ButtonEditor;
-import src.view.ButtonRenderer;
+import src.base.ButtonEditor;
+import src.base.ButtonRenderer;
 
 public class RequestViewPanel extends JPanel{
     private JTable table;
@@ -90,11 +90,9 @@ public class RequestViewPanel extends JPanel{
 
                 }
                 serviceRequest.removeRequest(sender, event);
-
                 removeRow(row);
-
             }catch(Exception ex) {
-                ex.printStackTrace();
+                mainMenu.showMessage(Notifications.Type.ERROR, "Failed to accept request! Please try again later");
             }
         });
 
@@ -111,7 +109,7 @@ public class RequestViewPanel extends JPanel{
                 removeRow(row);
 
             }catch(Exception ex){
-                ex.printStackTrace();
+                mainMenu.showMessage(Notifications.Type.ERROR, "Failed to reject request! Please try again later");
             }
         });
 

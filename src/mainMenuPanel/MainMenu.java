@@ -111,5 +111,4 @@ public class MainMenu extends JFrame {
             frame.setVisible(true);
         });
     }
-
 }

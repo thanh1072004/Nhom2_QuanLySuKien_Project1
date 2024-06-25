@@ -6,8 +6,8 @@ import src.model.Event;
 import src.model.User;
 import src.service.ServiceEvent;
 import src.service.ServiceRequest;
-import src.view.ButtonEditor;
-import src.view.ButtonRenderer;
+import src.base.ButtonEditor;
+import src.base.ButtonRenderer;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -82,7 +82,7 @@ public class RequestSendPanel extends JPanel {
                     removeRow(row);
 
                 }catch(Exception ex){
-                    ex.printStackTrace();
+                    mainMenu.showMessage(Notifications.Type.ERROR, "Failed to send request! Please try again later");
                 }
             });
             actionListeners.add(e -> {
@@ -94,7 +94,7 @@ public class RequestSendPanel extends JPanel {
                     serviceRequest.addRequest(user, event);
                     serviceRequest.removeRequest(user, event);
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
+                    mainMenu.showMessage(Notifications.Type.ERROR, "Failed to delete event! Please try again later");
                 }
                 removeRow(row);
             });

@@ -39,20 +39,20 @@ public class ServiceInvite {
         try{
             connection.setAutoCommit(false);
 
-            PreparedStatement psSelect = connection.prepareStatement("select invite_id from invite where organizer_id = ? and event_id = ? and receiver_id = ?");
-            psSelect.setInt(1, event.getOrganizer().getUserId());
-            psSelect.setInt(2, event.getId());
-            psSelect.setInt(3, user.getUserId());
-            ResultSet rs = psSelect.executeQuery();
-            int invite_id = -1;
-            if(rs.next()) {
-                invite_id = rs.getInt("invite_id");
+            try(PreparedStatement psSelect = connection.prepareStatement("select invite_id from invite where organizer_id = ? and event_id = ? and receiver_id = ?")){
+                psSelect.setInt(1, event.getOrganizer().getUserId());
+                psSelect.setInt(2, event.getId());
+                psSelect.setInt(3, user.getUserId());
+                ResultSet rs = psSelect.executeQuery();
+                int invite_id = -1;
+                if(rs.next()) {
+                    invite_id = rs.getInt("invite_id");
+                }
+                try(PreparedStatement psInsert = connection.prepareStatement("insert into finished_invite (invite_id) values (?)")){
+                    psInsert.setInt(1, invite_id);
+                    psInsert.executeUpdate();
+                }
             }
-
-            PreparedStatement psInsert = connection.prepareStatement("insert into finished_invite (invite_id) values (?)");
-            psInsert.setInt(1, invite_id);
-            psInsert.executeUpdate();
-
             connection.commit();
         }catch(Exception e){
             connection.rollback();
