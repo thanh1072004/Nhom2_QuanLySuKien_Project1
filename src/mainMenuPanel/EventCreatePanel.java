@@ -160,8 +160,8 @@ public class EventCreatePanel extends JPanel{
                     inviteSendPanel.addEvent(event);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                } catch (Exception e) {
-                    mainMenu.showMessage(Notifications.Type.ERROR, "Failed to create event! Please try again later");
+                } catch (Exception _) {
+
                 }
             }
         };

@@ -74,10 +74,6 @@ public class MainMenu extends JFrame {
         return tablePanel;
     }
 
-    public EventUpdatePanel getEventUpdatePanel() {
-        return eventUpdatePanel;
-    }
-
     public InviteSendPanel getInviteSendPanel() {
         return inviteSendPanel;
     }

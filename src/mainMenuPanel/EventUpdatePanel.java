@@ -155,7 +155,6 @@ public class EventUpdatePanel extends JPanel{
             typeList.setEnabled(false);
             description.setEditable(false);
         }
-
         add(buttonPanel, gbc);
     }
 
@@ -174,11 +173,7 @@ public class EventUpdatePanel extends JPanel{
             @Override
             protected void done() {
                 try {
-                    Event updatedEvent = get();
                     tableListener.updateRow(row, eventName, eventDate, eventLocation, eventType);
-                    inviteSendPanel.updateEvent(updatedEvent);
-                }catch(InterruptedException e){
-                    Thread.currentThread().interrupt();
                 }catch (Exception e) {
                     mainMenu.showMessage(Notifications.Type.ERROR, "Failed to update event! Please try again later");
                 }

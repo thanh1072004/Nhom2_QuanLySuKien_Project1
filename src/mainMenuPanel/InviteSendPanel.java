@@ -9,10 +9,12 @@ import src.model.User;
 import src.service.*;
 
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.List;
 import javax.swing.*;
 
 public class InviteSendPanel extends JPanel {
+    private MainMenu mainMenu;
     private transient User receiver;
     private transient ServiceUser serviceUser;
     private transient ServiceEvent serviceEvent;
@@ -23,97 +25,99 @@ public class InviteSendPanel extends JPanel {
     private TextField receiver_name;
 
     public InviteSendPanel(User organizer, MainMenu mainMenu) {
-        try{
-            serviceUser = new ServiceUser();
-            serviceEvent = new ServiceEvent();
-            serviceInvite = new ServiceInvite();
-            serviceAttendee = new ServiceAttendee();
-            List<Event> events = serviceEvent.getOrganizerEvent(organizer);
+        this.mainMenu = mainMenu;
+        serviceUser = new ServiceUser();
+        serviceEvent = new ServiceEvent();
+        serviceInvite = new ServiceInvite();
+        serviceAttendee = new ServiceAttendee();
 
-            setLayout(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.insets = new Insets(20, 20, 20, 20);
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(20, 20, 20, 20);
 
-            Font font = new Font("Arial", Font.PLAIN, 16);
+        Font font = new Font("Arial", Font.PLAIN, 16);
 
-            JLabel nameLabel = new JLabel("Name Event:");
-            nameLabel.setFont(Config.FONT);
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            add(nameLabel, gbc);
-            Event[] event_names = new Event[events.size()];
-            for (int i = 0; i < events.size(); i++) {
-                event_names[i] = events.get(i);
-            }
-            event_name = new ComboBox<>();
-            eventModel = new DefaultComboBoxModel<>(event_names);
-            event_name.setModel(eventModel);
-            gbc.gridx = 1;
-            add(event_name, gbc);
+        JLabel nameLabel = new JLabel("Name Event:");
+        nameLabel.setFont(Config.FONT);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(nameLabel, gbc);
+        event_name = new ComboBox<>();
+        eventModel = new DefaultComboBoxModel<>();
+        event_name.setModel(eventModel);
+        gbc.gridx = 1;
+        add(event_name, gbc);
 
-            JLabel usernameLabel = new JLabel("Username:");
-            usernameLabel.setFont(Config.FONT);
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            add(usernameLabel, gbc);
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setFont(Config.FONT);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        add(usernameLabel, gbc);
 
-            receiver_name = new TextField("");
-            receiver_name.setFont(Config.FONT);
-            receiver_name.setPreferredSize(new Dimension(200, 40));
-            gbc.gridx = 1;
-            add(receiver_name, gbc);
+        receiver_name = new TextField("");
+        receiver_name.setFont(Config.FONT);
+        receiver_name.setPreferredSize(new Dimension(200, 40));
+        gbc.gridx = 1;
+        add(receiver_name, gbc);
 
-            gbc.gridx = 0;
-            gbc.gridy = 2;
-            gbc.gridwidth = 6;
-            gbc.fill = GridBagConstraints.CENTER;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 6;
+        gbc.fill = GridBagConstraints.CENTER;
 
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-            JButton inviteUserButton = new JButton("Invite User");
-            inviteUserButton.setFont(font);
-            inviteUserButton.setBackground(Config.CYAN);
-            inviteUserButton.setForeground(Color.WHITE);
-            inviteUserButton.setFocusPainted(false);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JButton inviteUserButton = new JButton("Invite User");
+        inviteUserButton.setFont(font);
+        inviteUserButton.setBackground(Config.CYAN);
+        inviteUserButton.setForeground(Color.WHITE);
+        inviteUserButton.setFocusPainted(false);
 
-            inviteUserButton.addActionListener(e ->{
-                try {
-                    Event event = (Event) event_name.getSelectedItem();
+        inviteUserButton.addActionListener(e ->{
+            try {
+                Event event = (Event) event_name.getSelectedItem();
 
-                    String receiverName = receiver_name.getText();
-                    if (receiverName.isEmpty()) {
-                        mainMenu.showMessage(Notifications.Type.WARNING, "Please fill out all the fields");
-                    } else {
-                        receiver = serviceUser.getUser(receiverName);
-                        if(receiver == null) {
-                            mainMenu.showMessage(Notifications.Type.ERROR, "User not found");
-                        }else if(serviceAttendee.checkAttendee(receiver, event)){
-                            mainMenu.showMessage(Notifications.Type.INFO, "User already attendee of this event");
-                        }else if (serviceInvite.checkInvite(organizer, receiver, event)    ) {
-                            mainMenu.showMessage(Notifications.Type.INFO, "Invitation already sent to this user for the selected event");
-                        }else {
-                            mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation has been sent");
-                            serviceInvite.addInvite(organizer, receiver, event);
-                        }
+                String receiverName = receiver_name.getText();
+                if (receiverName.isEmpty()) {
+                    mainMenu.showMessage(Notifications.Type.WARNING, "Please fill out all the fields");
+                } else {
+                    receiver = serviceUser.getUser(receiverName);
+                    if(receiver == null) {
+                        mainMenu.showMessage(Notifications.Type.ERROR, "User not found");
+                    }else if(serviceAttendee.checkAttendee(receiver, event)){
+                        mainMenu.showMessage(Notifications.Type.INFO, "User already attendee of this event");
+                    }else if (serviceInvite.checkInvite(organizer, receiver, event)    ) {
+                        mainMenu.showMessage(Notifications.Type.INFO, "Invitation already sent to this user for the selected event");
+                    }else {
+                        mainMenu.showMessage(Notifications.Type.SUCCESS, "Invitation has been sent");
+                        serviceInvite.addInvite(organizer, receiver, event);
                     }
-                    event_name.setSelectedItem(null);
-                    receiver_name.setText("");
-                } catch (Exception ex) {
-                    mainMenu.showMessage(Notifications.Type.ERROR, "Send invitation failed! Please try again later");
                 }
-            });
-
-            buttonPanel.add(inviteUserButton);
-            add(buttonPanel, gbc);
-            
-        }catch(Exception ex){
-            mainMenu.showMessage(Notifications.Type.ERROR, "Failed to get event! Please try again later");
-        }
+                event_name.setSelectedItem(null);
+                receiver_name.setText("");
+            } catch (Exception ex) {
+                mainMenu.showMessage(Notifications.Type.ERROR, "Send invitation failed! Please try again later");
+            }
+        });
+        buttonPanel.add(inviteUserButton);
+        add(buttonPanel, gbc);
     }
 
     public void addEvent(Event event) {
         eventModel.addElement(event);
+    }
+
+    public void loadOrganizerEvents(User organizer) {
+        try {
+            List<Event> events = serviceEvent.getOrganizerEvent(organizer);
+            eventModel.removeAllElements();
+            for (Event event : events) {
+                eventModel.addElement(event);
+            }
+        } catch (SQLException e) {
+            mainMenu.showMessage(Notifications.Type.ERROR, "Load event failed! Please try again later");
+        }
     }
 
     public void updateEvent(Event event){

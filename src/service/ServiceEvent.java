@@ -84,7 +84,7 @@ public class ServiceEvent {
     public List<Event> getOrganizerEvent(User user) throws SQLException {
         serviceUser = new ServiceUser();
         List<Event> events = new ArrayList<>();
-        try(PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, e.type, u.user_id AS " +
+        try(PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, e.type, u.user_id as organizer_id " +
                                                             "from event e " +
                                                             "join Users u on e.organizer_id = u.user_id " +
                                                             "where u.user_id = ?")){
@@ -132,7 +132,7 @@ public class ServiceEvent {
         List<Event> events = new ArrayList<>();
         try(PreparedStatement ps = connection.prepareStatement("select e.event_id, e.name, e.location, e.date, e.type, e.organizer_id " +
                                                             "from event e " +
-                                                            "left join request on e.event_id = r.event_id and r.sender_id = ? " +
+                                                            "left join request r on e.event_id = r.event_id and r.sender_id = ? " +
                                                             "left join attendee a on e.event_id = a.event_id and a.user_id = ? " +
                                                             "where e.type = 'Public' and e.organizer_id != ? " +
                                                             "and r.request_id is null " +

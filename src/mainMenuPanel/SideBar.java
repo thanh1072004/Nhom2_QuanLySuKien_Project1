@@ -11,11 +11,13 @@ import src.model.User;
 
 public class SideBar extends JPanel {
     private InviteViewPanel inviteViewPanel;
+    private InviteSendPanel inviteSendPanel;
     private RequestSendPanel requestSendPanel;
     private RequestViewPanel requestViewPanel;
 
     public SideBar(Main main, MainMenu mainMenu, User user){
         inviteViewPanel = mainMenu.getInviteViewPanel();
+        inviteSendPanel = mainMenu.getInviteSendPanel();
         requestSendPanel = mainMenu.getRequestSendPanel();
         requestViewPanel = mainMenu.getRequestViewPanel();
 
@@ -120,7 +122,10 @@ public class SideBar extends JPanel {
             mainMenu.showPanel("inviteViewPanel");
             inviteViewPanel.getInvite();
         });
-        sendInvitations.addActionListener(e -> mainMenu.showPanel("inviteSendPanel"));
+        sendInvitations.addActionListener(e -> {
+            mainMenu.showPanel("inviteSendPanel");
+            inviteSendPanel.loadOrganizerEvents(user);
+        });
 
         JMenu requestMenu = createMenu("Request");
         requestMenu.setPreferredSize(new Dimension(200, 50));
