@@ -91,8 +91,8 @@ public class TablePanel extends JPanel implements TableListener {
                         serviceEvent.deleteEvent(event_id);
                     }else{
                         serviceAttendee.removeAttendee(user, serviceEvent.getSelectedEvent(event_id));
+                        mainMenu.showMessage(Notifications.Type.SUCCESS, "Event deleted!");
                     }
-                    System.out.println("delete successfully");
                 } catch (Exception ex) {
                     mainMenu.showMessage(Notifications.Type.ERROR, "Failed to delete event! Please try again later");
                 }
