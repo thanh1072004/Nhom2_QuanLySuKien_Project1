@@ -1,76 +1,95 @@
-package model;
+package src.model;
 
 public class Event {
-	private int organizer_id;
-	private int event_id;
+    private int id;
     private String name;
     private String location;
-    private String event_date;
-	private String description;
+    private String date;
     private String type;
-	public Event(int event_id, String name, String location, String event_date, String type, String description, int organizer_id) {
-		this.organizer_id = organizer_id;
-		this.event_id = event_id;
-		this.name = name;
-		this.location = location;
-		this.event_date = event_date;
-		this.type = type;
-		this.description = description;
-	}
+    private String description;
+    private User organizer;
 
-	public int getOrganizer_id() {
-		return organizer_id;
-	}
+    public Event(int id, String name, String date, String location, String type, User organizer) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.date = date;
+        this.type = type;
+        this.organizer = organizer;
+    }
 
-	public void setOrganizer_id(int organizer_id) {
-		this.organizer_id = organizer_id;
-	}
+    public Event(int id, String name, String date, String location, String type, String description, User organizer) {
+        this.id = id;
+        this.description = description;
+        this.organizer = organizer;
+        this.type = type;
+        this.date = date;
+        this.location = location;
+        this.name = name;
+    }
 
-	public int getEvent_id() {
-		return event_id;
-	}
+    public Event() {
 
-	public void setEvent_id(int event_id) {
-		this.event_id = event_id;
-	}
+    }
 
-	public String getName() {
-		return name;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getLocation() {
-		return location;
-	}
+    public User getOrganizer() {
+        return organizer;
+    }
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    public void setOrganizer(User organizer) {
+        this.organizer = organizer;
+    }
 
-	public String getEvent_date() {
-		return event_date;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setEvent_date(String event_date) {
-		this.event_date = event_date;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getDate() {
+        return date;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
