@@ -1,5 +1,7 @@
 package src.database;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.*;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,8 +34,11 @@ public class DatabaseConnection {
 
     private void loadProperties() throws IOException {
         properties = new Properties();
-        try (FileInputStream fis = new FileInputStream("src/resources/config.properties")) {
-            properties.load(fis);
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                throw new FileNotFoundException("config.properties file not found in the classpath");
+            }
+            properties.load(input);
         }
     }
 
