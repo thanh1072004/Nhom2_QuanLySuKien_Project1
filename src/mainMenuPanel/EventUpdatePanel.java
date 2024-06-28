@@ -16,7 +16,6 @@ import java.util.Objects;
 
 public class EventUpdatePanel extends JPanel{
     private MainMenu mainMenu;
-    private InviteSendPanel inviteSendPanel;
     private transient Event event;
     private JTextField name, location;
     private DateSelector dateSelector;
@@ -31,7 +30,6 @@ public class EventUpdatePanel extends JPanel{
         this.mainMenu = mainMenu;
         tableListener = mainMenu.getTablePanel();
         serviceEvent = new ServiceEvent();
-        inviteSendPanel = mainMenu.getInviteSendPanel();
         boolean isOrganizer = Objects.equals(user.getUsername(), event.getOrganizer().getUsername());
 
         setLayout(new GridBagLayout());

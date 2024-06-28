@@ -19,6 +19,7 @@ import src.base.ButtonEditor;
 import src.base.ButtonRenderer;
 
 public class RequestViewPanel extends JPanel{
+    private MainMenu mainMenu;
     private JTable table;
     private DefaultTableModel tableModel;
     private ServiceRequest serviceRequest;
@@ -28,6 +29,7 @@ public class RequestViewPanel extends JPanel{
     private User user;
 
     public RequestViewPanel(User user, MainMenu mainMenu) {
+        this.mainMenu = mainMenu;
         this.user = user;
         serviceUser = new ServiceUser();
         serviceEvent = new ServiceEvent();
@@ -163,7 +165,7 @@ public class RequestViewPanel extends JPanel{
                 addRowToTable(new Object[]{id++, event.getId(), event.getName(), event.getDate(), event.getLocation(), sender.getUsername(), "Action"});
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            mainMenu.showMessage(Notifications.Type.ERROR,"Failed to get request! Please try again later");
         }
     }
     

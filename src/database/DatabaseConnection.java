@@ -34,7 +34,7 @@ public class DatabaseConnection {
 
     private void loadProperties() throws IOException {
         properties = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("src/resources/config.properties")) {
             if (input == null) {
                 throw new FileNotFoundException("config.properties file not found in the classpath");
             }

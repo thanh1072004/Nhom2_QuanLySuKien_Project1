@@ -10,12 +10,14 @@ import src.base.Config;
 import src.model.User;
 
 public class SideBar extends JPanel {
+    private TablePanel tablePanel;
     private InviteViewPanel inviteViewPanel;
     private InviteSendPanel inviteSendPanel;
     private RequestSendPanel requestSendPanel;
     private RequestViewPanel requestViewPanel;
 
     public SideBar(Main main, MainMenu mainMenu, User user){
+        tablePanel = mainMenu.getTablePanel();
         inviteViewPanel = mainMenu.getInviteViewPanel();
         inviteSendPanel = mainMenu.getInviteSendPanel();
         requestSendPanel = mainMenu.getRequestSendPanel();
@@ -82,7 +84,10 @@ public class SideBar extends JPanel {
             }
         });
         create.addActionListener(e -> mainMenu.showPanel("eventCreatePanel"));
-        view.addActionListener(e -> mainMenu.showPanel("tablePanel"));
+        view.addActionListener(e ->{
+            mainMenu.showPanel("tablePanel");
+            tablePanel.loadUserEvents(user);
+        });
 
         JMenu invitationsMenu = createMenu("Invitations");
         invitationsMenu.setPreferredSize(new Dimension(200, 50));
@@ -120,7 +125,7 @@ public class SideBar extends JPanel {
         });
         viewInvitations.addActionListener(e -> {
             mainMenu.showPanel("inviteViewPanel");
-            inviteViewPanel.getInvite();
+            inviteViewPanel.getInvite(user);
         });
         sendInvitations.addActionListener(e -> {
             mainMenu.showPanel("inviteSendPanel");
